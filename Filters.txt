@@ -1,0 +1,470 @@
+1)Action filter:
+using Microsoft.AspNetCore.Mvc.Filters;
+using Filters.Data;
+using System.Diagnostics;
+using System.Linq;
+namespace Filters.AppFilter
+{
+    public class UserActivityFilter : IActionFilter
+    {
+        private readonly AppDbContext appDbContext;
+        public UserActivityFilter(AppDbContext appDbContext)
+        {
+            this.appDbContext = appDbContext;
+        }
+
+
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+              Debug.WriteLine($"[FILTER LOG] Action Execution Started.");
+        }
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+           Debug.WriteLine($"[FILTER LOG] Action Execution Completed.");
+        }
+    }
+}
+
+
+and use in your controller like
+  [ServiceFilter(typeof(UserActivityFilter))]
+    public class Employeecontroller : Controller
+    {
+
+
+
+Uses:
+Global Application: If you want to track every page in your app, you can register this filter globally in Program.cs, and you'll never have to touch a controller again to add logging.
+
+Security Auditing: If an Emp tries to access an Admin page, this filter can catch that attempt and log it before the page even loads, creating a "paper trail" of unauthorized access attempts.
+
+///////////////////////////////////
+
+2)Exception Filter:
+create the exception class
+public class DbExceptionFilter : IExceptionFilter
+{
+    private readonly IModelMetadataProvider _modelMetadataProvider;
+
+    public DbExceptionFilter(IModelMetadataProvider modelMetadataProvider)
+    {
+        _modelMetadataProvider = modelMetadataProvider;
+    }
+    public void OnException(ExceptionContext context)
+    {
+        if(context.Exception is DbUpdateException || context.Exception.InnerException is DbException)
+        {
+            Console.WriteLine($"Db error detected: {context.Exception.Message}");
+
+            var result = new ViewResult{ViewName="DbException"};
+            result.ViewData = new ViewDataDictionary(_modelMetadataProvider,context.ModelState)
+            {
+                {"ExceptionMessage","Please try after some time"}
+            };
+            context.Result = result;
+            context.ExceptionHandled = true;
+        }
+
+    }
+}   
+ and use this in controller
+  [ServiceFilter(typeof(UserActivityFilter))]
+---------------------------
+use of result:In ASP.NET Core filters, context.Result is your "Remote Control" for the request. When you assign a value to it, you are telling the framework: "Stop what you were doing, and do this instead."
+like when eexception is occurred then call this view
+var result = new ViewResult{ViewName="DbException"};
+context.Result = result;
+--------------------------------------
+
+In Authorize filter we can ues on top of Action name(Attribute way)
+like
+ [AuthFilter]
+        public IActionResult UserList()
+        {}
+but in exception and action filter not because
+If your filter needs to talk to the database (using AppDbContext), you cannot use [ExceptionFilter]/[AuthFilter] as attribute way.
+
+Why? Because Attributes are static. They are created when the app starts, but your Database connection is created fresh for every request. They can't find each other.
+so we have to use it as service way
+[ServiceFilter(typeof(ExceptionFilter))] // This tells .NET to "inject" the database
+public IActionResult UserList() { ... }
+
+
+
+Action Filter (for logging)
+Exception Filter (for crashes)
+Authorization Filter(Security Guard)
+
+---------------------------------------------------------
+3)Authorization filter:
+create authprizeFilter class
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+public class AuthFilter :Attribute, IAuthorizationFilter
+{
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var role = context.HttpContext.Session.GetString("Role");
+        if(role != "Admin")
+        {
+            context.Result = new ContentResult()
+            {
+                StatusCode = 403,
+                Content = "Access denied : you dont have admin permission to access this page"
+            };
+        }
+        //throw new NotImplementedException();
+    }
+}
+
+
+and use in controller
+[AuthFilter]
+public IActionResult UserList()
+ {
+     throw new DbUpdateException("DbException occurred");
+     var users = _appDbContext.Users.ToList();
+     return View(users);
+ }
+
+
+To check above functionality you have to saved the user's role at the time of login in Httpcontext
+like this
+ if(userDb != null)
+            {
+                HttpContext.Session.SetString("Name", userDb.Name);
+                HttpContext.Session.SetString("Password",userDb.Password);
+                HttpContext.Session.SetString("Role",userDb.Role);
+
+
+Middleware:
+app.UseExceptionHandler("/Home/Error"); // 1. Catch global crashes
+app.UseStaticFiles();                   // 2. Serve CSS/JS fast (no security check needed)
+app.UseRouting();                       // 3. Figure out where the request is going
+app.UseSession();                       // 4. Load the user's "Locker"
+app.UseAuthentication();                // 5. Who is this person?
+app.UseAuthorization();                 // 6. Are they allowed in?
+app.MapControllerRoute(...);            // 7. Go to the Controller!
+
+
+
+Middleware is better for Global Performance.
+
+Example: If you want to block IP addresses from Russia or China, you don't want to wait until the request reaches a Filter. You want to block it at the Middleware level (the very first gate) to save server memory.
+Filters are the security guards standing inside the Admin Office. To reach them, the visitor has already entered the building, used the elevator, and walked down the hall.
+
+Middleware is the security guard at the Front Gate. If they aren't on the list, they never even step inside.
+
+Middleware:
+Runs at the very start of the request.
+Global: Affects everything (even a .jpg or .css file).
+
+
+Filters:
+Runs only after Routing finds a Controller.
+MVC Only: Only affects Controllers and Actions.
+
+Result Filter:
+
+Sometimes you want to show specific information on every single page (like the current user's Subscription Status or a System Maintenance message) without manually adding it to every Controller's ViewBag.
+The Use: The Result Filter can "reach into" the ViewData right before the HTML is rendered and inject a value.
+
+Means if you want to change anything in view before it go to end user you can modify the page and send.
+Example: Showing "Welcome, [Name]" in the layout for every page the user visits.
+The Result Filter runs after your Controller's Action has already finished its work.
+Action Filter: Checks the "ID Card" at the door. If you aren't logged in, the Controller never runs.
+Result Filter: Checks the "ID Card" after the meal is cooked.
+
+
+
+///////////////////////
+
+Built-in .NET Identity system
+
+program.cs
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Employee/Login"; // Where to go if not logged in
+        options.AccessDeniedPath = "/Employee/AccessDenied"; // Where to go if role is wrong
+    });
+
+
+app.UseRouting();
+
+
+
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+
+[HttpPost]
+public async Task<IActionResult> Login(User objModel)
+{
+    var userDb = _appDbContext.Users.FirstOrDefault(x => x.Name == objModel.Name && x.Password == objModel.Password);
+
+    if (userDb != null)
+    {
+        // 1. Create the "Claims" (The data on the ID card)
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, userDb.Name),
+            new Claim(ClaimTypes.Role, userDb.Role), // This stores "Admin" or "Employee"
+            new Claim("FavoriteColor", "Blue") // You can add custom data too!
+        };
+
+        // 2. Create the Identity
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        // 3. Sign In (This creates the encrypted Authentication Cookie)
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
+            new ClaimsPrincipal(claimsIdentity));
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    ViewBag.Error = "Invalid credentials.";
+    return View();
+}
+
+then use in controllers:
+[Authorize(Roles = "Admin")] 
+public IActionResult UserList()
+{
+    var users = _appDbContext.Users.ToList();
+    return View(users);
+}
+
+
+
+--------------------------------------------
+Question :The "Dependency Injection" Memory Leak:
+-
+A memory leak happens when:
+-Objects are no longer needed
+-But they are still referenced somewhere
+So the Garbage Collector (GC) cannot remove them
+
+👉 Result: Memory usage keeps growing over time.
+
+DI is a pattern where:
+Objects (services) are created and managed by a container
+You don’t manually new them everywhere
+
+🧩 3 Lifetimes in .NET DI:
+Transient → new instance every time
+Scoped → one per request
+Singleton → one for entire app lifetime
+--------------------
+In program.cs:
+services.AddDbContext<AppDbContext>(); // Scoped
+services.AddSingleton<ReportService>(); // Singleton ❌
+
+In class:
+public class ReportService
+{
+    private readonly AppDbContext _context;
+
+    public ReportService(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public List<Order> GetReports()
+    {
+        return _context.Orders.ToList();
+    }
+}
+
+1. Singleton is created once
+ReportService is created at app startup
+2. Scoped service injected into it
+AppDbContext (should live per request)
+3. Now this happens:
+Singleton holds reference to DbContext
+DbContext never gets disposed ❌
+Connections + tracked entities stay in memory
+
+👉 Over time:
+Memory increases
+DB connections pile up
+Performance drops
+Garbage Collector cannot clean it
+
+✅ FIX #1 (Best): Match Lifetimes Properly
+services.AddScoped<AppDbContext>();
+services.AddScoped<ReportService>();
+
+👉 Never inject Scoped into Singleton
+
+
+
+Question:What is the difference between Repository Pattern and Unit of Work? Is it always necessary to use both?
+explain in detail
+The Repository pattern abstracts data access logic and provides a clean interface for CRUD operations, while the Unit of Work pattern manages transactions and ensures that multiple operations are committed as a single unit like transaction.
+
+
+
+
+Question : When transist , scoped and singleton need to use give real example
+Use Transient when: 
+Object is lightweight
+No shared state needed
+Safe to create many times
+like send email as background service
+Real Scenario
+You send emails from multiple places
+Each time formatting happens independently
+No need to reuse instance
+
+👉 Every time requested → new object created
+
+Scoped:
+Use Scoped when:
+Data should be shared within one request
+But NOT across users
+like db operation and all because if new request also have another instance then inconsistency issue arrive
+
+SINGLETON:
+Use Singleton when:
+Object is stateless OR thread-safe
+Expensive to create
+Needs to be reused globally
+like it can be use in Logger
+
+Transient is used for lightweight, stateless services created every time. Scoped is used for request-based operations like DbContext where one instance per request is needed. Singleton is used for shared, thread-safe services like caching or configuration that should live for the entire application lifetime.
+
+Another example:
+Request 1: /get-products
+User just browsing products
+No email sent
+
+👉 New request → new Scoped instance
+
+Request 2: /place-order
+
+Inside this single request, many things happen:
+
+Save order
+Process payment
+Send order email
+Send invoice email
+in this  request -2 save order,order email all thesea are transient
+and request -1 and request -2 are scoped example
+
+
+Question : For db request can we use transient  like background operation is done via scoped?
+Every time it is requested:
+
+-DbContext should not be registered as Transient because it can lead to multiple instances within the same request, causing tracking and transaction issues. It is best registered as Scoped.
+-Data inconsistency risk. A new DbContext instance is created and become expensive and Data inconsistency risk
+
+
+Question: What is the difference between Repository Pattern and Unit of Work? Is it always necessary to use both?
+The Repository pattern abstracts data access logic and provides a clean interface for CRUD operations, while the Unit of Work pattern manages transactions and ensures that multiple operations are committed as a single unit.
+
+Question: How do you handle Concurrency in EF Core? What happens if two Employees try to update the same record at the same time?
+How it works:When EF Core executes the UPDATE statement, it adds a WHERE clause:$
+$UPDATE  Employees SET Name = 'New Name' WHERE Id = 1 AND RowVersion = [OldVersion]}$$
+If the RowVersion in the DB has changed, 0 rows are updated, and EF Core triggers an exception. 
+
+using linq:
+_context.Entry(employee)
+        .Property(e => e.RowVersion)
+        .OriginalValue = dto.RowVersion;
+update EMployee set  column = newValue where RowVersion = oldRowversion
+
+We use a RowVersion column as a concurrency token. During update, EF Core checks the original RowVersion. If it has changed, it throws DbUpdateConcurrencyException, which we handle to avoid overwriting data.
+
+Question: What is LINQ Deferred Execution?
+👉 A LINQ query is not executed when it is written, but executed later when you actually use the data.
+When you write a LINQ query:
+👉 At this point:
+
+❌ Query is NOT executed
+✔ It’s just prepared
+👉 Only when you iterate or use it, like:
+foreach (var user in data)
+{
+    Console.WriteLine(user.Name);
+}
+Question: Explain the Middleware Pipeline. How can you 'short-circuit' a request?
+
+Middleware:
+A sequence of components that handle an HTTP request and response.
+
+Short-circuiting:
+Stop the request pipeline early and do NOT call the next middleware
+Simply do NOT call next()
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/blocked")
+    {
+        await context.Response.WriteAsync("Access Denied");
+        return; // ❌ stops pipeline
+    }
+
+    await next(); // continue pipeline
+});
+In this,
+/blocked : Stops here (short-circuited)
+
+🔷 Real-Life Use Cases
+✔ Authentication
+If user not logged in → stop request
+✔ Authorization
+No permission → return 403
+
+
+app.Use() - Can call next middleware
+app.Run() - Terminal (always short-circuits),No middleware runs after this
+
+
+
+Question: Properties of database transactions (ACID)
+
+-Atomicity:Either all operations succeed OR none happen
+Bank transfer:
+Debit ₹1000 from A
+Credit ₹1000 to B
+
+👉 If credit fails:
+Debit must rollback ❌
+✔ No partial updates
+
+-Consistency: After a transaction, the database must remain in a valid and correct state according to all rules.
+Rules can be:
+Primary key / foreign key constraints
+NOT NULL constraints
+
+Simple Example
+🧠 Before Transaction:
+Account A = ₹5000
+Account B = ₹3000
+
+Total money = ₹8000 ✔
+
+🔹 Transaction:
+Transfer ₹1000 from A → B
+
+After Transaction:
+A = ₹4000
+B = ₹4000
+Total = ₹8000 ✔
+👉 ✔ Consistency maintained
+Means after transfer value should be 8k by adding both values.
+
+Isolation (No Interference):
+Multiple transactions should not interfere with each other
+Two users updating same record
+👉 Each transaction behaves as if:
+It is running alone
+One is updating one column like "price of product" then update value is shown by the user2 only when the price is updated and changes are committed by user1.
+
+Durability (Permanent Save):
+Once transaction is committed, it is permanently saved
+means changes are saved that are permanently not rollback until the transaction not fail.

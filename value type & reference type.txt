@@ -1,0 +1,219 @@
+
+Value Type
+A data type is a value type if it holds a data value within its own memory space. It means the variables of these data types directly contain values.
+All the value types derive from System.ValueType, which in-turn, derives from System.Object. For example, consider integer variable int i = 100;
+It stores in stack.
+The system stores 100 in the memory space allocated for the variable i.
+The following data types are all of value type:
+
+bool,byte,char,decimal,double,enum,float,int,long,sbyte,short,struct,uint
+
+int x = 5;
+int y = x;   // Copy happens
+
+x = 10;
+
+Console.WriteLine(x); // 10
+Console.WriteLine(y); // 5
+
+
+x=5 in this it stores the value in memory and then copy of x is created as y
+Stack:
+x = 5
+y = 5
+
+then we are assigning/changing the value of x=10 then,
+Stack:
+x = 10
+y = 5
+
+They are completely separate.So changing base does NOT change copy.
+
+
+Reference Types in C#
+✅ Definition
+A reference type stores the address (reference) of the actual data.The actual object is stored in heap memory.
+like:
+class
+string
+object
+array
+delegate
+interface
+
+
+class Person
+{
+    public int Age;
+}
+Person p1 = new Person();
+p1.Age = 20;
+Person p2 = p1;   // Copy of reference, not object
+p1.Age = 30;
+Console.WriteLine(p1.Age); // 30
+Console.WriteLine(p2.Age); // 30
+
+in this
+Person p2 = p1;
+they are copying the address So changing p1 affects p2.
+
+--------------------------------
+Value type = Photocopy of document
+Reference type = Two people sharing same link
+
+If you edit photocopy → original unchanged
+If you edit shared link → everyone sees change
+
+Null
+The default value of a reference type variable is null when they are not initialized.Null means not refering to any object.
+A value type variable cannot be null because it holds value, not a memory address. C# 2.0 introduced nullable types, using which you can assign null to a value type variable or declare a value type variable without assigning a value to it.
+
+
+string name="xyz";
+it is reference type because string is immutable
+-----------------------------------------
+struct → Value Type
+class → Reference Type
+
+Example:
+
+struct Point
+{
+    public int X;
+}
+
+class Point
+{
+    public int X;
+}
+
+Boxing and Unboxing in C#:
+Boxing: Boxing is the process of converting a value type (like int, double, struct) to a reference type (object). When a value type is boxed, a new object is allocated to the heap, and the value is copied into it.
+
+public void SomeMethod()
+{
+int x=10;
+object y =x; //boxing
+int z = (int)y; //unboxing
+}
+
+Line1: int x = 10;
+When this statement is executed, an integer variable x will be created in the Stack memory with a value of 10.
+
+
+Stack Memory:
+
+┌──────────────┐
+| x = 10       |
+└──────────────┘
+
+Heap Memory:
+(empty)
+
+then
+object y =x; //boxing
+                BOXING
+       Stack ---------------- Heap
+
+┌──────────────┐         ┌──────────────┐
+| x = 10       |         |   10         |
+└──────────────┘         └──────────────┘
+┌──────────────┐
+| y reference | ------------------------→ (Heap Object containing 10)
+└──────────────┘
+
+for more info:
+//https://dotnettutorials.net/lesson/boxing-and-unboxing-in-csharp/
+
+
+Unboxing:
+Line3: int z = (int)y;
+When executing this statement, we move the object value to an integer data type by doing type casting. When we move a reference type to a value type, it is called Unboxing
+
+---------------------------------------
+
+Generic Collections
+Type-Safe by Design
+Generic collections require you to define the type of data they will hold. For example, List<int> will only accept integers.
+
+This ensures:
+No accidental data type mismatches
+No need for casting
+Better Performance
+Since there’s no need for boxing/unboxing (converting value types to/from object), generic collections perform faster and use memory more efficiently.
+List<string> names = new List<string>(); 
+Dictionary<int, string> studentMap = new Dictionary<int, string>();
+Queue<double> prices = new Queue<double>(); 
+HashSet<Guid> uniqueIds = new HashSet<Guid>();
+
+-----------------------------------------------------
+Another example of Generic method
+public T GetFirst<T>(T a, T b)
+{
+    return a;
+}
+-----------------
+int x = GetFirst<int>(10, 20);
+string y = GetFirst<string>("Hello", "World");
+
+-------------------------------------------------------
+
+Non-Generic Collections
+Object-Based Storage
+Non-generic collections store data as object, which leads to the need for casting when retrieving data.
+This can result in:
+Runtime errors if the cast is incorrect
+Lower performance due to boxing/unboxing
+ArrayList items = new ArrayList();
+items.Add(42);
+items.Add("hello"); // Works, but can cause issues later
+
+Hashtable map = new Hashtable();
+map["id"] = 1;
+map["name"] = "Alice";
+
+
+---------------------------------------------------
+CI Flow Diagram :
+Developer → Git Push → CI Server
+                     ↓
+            Build → Test → Validate
+                     ↓
+                 Success/Fail
+
+
+
+CI Completed
+     ↓
+Build Artifact Created (.dll/.zip/.docker image)
+     ↓
+Deploy to Staging Environment
+     ↓
+Manual Approval
+     ↓
+Deploy to Production
+
+
+
+full
+Code Push
+   ↓
+Build + Test
+   ↓
+Deploy to Staging
+   ↓
+Manual Approval Given
+   ↓
+Automatically Deploy to Production
+
+
+🔹 Here’s what happens:
+
+Human gives approval (clicks Approve)
+
+After that, deployment to production happens automatically
+
+No further human action is needed
+
+👉 So yes — after manual approval, it goes to production automatically
+	

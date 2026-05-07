@@ -1,0 +1,355 @@
+
+. NUnit and xUnit are common in the .NET ecosystem.7. 
+Certifications (Optional): Microsoft Certifications: Consider obtaining certifications like MCSD: App Builder.
+
+
+
+jwthelper.cs
+appsetting.json
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+add code in program.cs 
+use in controller
+
+
+dotnet publish -c Release -o C:\MyApp\publish
+
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
+"%USERPROFILE%\.dotnet\tools\dotnet-ef" migrations add AddZoomtoken_Tbl
+
+ // using (var smtp = new SmtpClient("sandbox.smtp.mailtrap.io", 2525))
+            // {
+            //     smtp.Credentials = new NetworkCredential("2b4af727574f7e", "fa7bef5a7f569e");
+            //     smtp.EnableSsl = true;
+
+            //     var mail = new MailMessage();
+            //     mail.From = new MailAddress("dimple.jain@anktech.co.in");
+            //     mail.To.Add(objModel.Email);
+            //     mail.Subject = "Verify your email";
+            //     mail.Body = $"<p>Click <a href='{verificationLink}'>here</a> to verify your email.</p>";
+            //     mail.IsBodyHtml = true;
+
+            //     smtp.Send(mail);
+            // }
+
+
+ // if (_context.Users.Any(x => x.Email == objModel.Email))
+            //     return BadRequest("Email already exists");
+
+            // objModel.UserId = Guid.NewGuid();
+            // _context.Users.Add(objModel);
+            // _context.SaveChanges();
+
+
+
+
+//
+ [HttpPost("login")]
+        public IActionResult Login([FromBody] Userdb objmodel)
+        {
+
+            int isvalid = _userRepository.Login(objmodel.Email, objmodel.Password);
+
+            if (isvalid == 0)
+            {
+                return Unauthorized("Invalid credentials");
+            }
+            else
+            {
+                var token = JwtHelper.GenerateToken(objmodel.Email, _configuration);
+                return Ok(new
+                {
+                    token,
+                    message = "Login successfully.."
+
+                });
+            }
+
+        }
+
+https://app.sendgrid.com/settings/sender_auth/senders
+
+How to disable Lazy loading using DBContext?\
+myDBContext.Configuration.LazyLoadingEnabled = false;
+
+
+📘 Example (Tracking enabled by default):
+var student = context.Students.FirstOrDefault(s => s.Id == 1);
+student.Name = "John Updated"; // change the name
+
+context.SaveChanges(); // EF sees the change and updates the database
+EF tracks the original name and sees it changed to "John Updated", so it executes:
+UPDATE Students SET Name = 'John Updated' WHERE Id = 1
+
+
+🚫 Without Tracking (using AsNoTracking()):
+
+var student = context.Students.AsNoTracking().FirstOrDefault(s => s.Id == 1);
+student.Name = "John Updated";
+
+context.SaveChanges(); // ❌ Nothing happens
+Since AsNoTracking() was used, EF is not tracking changes to student, so calling SaveChanges() does nothing.
+
+
+while actually need to update data after applying Notacking then
+_context.Entry(user).State = EntityState.Modified;
+await _context.SaveChangesAsync();
+
+Or
+_context.Users.Update(user);
+await _context.SaveChangesAsync();
+
+now ef track the changes
+
+*Which of the following method attaches an entity to a context with Unchanged entity state?
+Attach()
+
+*Which of the following class provides information about an existing entity in a context?
+EntityEntry 
+
+
+=>Eagar Loading
+Loads related data at the same time as the main entity using .Include().
+var students = context.Students
+                      .Include(s => s.Courses)
+                      .ToList();
+This loads all students and their related courses in a single query.
+Use when you always need the related data immediately.
+
+=>Eplicit Loading
+Loads related data manually after the main entity is loaded, using .Entry().Collection().Load() or .Reference().Load().
+var student = context.Students.FirstOrDefault(s => s.Id == 1);
+
+// Explicitly load related courses
+context.Entry(student)
+       .Collection(s => s.Courses)
+       .Load();
+This runs two separate queries:
+One for Student
+Another for Courses of that student
+
+Use when you don’t always need the related data but decide later at runtime.
+
+=>Lazy Loading
+ Loads related data automatically when you access the navigation property — only if it's not already loaded.
+var student = context.Students.FirstOrDefault(s => s.Id == 1);
+var courses = student.Courses; // Triggers separate query if not loaded
+
+For this to work:
+1. Navigation properties must be virtual
+2. Enable Lazy Loading Proxies in Startup/Program
+services.AddDbContext<AppDbContext>(options =>
+    options.UseLazyLoadingProxies()
+           .UseSqlServer(Configuration.GetConnectionString("Default")));
+3. dotnet add package Microsoft.EntityFrameworkCore.Proxies
+Use when you may or may not need related data, and want it fetched only if accessed.
+proxy is needed only in lazy loading
+problem while using lazy loading:
+N+1 problem
+var users = _context.Users.ToList(); // 1 query: SELECT * FROM Users
+
+foreach(var user in users)
+{
+    var events = user.Events; // triggers N queries (one per user)
+}
+
+So total queries = 1 + N → this is the N+1 problem.
+
+=>Change tracking:
+Change tracking is the mechanism Entity Framework (EF) uses to monitor changes to entities and their relationships so it knows what to update when SaveChanges() is called.
+
+It means EF tracks changes such as:
+Adding/removing items in a collection (e.g., student.Courses.Add(course))
+Assigning a related entity (e.g., student.Advisor = someTeacher)
+Breaking relationships (e.g., student.Courses.Remove(course))
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    // Navigation property must be virtual for lazy loading
+    public virtual ICollection<Course> Courses { get; set; }
+}
+
+public class Course
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+
+    public int StudentId { get; set; }
+    public virtual Student Student { get; set; }
+}
+
+Ex:
+var student = db.Students.Include(s => s.Courses).First();
+var newCourse = db.Courses.First(c => c.Id == 5);
+student.Courses.Add(newCourse); // EF tracks this addition
+db.SaveChanges(); // EF generates a linking INSERT in the join table
+
+EF tracked the change (Add) and knows to update the relationship table.
+like this:
+| StudentId | CourseId |
+| --------- | -------- |
+| 1         | 5        |
+
+EF won’t track changes if:
+=Proxy creation is disabled.
+=Navigation properties are not virtual (EF can't override them).
+Ex.2
+
+In EF Core, change tracking means EF monitors entities you load from the database and tracks changes so it can automatically generate the right SQL UPDATE/DELETE commands when you call SaveChanges().
+
+public class User
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public virtual ICollection<Event> Events { get; set; }
+}
+
+var user = await context.Users.FirstAsync();   // Only user is loaded here
+user.Name = "New Name";                        // EF tracks this ✅
+
+user.Events.First().Title = "New Event Title"; // ❌ Not tracked if Events were not loaded
+
+👉 But if lazy loading is enabled, user.Events.First() will load Events, and now EF can track changes to event entities too.
+1. user.Events.First()
+Since Events is a virtual navigation property, and EF Core's lazy loading proxy is active,
+EF automatically loads Events from the database when you access .Events.
+2. Title = "New Event Title"
+EF adds this change to the Change Tracker.
+3. await context.SaveChangesAsync()
+EF generates an UPDATE SQL command for the Event table to save the changed title.
+
+//////////////////////////////////////
+Queries:
+var result = _context.Database
+    .SqlQuery<UserDto>("SELECT FirstName, Email FROM Users")
+    .ToList();
+var rowsAffected = _context.Database.ExecuteSqlInterpolated(
+    $"DELETE FROM Users WHERE Id = {id}");
+var id = 5;
+
+(Safer for Parameters)
+var user = _context.Users
+    .FromSqlInterpolated($"SELECT * FROM Users WHERE Id = {id}")
+    .FirstOrDefault();
+
+var users = _context.Users
+    .FromSqlRaw("SELECT * FROM Users WHERE IsActive = 1")
+    .ToList();
+
+fromsql():var user = _context.Users.FromSqlRaw("SELECT * FROM Users WHERE Id = {0}", userId).FirstOrDefault();
+Accepts plain string SQL
+You manually add parameters to avoid SQL injection
+Use this when you already have parameterized values
+
+
+fromsqlraw():var user = _context.Users.FromSqlInterpolated($"SELECT * FROM Users WHERE Id = {userId}").FirstOrDefault();
+Accepts interpolated SQL strings
+Automatically parameterizes values
+Prevents SQL injection automatically
+when the Queries are parameterized and user inputs
+
+
+IEnumerable<User> users = _context.Users.Where(u => u.IsActive);
+
+Use IEnumerable<T> 
+when you plan to apply more filters or delay execution;
+Deferred execution (query not run yet)
+You want to avoid multiple DB calls.
+Main Limitation: You cannot directly get the count of items unless you iterate through the entire collection or convert it.
+
+Use ToList()
+when you need to load all data right away (e.g., for binding to a grid or processing)
+Immediate execution (query is executed)
+You want to avoid multiple DB calls.
+Inherits from ICollection<T>, which includes:
+Count (property)
+Add(), Remove(), Contains(), etc.
+Count without looping
+
+
+
+Nullable Reference Type in C#:
+A nullable reference type is a reference type that is explicitly allowed to be null, indicated by appending a ? to the type (e.g., string?,User?)
+
+Minimal APIs:
+It is a lightweight way to build HTTP APIs with less ceremony — no controllers, no [Route], [HttpGet] attributes — just straight to the point.
+create project through cmd
+dotnet new web -n MinimalApiDemo
+dotnet run
+code .
+
+Ex.
+program.cs
+using Microsoft.AspNetCore.Http.HttpResults;
+using MinimalApiDemo.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.MapGet("/", () => "Hello World!");
+
+app.MapGet("Get/", () => "hello from Http method");
+app.MapPost("/Submit", (User objModel) => $"recieved user {objModel.Name}");
+app.MapPut("/Update", (int Id, User objModel) => $"Id={Id} is update with name={objModel.Name}");
+app.MapDelete("/Delete", (int Id) => {
+
+    if (Id == null)
+    {
+        return Results.BadRequest("Invalid ID.");
+    }
+    return Results.Ok($"Id={Id} is deleted");
+
+
+
+    });
+
+//Route parameter
+app.MapGet("/TempTestWithRoute/{Id}", (int Id) => $"Route param is:{Id}");
+
+//Query parameter
+app.MapGet("/TempwithQueryParam", (string? name, int Id) => $"Query params are Id:{Id} and name:{name}");
+app.Run();
+
+User Model.cs
+namespace MinimalApiDemo.Models
+{
+    public class User
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+}
+
+
+
+
+
+-------------------------------------------
+💡 Rule of Thumb:
+
+Singleton → “once per app.”
+Lifetime: A single instance is created once and shared across the entire application.
+
+Scoped → “once per request.”
+Lifetime: A new instance is created per HTTP request (or scope). Within that request, all usages get the same instance.
+
+Transient → “new every time.”
+Lifetime: A new instance is created every time the service is requested.
+
+
+
+	
+
+
+
+
+
+
+
+
+

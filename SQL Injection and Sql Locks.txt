@@ -1,0 +1,196 @@
+SQL Injection (SQLi) is a security vulnerability that occurs when an attacker is able to manipulate a SQL query by inserting malicious input into it. This can allow attackers to read, modify, or delete database data they shouldn’t have access to.
+
+🔹 How it happens
+It usually occurs when user input is directly concatenated into SQL queries without proper validation or parameterization.
+Example:
+string userName = txtUserName.Text;
+string password = txtPassword.Text;
+
+string query = $"SELECT * FROM Users WHERE UserName = '{userName}' AND Password = '{password}'";
+var user = db.ExecuteQuery(query);
+
+then attacker try=SELECT * FROM Users WHERE UserName = '' OR 1=1 --' AND Password = 'anything'
+OR 1=1 makes the WHERE condition always true.
+🔹 Types of SQL Injection
+
+1)Classic / In-band SQLi – Attacker gets data through the same channel.
+2)Blind SQLi – Attacker gets yes/no responses to infer data.
+=>
+Example: Check if first user’s password starts with 'a'
+SELECT * FROM Users WHERE UserName='admin' AND Password='' OR SUBSTRING(Password,1,1)='a';
+If page behaves normally → condition true
+If error/page changes → condition false
+Attacker repeats to extract password one character at a time.
+
+3)Error-based SQLi – Uses database errors to extract information.
+normal query is =ELECT * FROM Users WHERE UserName=''
+and attacker input is = AND 1=CONVERT(int,(SELECT @@version)) --
+then query would be
+SELECT * FROM Users WHERE UserName='' AND 1=CONVERT(int,(SELECT @@version)) --
+-Database may return an error with version info
+
+
+4)Union-based SQLi – Combines results of malicious query with original query.
+Attacker uses UNION to combine results of malicious query with original query.
+-- Vulnerable query
+SELECT Name, Email FROM Users WHERE Id = 1;
+Attacker input:
+Id = 1 UNION SELECT CreditCardNumber, ExpiryDate FROM CreditCards
+Query becomes:
+
+SELECT Name, Email FROM Users WHERE Id = 1
+UNION
+SELECT CreditCardNumber, ExpiryDate FROM CreditCards;
+✅ Result: App displays sensitive data along with normal query results.
+
+
+*Locks in SQL with .Net Core==
+
+It usually refers to how to prevent race conditions or concurrent access issues when multiple processes or users try to read/write the same data. Let me explain clearly.
+| Lock Type            | Description                                                                             |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| **Shared (S)**       | For reading. Multiple transactions can read the same row simultaneously.                |
+| **Exclusive (X)**    | For writing. Only one transaction can write; others are blocked.                        |
+| **Update (U)**       | Used to avoid deadlocks when updating.                                                  |
+| **Row, Page, Table** | Locks can be applied at different granularities: row-level, page-level, or table-level. |
+
+3️⃣ Using Locks in .NET Core (EF Core)
+
+EF Core supports transactions and you can also use raw SQL with locking hints.
+---------------------------------------------------------------------------------------
+using var transaction = await _context.Database.BeginTransactionAsync();
+
+var user = await _context.Users
+    .Where(u => u.Id == 1)
+    .FirstOrDefaultAsync();
+
+// Perform updates
+user.Name = "New Name";
+await _context.SaveChangesAsync();
+await transaction.CommitAsync();
+-----------------------------------------------------------------------------------------
+
+Default behavior (Read Committed):
+When you read a row → SQL Server applies a shared lock (others can read, but can’t modify until your read is done).
+When you update a row → SQL Server applies an exclusive lock (others must wait).
+By just wrapping your queries in BeginTransactionAsync() ... CommitAsync(), EF Core ensures that only one transaction can safely modify a row at a time, because SQL Server automatically applies row-level locks under the hood.
+
+Lock Type		When it happens	What it does
+Shared Lock (S)		When you SELECT (read) data		Other transactions can also read, but cannot modify until lock is released
+Exclusive Lock (X)	When you UPDATE, DELETE, or INSERT	Prevents all other reads and writes until the transaction ends
+Update Lock (U)		When updating but not yet committed	Prevents deadlocks by first reserving row for update
+
+Exclusive and Update Lock are same but difference is:
+Exclusive Lock (X) Can cause deadlocks if two sessions read → then try to update
+Update Lock (U) Prevents deadlocks by ensuring only 1 “potential updater” at a time.
+
+==>2️⃣ Isolation Levels
+👉 These are rules / policies that tell the database which lock types to apply and how long to hold them.
+
+| Isolation Level              | Locks Applied                                          | Behavior                                                 |
+| ---------------------------- | ------------------------------------------------------ | -------------------------------------------------------- | 
+| **Read Uncommitted**         | No shared locks, ignores exclusive locks               | Dirty reads allowed (you can read uncommitted data)      |
+| **Read Committed (Default)** | Shared locks during read, exclusive locks during write | Prevents dirty reads                                     |
+| **Repeatable Read**          | Shared locks remain until transaction ends             | can not update the data until read finished                |
+| **Serializable**             | Locks entire range of rows                             | Prevents dirty, non-repeatable, phantom reads            |
+| **Snapshot**                 | Uses row versioning instead of locks                   | Readers don’t block writers, writers don’t block readers |
+
+Read Committed → applies S locks during read but releases them immediately after read finishes.
+Repeatable Read → applies S locks but holds them until the transaction ends.
+Serializable → may apply range locks (locking more than just the row) to prevent phantom inserts.
+phantom insert means new row is inserted while the read traction is running.
+Example:
+A transaction runs a SELECT query with some condition (e.g., "give me all users with Age > 30").
+Before the transaction finishes, another transaction inserts new rows that match the same condition.
+If the first transaction re-runs the same query within the same transaction, it sees “phantom” new rows that didn’t exist before.
+Serializable:It achieves this with range locks that block inserts/updates in your query range,
+Safest but slowest isolation level.
+
+1️⃣ Read Uncommitted (lowest isolation)
+------------------------------------
+👉 Allows dirty reads (you can see uncommitted changes).
+
+Example:
+-- Transaction A
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+BEGIN TRAN;
+SELECT Balance FROM Accounts WHERE Id = 1;  -- Reads even uncommitted changes
+
+-- Transaction B (in parallel)
+BEGIN TRAN;
+UPDATE Accounts SET Balance = 0 WHERE Id = 1; -- Not committed yet
+---------------------------------------------------------------------
+🔹 Transaction A sees Balance = 0 (dirty read), even though B hasn’t committed.
+If B rolls back, A read data that never actually existed.
+
+
+
+2️⃣ Read Committed (default in SQL Server & EF Core)
+------------------------------------------------
+👉 Prevents dirty reads, but allows non-repeatable reads and phantoms.
+
+Example:
+-- Transaction A
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN TRAN;
+SELECT Balance FROM Accounts WHERE Id = 1; -- Reads 1000
+-- (Row lock released immediately after read)
+
+
+-- Transaction B
+UPDATE Accounts SET Balance = 500 WHERE Id = 1;
+COMMIT;
+
+
+-- Transaction A again
+SELECT Balance FROM Accounts WHERE Id = 1; -- Reads 500 now
+
+---------------------------------------------------------------------
+🔹 Transaction A sees different values in the same transaction = non-repeatable read.
+
+
+3️⃣ Repeatable Read
+------------------------------------------------------------
+👉 Prevents dirty and non-repeatable reads, but allows phantoms.
+
+Example:
+-- Transaction A
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRAN;
+SELECT Balance FROM Accounts WHERE Id = 1; -- Reads 1000 (row locked)
+
+
+-- Transaction B
+UPDATE Accounts SET Balance = 500 WHERE Id = 1; -- ❌ BLOCKED (row lock held by A)
+
+
+-- Transaction A again
+SELECT Balance FROM Accounts WHERE Id = 1; -- Still 1000 (no non-repeatable read)
+
+-------------------------------------------------------------------
+✅ Safe from dirty reads and non-repeatable reads.
+❌ But another transaction can still insert new rows that match a query condition (phantoms).
+
+
+
+4️⃣ Serializable (strictest locking)
+----------------------------------------------------------------------------
+👉 Prevents dirty reads, non-repeatable reads, and phantoms using range locks.
+Example:
+-- Transaction A
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRAN;
+SELECT * FROM Accounts WHERE Balance > 1500;
+-- Locks the whole range of rows with Balance > 1500
+
+-- Transaction B
+INSERT INTO Accounts VALUES (4, 1800); -- ❌ BLOCKED until A commits
+
+-------------------------------------------------------------------------------
+🔹 Prevents phantom insert (new rows matching the condition).
+
+
+
+
+
+

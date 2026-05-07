@@ -1,0 +1,137 @@
+delegates
+A delegate is a type-safe function pointer in C#.
+It lets you reference methods as variables.
+
+You can:
+
+Pass methods as parameters
+Assign methods to variables
+Store multiple methods in one delegate
+
+
+using System;
+
+public class Program
+{
+    // Step 1: Declare a delegate
+    public delegate void NotifyUser(string message);
+
+    // Step 2: Define methods matching the delegate signature
+    public static void SendEmail(string message)
+    {
+        Console.WriteLine("Email sent: " + message);
+    }
+
+    public static void SendSMS(string message)
+    {
+        Console.WriteLine("SMS sent: " + message);
+    }
+
+    public static void SendWhatsApp(string message)
+    {
+        Console.WriteLine("WhatsApp message sent: " + message);
+    }
+
+    // Step 3: Use delegate to call the appropriate method
+    public static void Main(string[] args)
+    {
+        NotifyUser notifier;
+
+        Console.WriteLine("Choose notification type (email/sms/whatsapp):");
+        string input = Console.ReadLine().ToLower();
+
+        if (input == "email")
+            notifier = SendEmail;
+        else if (input == "sms")
+            notifier = SendSMS;
+        else
+            notifier = SendWhatsApp;
+
+        // Invoke the delegate
+        notifier("Welcome to our system!");
+    }
+}
+
+Loose coupling – the caller doesn’t need to know the exact method name.
+Plug-and-play behavior – you can change logic at runtime.
+
+
+Another example of both:
+
+----------------------------------------------------------------------------------------
+namespace FireAlarmExample
+{
+    // Step 1: Publisher class
+    public class FireAlarmSystem
+    {
+        // Step 2: Declare a delegate
+        public delegate void AlarmHandler();
+
+        // Step 3: Declare an event based on the delegate
+        public event AlarmHandler FireAlarm;
+
+        // Step 4: Method to trigger the alarm
+        public void DetectFire()
+        {
+            Console.WriteLine("🔥 Fire detected!");
+            FireAlarm?.Invoke(); // Notify all subscribers
+        }
+
+        // Step 5: Methods that respond to the event
+        public void CallFireDepartment()
+        {
+            Console.WriteLine("📞 Calling the fire department...");
+        }
+
+        public void OpenEmergencyExits()
+        {
+            Console.WriteLine("🚪 Opening emergency exits...");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Step 6: Create the publisher object
+            FireAlarmSystem system = new FireAlarmSystem();
+
+            // Step 7: Subscribe methods to the event
+            system.FireAlarm += system.CallFireDepartment;
+            system.FireAlarm += system.OpenEmergencyExits;
+
+            // Step 8: Trigger the fire alarm
+            system.DetectFire();
+
+            Console.ReadLine();
+
+	//You can also unsubscribe the event like
+	    system.FireAlarm -= system.OpenEmergencyExits;
+
+            Console.WriteLine("\n Second fire event (one unsubscribed):");
+            system.DetectFire(); // only CallFireDepartment will be called
+
+            Console.ReadLine();
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------
+First we create delegate and then event which correspond to delegates
+now The FireAlarm event is just a declaration — it defines what can happen.
+But it does nothing unless we invoke (raise) it somewhere in the code.
+so we created DetectFire() method and 2 other which are connected to event like when event is trigger then connected method are executed
+
+so in main class we subscribes the methoids to event then triggered the event.
+
+for delegates 
+https://dev.to/sebastiandevelops/understanding-c-delegates-and-events-with-real-world-examples-2an6
+
+Difference:
+					Delegate                                                          Event
+Definition	A type-safe reference to one or more methods (function pointer).	A wrapper around a delegate that provides a notification 														mechanism.
+
+Invocation	Can be invoked from anywhere (if public).	                         Can only be invoked from inside the class where it is 															declared.
+
+Access Control	External code can assign and invoke the delegate directly.	External code can only subscribe (+=) or unsubscribe (-=). Cannot 											invoke directly.
+
+

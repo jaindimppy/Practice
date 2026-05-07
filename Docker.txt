@@ -1,0 +1,155 @@
+Docker
+If your app has multiple services (like booking, authentication, notifications), you can containerize each one separately and deploy them as a single unit with docker-compose or orchestration tools like Kubernetes.
+DigitalOcean is a cloud service provider.
+It offers virtual servers (called droplets), databases, storage, networking, and more. Think of it like renting space on the internet where your app can live and be accessed by users.
+
+🐳 Docker is a tool to package your app into containers.
+It helps you build, ship, and run your code in a portable environment so it behaves the same wherever it's deployed.
+
+📦 How They Work Together: You use Docker to containerize your app (like bundling the backend, frontend, and database), and then you deploy that container to DigitalOcean servers to make it live on the internet. DigitalOcean even has services like App Platform that support Docker-based deployments with just a few clicks.
+
+💡 Analogy Time: If Docker is the suitcase that carries your neatly packed app, then DigitalOcean is the apartment where that suitcase gets unpacked and used.
+
+ Docker is a powerful open-source platform that lets developers package applications and their dependencies into lightweight, portable containers. These containers run consistently across different environments—whether it's your laptop, a server, or the cloud.
+
+
+common format for Docker(.NET)
+----------------------------------
+
+
+
+# 👷 Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Copy project file and restore dependencies
+COPY ["MeetEase.csproj", "./"]
+RUN dotnet restore "MeetEase.csproj"
+
+# Copy the rest of the code and publish
+COPY . .
+RUN dotnet publish "MeetEase.csproj" -c Release -o /app/publish
+
+# 🚀 Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+# Use correct DLL name based on csproj
+ENTRYPOINT ["dotnet", "MeetEase.dll"]
+
+
+Explaination:
+---------------------------------------------------
+
+# 👷 Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+-->
+Base Image: Uses the full .NET SDK (not just runtime).
+Required to compile, restore NuGet packages, and publish.
+
+WORKDIR /app
+-->
+Sets the working directory inside the container to /app.
+
+# Copy project file and restore dependencies
+COPY ["MeetEase.csproj", "./"]
+-->
+Copies just the .csproj file to leverage layer caching.
+Optimizes rebuild times when only source code changes.
+
+RUN dotnet restore "MeetEase.csproj"
+Restores NuGet packages.
+
+# Copy the rest of the code and publish
+RUN dotnet publish "MeetEase.csproj" -c Release -o /app/publish
+-->
+Now copies the rest of the source code files to the container.
+Compiles and publishes the app to /app/publish in Release mode.
+This output folder contains the ready-to-run app.
+
+# 🚀 Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+-->
+This image contains only the .NET Runtime, making it much smaller and faster (no SDK)
+
+WORKDIR /app
+COPY --from=build /app/publish .
+-->
+Copies published output from the build stage into the runtime image.
+
+# Use correct DLL name based on csproj
+ENTRYPOINT ["dotnet", "MeetEase.dll"]
+-->
+Starts your app using dotnet MeetEase.dll.
+
+
+
+
+
+
+create the docker file which includes the all deatils of your project like 
+path of project 
+to build
+to publish all
+in this you can the line of text(.gitignore file) to ignore some files while build the project.
+
+then there is also need of .yml file
+
+now to run in locally
+you need to install docker desktop
+in which where you created the .docker file and .yml file you open cmd and write the command 
+
+----------------------------
+docker build -t myapp .
+-----------------------------
+so the image is created in docker desktop and from where you click run then your application/project is run as per the you write in docker file
+
+
+if it is in server then
+once you created docker image it will run on server
+
+
+Dockerfile:A text file containing instructions to build a Docker image.(like above give code)
+Images:A read-only snapshot of your application with all dependencies.Built using a Dockerfile.It is created by writing command "docker build -t myapp ." then image will create
+
+Volumes :
+By default, when a container is deleted, all its data is lost.Volumes store data outside the container to survive container removal.
+Types of Docker Volumes
+Type							Description
+Anonymous Volume			Docker creates a volume automatically; not named. Example: docker run -v /app/data myapp
+Named Volume				You assign a name; easy to reuse and manage. Example: docker run -v mydata:/app/data myapp
+
+Example 1: Named Volume
+----------------------------------------------------------
+docker run -d -p 8080:80 -v myvolume:/app/data mydotnetapp
+----------------------------------------------------------
+myvolume → Docker-managed volume
+/app/data → folder inside container
+-----------------------
+Named Volume:
+“Docker, please store data somewhere safe. I don’t care where.
+Just mount it inside my container at /app/data.”
+
+Example 2: Bind Mount
+---------------------------------------------------------------
+docker run -d -p 8080:80 -v C:/myapp/data:/app/data mydotnetapp
+---------------------------------------------------------------
+Maps host folder C:/myapp/data to container folder /app/data.
+Data inside /app/data will persist even if the container is removed.
+----------------------------
+Bind Mount:
+“Docker, use this exact folder on my machine (C:/backup)
+and connect it to /app/data inside the container.”
+
+Network:
+Bind Mounts:
+
+Drawbacks:
+If kernel is compromised, all containers are exposed.
+Less Support for Windows-Requires WSL2 on Windows.
+Multi-layer images lead to huge disk usage.
+
+
+
+

@@ -1,0 +1,82 @@
+Queries:
+The "Second Highest Salary" (Classic)
+2. Group By with Having (Filtering Aggregates) like Find departments having more than 5 employees.
+Find all Departments that have no employees assigned to them.
+Find employees and the names of their Managers (from the same Employees table).
+Finding the Nth Highest Salary
+Delete duplicate records (keeping the one with the smallest ID):
+DELETE FROM users 
+WHERE id NOT IN (
+  SELECT MIN(id) 
+  FROM users 
+  GROUP BY email
+);
+
+Find departments where average employee age is greater than 30.
+SELECT d.Name AS DepartmentName
+FROM Employee e
+JOIN Department d 
+    ON e.DeptId = d.Id
+GROUP BY d.Name
+HAVING AVG(e.Age) > 30;
+
+
+Find highest salary per department
+Count employees per department
+ROW_NUMBER() and PARTITION BY
+ROW_NUMBER() → unique numbering
+👇 Table: Employee
+Id	Name	Salary
+1	A	5000
+2	B	7000
+3	C	6000
+
+SELECT Name, Salary,
+ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNum
+FROM Employee;
+
+✅ Output:
+Name	Salary	RowNum
+B	7000	1
+C	6000	2
+A	5000	3
+Example with PARTITION
+Table:
+Name	Dept	Salary
+A	IT	5000
+B	IT	7000
+C	HR	6000
+D	HR	4000
+
+SELECT Name, Dept, Salary,
+ROW_NUMBER() OVER (PARTITION BY Dept ORDER BY Salary DESC) AS RowNum
+FROM Employee;
+
+Name	Dept	Salary	RowNum
+B	IT	7000	1
+A	IT	5000	2
+C	HR	6000	1
+D	HR	4000	2
+
+👉 Row numbers restart for each Dept
+
+EXISTS vs IN
+pagination
+How EF Core generates SQL
+Why COUNT(1) vs COUNT(*)
+What happens without ORDER BY?
+Why indexes slow down INSERT?
+
+
+DISTINCT vs GROUP BY
+DISTINCT
+Removing duplicates.
+Aggregations Not supported.
+Uses WHERE
+
+
+
+GROUP BY
+Categorizing data for analysis.
+Aggregations supported/Designed for SUM, COUNT, etc.
+Can use HAVING to filter groups.

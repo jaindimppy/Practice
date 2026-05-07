@@ -1,0 +1,261 @@
+using Microsoft.AspNetCore.Mvc;
+using YourNamespace.Data;
+using YourNamespace.DTOs;
+using YourNamespace.Models;
+
+namespace YourNamespace.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly ApplicationDbContext _context;
+
+        public AuthController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email))
+                return BadRequest("Email is required");
+
+            var existing = await _context.UserRegistrations
+                .FirstOrDefaultAsync(u => u.Email == request.Email && !u.IsVerified);
+
+            if (existing != null)
+                return BadRequest("Email already registered but not verified");
+
+            var otp = new Random().Next(100000, 999999).ToString();
+            var token = Guid.NewGuid().ToString();
+
+            var registration = new UserRegistration
+            {
+                Email = request.Email,
+                OTP = otp,
+                Token = token,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(15)
+            };
+
+            _context.UserRegistrations.Add(registration);
+            await _context.SaveChangesAsync();
+
+            // TODO: Send OTP via email
+
+            return Ok(new
+            {
+                message = "Registration started. OTP sent to email.",
+                registrationId = registration.RegistrationId
+            });
+        }
+    }
+}
+
+
+globally exception handling
+----------------------------------------------
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.File
+
+///////////////////////////////////////////
+Create a new class: Middleware/GlobalExceptionMiddleware.cs
+using System.Net;
+using System.Text.Json;
+
+public class GlobalExceptionMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context); // Continue pipeline
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unhandled exception occurred.");
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            var errorResponse = new
+            {
+                StatusCode = context.Response.StatusCode,
+                Message = "Something went wrong. Please try again later.",
+                Error = ex.Message // (optional: hide in production)
+            };
+
+            var result = JsonSerializer.Serialize(errorResponse);
+            await context.Response.WriteAsync(result);
+        }
+    }
+}
+//////////////////////////////////////////////////////////
+Step 3: Register Middleware in Program.cs
+app.UseMiddleware<GlobalExceptionMiddleware>();
+////////////////////////////////////////////////////////////////
+🔹 Step 4: Set Up Serilog in Program.cs
+
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(); // 👈 Add this
+
+var app = builder.Build();
+
+This logs errors to both console and daily log files.
+
+
+Storeprocedure:
+you can create store procedure by using the dto to storeprocedure response in this need to add dto as table in databse
+or you  can also do by manual mapping
+
+
+
+
+Ardalis Specification
+----------------------------------------
+dotnet add package Ardalis.Specification.EntityFrameworkCore
+
+
+Ardalis Specification is mainly for separating and reusing the "where" (filter) or query logic that you want to apply on your models/entities.
+
+Why is that useful?
+Instead of repeating the same filtering code everywhere (like .Where(u => u.IsActive) in many places),
+
+You put that logic once inside a Specification class,
+
+And then reuse that class wherever you want to query active users.
+
+public class ActiveUsersSpecification : Specification<User>
+{
+    public ActiveUsersSpecification()
+    {
+        Query.Where(u => u.IsActive);  // filter: only active users
+    }
+}
+
+and use it in method like this..
+
+ public async Task<List<User>> GetActiveUsersAsync()
+  {
+
+        var spec = new ActiveUsersSpecification();
+        return await _userRepository.ListAsync(spec);
+		or in class u can do like
+ var user = SpecificationEvaluator.Default
+            .GetQuery(_context.Users.AsQueryable(), spec)
+  }  
+
+for sending Coomon response u can use this...
+ var response = new
+    {
+        Data = events,
+        TotalCount = totalCount,
+        PageNumber = pageNumber,
+        PageSize = pageSize,
+        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+    };
+
+    return Ok(response);
+
+
+
+Hangfire:
+
+dotnet add package Hangfire
+dotnet add package Hangfire.AspNetCore
+dotnet add package Hangfire.SqlServer
+
+types:
+Fire-and-Forget
+Scheduled
+Recurring
+Continuation
+
+//////////////////////////////////////////////////////////////////////////////////
+✅ Platform & Framework
+ASP.NET (Framework): Runs only on Windows, built on .NET Framework.
+
+ASP.NET Core: Cross-platform (Windows, Linux, macOS), built on .NET Core / .NET 5+.
+
+✅ Project Structure & Files
+ASP.NET: Uses Global.asax, Web.config, App_Start/.
+
+ASP.NET Core: Uses Program.cs, Startup.cs, appsettings.json.
+
+✅ Configuration
+ASP.NET: Uses Web.config (XML format).
+
+ASP.NET Core: Uses appsettings.json (JSON format, more modern).
+
+✅ Dependency Injection
+ASP.NET: No built-in DI (third-party required).
+
+ASP.NET Core: Built-in DI container.
+
+✅ Request Pipeline
+ASP.NET: Uses HttpModules and HttpHandlers.
+
+ASP.NET Core: Uses Middleware pipeline (more flexible and modern).
+
+✅ Hosting
+ASP.NET: Hosted on IIS only.
+
+ASP.NET Core: Can be hosted with Kestrel, IIS, or NGINX.
+
+✅ Performance
+ASP.NET: Slower due to older architecture.
+
+ASP.NET Core: High-performance, optimized for modern workloads.
+
+✅ Real-Time Support
+ASP.NET: Supports old SignalR.
+
+ASP.NET Core: Supports SignalR Core, better for real-time apps.
+
+✅ Modern Features
+ASP.NET: No Razor Pages, Blazor, or Minimal APIs.
+
+ASP.NET Core: Supports Razor Pages, Blazor, and Minimal APIs.
+
+✅ Cross-Platform Development
+ASP.NET: Windows-only, works mainly with Visual Studio.
+
+ASP.NET Core: Cross-platform, works with VS Code and CLI too.
+
+
+
+
+C:\Android\Sdk\emulator>emulator -avd Pixel_6_Pro_API_34_Play
+
+
+https://www.genymotion.com/product-desktop/download/
+https://www.virtualbox.org/wiki/Downloads
+another way
+
+https://cloud.geny.io/launchpad
+
+
+
+
+
+for creating publish folder using vscode
+dotnet publish -c Release -o ./publish
+

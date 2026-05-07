@@ -1,0 +1,666 @@
+1.Creational
+===========
+a) Singleton Pattern
+
+Purpose: Ensure a class has only one instance and provide global access to it.
+✅ Example: Configuration Manager
+!)
+public class ConfigurationManager
+{
+    private static ConfigurationManager _instance;
+    private static readonly object _lock = new();
+
+    private ConfigurationManager() { }         --constructor
+
+    public static ConfigurationManager Instance
+    {
+        get
+        {
+            lock (_lock)
+            {
+		if (_instance == null) // Double-check
+                return _instance ??= new ConfigurationManager();
+            }
+        }
+    }
+
+    public string GetSetting(string key) => "SomeValue";
+}
+===================================================================================
+Usage:
+var connection = DbConnectionManager.Instance.GetConnection();
+connection.Open();
+// Use the connection for queries...
+===================================================================================
+Explainaton:
+-> lock (_lock)
+to check that 
+“Only one thread can enter this block of code at a time. If another thread tries, it must wait.” and then use the method and all
+->DbConnectionManager.Instance.GetConnection();
+- DbConnectionManager is your Singleton class
+- Instance is a static property that returns the one and only object of AppSettings
+- GetConnection is a property of that object.
+
+Like:
+imagine a cinema hall. No matter how many movies are played, there’s only one projector. Every screen request goes through that single device. You don’t want multiple projectors running in parallel—it would waste resources and cause chaos.
+That’s exactly what the Singleton pattern does:
+It ensures only one instance of a class exists and provides global access to it.
+Another:
+2)It is also example of singleton but it is not safe from threads
+1st example is safe from threads
+using System;
+
+public class Singleton
+{
+    // Step 1: Private static variable to hold the single instance
+    private static Singleton _instance;
+
+    // Step 2: Private constructor to prevent external instantiation
+    private Singleton()
+    {
+        Console.WriteLine("Singleton instance created.");
+    }
+
+    // Step 3: Public static method to provide global access
+    public static Singleton GetInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new Singleton();
+        }
+        return _instance;
+    }
+
+    public void ShowMessage(string message)
+    {
+        Console.WriteLine(message);
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Trying to get instances
+        Singleton s1 = Singleton.GetInstance();
+        Singleton s2 = Singleton.GetInstance();
+
+        // Both instances are same
+        if (s1 == s2)
+        {
+            Console.WriteLine("Both are the same instance!");
+        }
+
+        s1.ShowMessage("Hello from Singleton!");
+    }
+}
+
+b)Factory Method pattern
+
+The Factory Method Pattern is a creational design pattern that lets you define an interface for creating objects, but allows subclasses to decide which class to instantiate.
+1. Product Interface
+public interface INotification
+{
+    void Send(string message);
+}
+2. Concrete Products
+public class EmailNotification : INotification
+{
+    public void Send(string message) => Console.WriteLine($"Email: {message}");
+}
+
+public class SmsNotification : INotification
+{
+    public void Send(string message) => Console.WriteLine($"SMS: {message}");
+}
+
+3. Creator (Factory)
+public abstract class NotificationFactory
+{
+    public abstract INotification CreateNotification();
+}
+4. Concrete Factories
+public class EmailFactory : NotificationFactory
+{
+    public override INotification CreateNotification() => new EmailNotification();
+}
+
+public class SmsFactory : NotificationFactory
+{
+    public override INotification CreateNotification() => new SmsNotification();
+}
+
+then
+class Program
+{
+    static void Main(string[] args)
+    {
+        NotificationFactory factory;
+
+        // Use Email factory
+        factory = new EmailFactory();
+        INotification email = factory.CreateNotification();
+        email.Send("Hello via Email!");
+
+        // Use SMS factory
+        factory = new SmsFactory();
+        INotification sms = factory.CreateNotification();
+        sms.Send("Hello via SMS!");
+    }
+}
+
+First create interface and write the another call for 2 methods and then abstract class for common method so now abstract must me override by the classes and call their version they want like sms or email.
+
+c) Abstract Factory Pattern
+d)Builder
+Parameters Overload: Helps avoid long lists of parameters in constructors.
+As we doing earlier like for getting input in model and create object and check and validation so not doing this and use builder method
+ var request = new UserRegistrationRequest
+    {
+        FirstName = firstName,
+        LastName = lastName,
+        Email = email,
+        Password = password,
+        TimeZone = timeZone,
+        PreferredLanguage = preferredLanguage,
+        SendWelcomeEmail = sendWelcomeEmail
+    };
+
+    // Validation
+    if (string.IsNullOrEmpty(request.Email))
+        return BadRequest("Email is required");
+Example:
+public class UserRegistrationRequest
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public string TimeZone { get; set; }
+    public string PreferredLanguage { get; set; }
+    public bool SendWelcomeEmail { get; set; }
+}
+Step 2: Create the Builder Class
+public class UserRegistrationBuilder
+{
+    private readonly UserRegistrationRequest _request = new();
+
+    public UserRegistrationBuilder SetName(string firstName, string lastName)
+    {
+        _request.FirstName = firstName;
+        _request.LastName = lastName;
+        return this;
+    }
+
+    public UserRegistrationBuilder SetEmail(string email)
+    {
+        _request.Email = email;
+        return this;
+    }
+
+    public UserRegistrationBuilder SetPassword(string password)
+    {
+        _request.Password = password;
+        return this;
+    }
+
+    public UserRegistrationBuilder SetTimeZone(string timeZone)
+    {
+        _request.TimeZone = timeZone;
+        return this;
+    }
+
+    public UserRegistrationBuilder SetPreferredLanguage(string language)
+    {
+        _request.PreferredLanguage = language;
+        return this;
+    }
+
+    public UserRegistrationBuilder SendWelcomeEmail(bool send = true)
+    {
+        _request.SendWelcomeEmail = send;
+        return this;
+    }
+
+    public UserRegistrationRequest Build()
+    {
+        // ✅ Optionally validate before returning
+        if (string.IsNullOrEmpty(_request.Email))
+            throw new InvalidOperationException("Email is required!");
+
+        return _request;
+    }
+}
+Step 3: Using It in Your API Controller
+[ApiController]
+[Route("api/[controller]")]
+public class UsersController : ControllerBase
+{
+    [HttpPost("register")]
+    public IActionResult Register()
+    {
+        var request = new UserRegistrationBuilder()
+            .SetName("Priya", "Sharma")
+            .SetEmail("priya@example.com")
+            .SetPassword("StrongPass123")
+            .SetTimeZone("Asia/Kolkata")
+            .SetPreferredLanguage("en")
+            .SendWelcomeEmail()
+            .Build();
+
+        // Here you would call your service/repository to save user
+        // userService.CreateUser(request);
+
+        return Ok(new { message = "User registered successfully", request });
+    }
+}
+
+==>Using Interface
+Step 1 — Create an Interface
+public interface IUserRegistrationBuilder
+{
+    IUserRegistrationBuilder SetName(string firstName, string lastName);
+    IUserRegistrationBuilder SetEmail(string email);
+    IUserRegistrationBuilder SetPassword(string password);
+    IUserRegistrationBuilder SetTimeZone(string timeZone);
+    IUserRegistrationBuilder SetPreferredLanguage(string language);
+    IUserRegistrationBuilder SendWelcomeEmail(bool send = true);
+
+    UserRegistrationRequest Build();
+}
+
+Step 2 — Implement It
+public class UserRegistrationBuilder : IUserRegistrationBuilder
+{
+    private readonly UserRegistrationRequest _request = new();
+
+    public IUserRegistrationBuilder SetName(string firstName, string lastName)
+    {
+        _request.FirstName = firstName;
+        _request.LastName = lastName;
+        return this;
+    }
+
+    public IUserRegistrationBuilder SetEmail(string email)
+    {
+        _request.Email = email;
+        return this;
+    }
+
+    public IUserRegistrationBuilder SetPassword(string password)
+    {
+        _request.Password = password;
+        return this;
+    }
+
+    public IUserRegistrationBuilder SetTimeZone(string timeZone)
+    {
+        _request.TimeZone = timeZone;
+        return this;
+    }
+
+    public IUserRegistrationBuilder SetPreferredLanguage(string language)
+    {
+        _request.PreferredLanguage = language;
+        return this;
+    }
+
+    public IUserRegistrationBuilder SendWelcomeEmail(bool send = true)
+    {
+        _request.SendWelcomeEmail = send;
+        return this;
+    }
+
+    public UserRegistrationRequest Build()
+    {
+        if (string.IsNullOrWhiteSpace(_request.Email))
+            throw new InvalidOperationException("Email is required!");
+        return _request;
+    }
+}
+
+Step 3 — Use It via the Interface
+[ApiController]
+[Route("api/[controller]")]
+public class UsersController : ControllerBase
+{
+    private readonly IUserRegistrationBuilder _builder;
+
+    public UsersController(IUserRegistrationBuilder builder)
+    {
+        _builder = builder;
+    }
+
+    [HttpPost("register")]
+    public IActionResult Register()
+    {
+        var request = _builder
+            .SetName("Priya", "Sharma")
+            .SetEmail("priya@example.com")
+            .SetPassword("StrongPass123")
+            .SetTimeZone("Asia/Kolkata")
+            .SetPreferredLanguage("en")
+            .SendWelcomeEmail()
+            .Build();
+
+        return Ok(new { message = "User registered successfully", request });
+    }
+}
+
+
+e)Prototype
+To create new objects by copying existing ones (cloning) instead of instantiating them from scratch.
+Useful when object creation is expensive or complex, but cloning is cheap.
+
+Example:
+using System;
+
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+
+    // Deep clone (trivial in this case since all are value types or immutable strings)
+    public Person Clone()
+    {
+        return new Person
+        {
+            Name = this.Name,
+            Age = this.Age
+        };
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var original = new Person
+        {
+            Name = "Priya",
+            Age = 25
+        };
+
+        var copy = original.Clone();
+        copy.Name = "Rohit";
+        copy.Age = 30;
+
+        Console.WriteLine($"Original: {original.Name}, Age: {original.Age}");
+        Console.WriteLine($"Copy:     {copy.Name}, Age: {copy.Age}");
+    }
+}
+
+no this is only 1 class example
+2)now 2 classes
+using System;
+
+public class Address
+{
+    public string City { get; set; }
+    public string Country { get; set; }
+
+    // Deep clone method for Address
+    public Address Clone()
+    {
+        return new Address
+        {
+            City = this.City,
+            Country = this.Country
+        };
+    }
+}
+
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Address Address { get; set; }
+
+    // Deep clone method for Person (clones nested Address)
+    public Person Clone()
+    {
+        return new Person
+        {
+            Name = this.Name,
+            Age = this.Age,
+            Address = this.Address?.Clone() // important for deep clone
+        };
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var original = new Person
+        {
+            Name = "Priya",
+            Age = 25,
+            Address = new Address { City = "Mumbai", Country = "India" }
+        };
+
+        var copy = original.Clone();
+        copy.Name = "Rohit";
+        copy.Age = 30;
+        copy.Address.City = "Pune"; // modifying copy does NOT affect original
+
+        Console.WriteLine($"Original: {original.Name}, Age: {original.Age}, City: {original.Address.City}");
+        Console.WriteLine($"Copy:     {copy.Name}, Age: {copy.Age}, City: {copy.Address.City}");
+    }
+}
+
+1) example-1 shallow clone-Copies only top-level fields
+2)example-2 deeply clone -Copies everything recursively (new instances of nested objects like ) widely used
+
+
+
+
+2. Structural Patterns
+ =================
+a)Decorator Pattern
+The Decorator Pattern is a structural design pattern that allows you to dynamically add new behavior or responsibilities to an object without modifying its original code.like we change the output of simpleMessage by adding !! mark to the another method which call it.
+public interface IMessage
+{
+    string GetMessage();
+}
+
+public class SimpleMessage : IMessage
+{
+    public string GetMessage() => "Hello";
+}
+
+// Decorator
+public class DecoratorMessage : IMessage
+{
+    private readonly IMessage _message;
+    public DecoratorMessage(IMessage message) => _message = message;
+
+    public string GetMessage() => _message.GetMessage() + "!!!";
+}
+
+class Program
+{
+    static void Main()
+    {
+        IMessage msg = new SimpleMessage();
+        Console.WriteLine(msg.GetMessage());  // Hello
+
+        // Add decorator
+        msg = new DecoratorMessage(msg);
+        Console.WriteLine(msg.GetMessage());  // Hello!!!
+    }
+}
+
+b)Adapter
+c)Facade
+s)Proxy
+
+
+3.Behavioral
+============
+
+a)Strategy
+Example :
+Imagine you have an e-commerce site. You want to support multiple payment methods (Credit Card, PayPal, UPI).
+Instead of writing if/else logic in the checkout, we use Strategy Pattern.
+Step 1: Define the Strategy Interface
+public interface IPayment
+{
+    void Pay(double amount);
+}
+Step 2: Create Concrete Strategies
+public class CreditCardPayment : IPayment
+{
+    public void Pay(double amount)
+    {
+        Console.WriteLine($"Paid {amount} using Credit Card.");
+    }
+}
+
+public class PayPalPayment : IPayment
+{
+    public void Pay(double amount)
+    {
+        Console.WriteLine($"Paid {amount} using PayPal.");
+    }
+}
+
+Step 3: Context Class
+public class PaymentContext
+{
+    private IPayment _payment;
+
+    public PaymentContext(IPayment payment)
+    {
+        _payment = payment;
+    }
+
+    public void SetPaymentStrategy(IPayment payment)
+    {
+        _payment = payment;
+    }
+
+    public void Checkout(double amount)
+    {
+        _payment.Pay(amount);
+    }
+}
+Step 4: Usage
+class Program
+{
+    static void Main()
+    {
+// In this u can use switch case
+        PaymentContext context = new PaymentContext(new CreditCardPayment());
+        context.Checkout(1000);  // Paid 1000 using Credit Card.
+
+        // Change strategy at runtime
+        context.SetPaymentStrategy(new PayPalPayment());
+        context.Checkout(500);   // Paid 500 using PayPal.
+
+     }
+}
+
+
+b)Observer
+c)Command
+
+=========================================================================================
+
+🚀 Real-World Usage in .NET Core
+- ASP.NET Core Middleware uses the Chain of Responsibility and Decorator patterns.
+- Dependency Injection leverages Factory and Singleton.
+- Entity Framework Core uses Unit of Work and Repository patterns.
+
+
+*Repository Pattern
+separates data access logic from the rest of the application (controllers/services).
+Instead of using DbContext directly inside controllers, you call a repository, which internally uses DbContext.
+*Key Characteristics
+
+=>Abstraction Layer
+You never use DbContext or SQL or Any User/Employee methods directly in your controllers.
+Controllers call IUserRepository, which internally talks to the database.
+
+=>Single Responsibility Principle (SRP)
+Repository is only responsible for data access logic.
+Controller is only responsible for request/response handling.
+
+=>Dependency Injection Friendly
+You inject IUserRepository into controllers, making code loosely coupled.
+
+1️⃣ Repository Interface
+public interface IUserRepository
+{
+    User GetById(int id);
+}
+2️⃣ Repository Implementation
+public class UserRepository : IUserRepository
+{
+    private readonly AppDbContext _context;
+    public UserRepository(AppDbContext context) => _context = context;
+
+    public User GetById(int id)
+    {
+        return _context.Users.Find(id);
+    }
+}
+3️⃣ Controller Action
+[HttpGet("{id}")]
+public IActionResult GetUser(int id)
+{
+    var user = _userRepo.GetById(id); // repository used here
+    if (user == null) return NotFound();
+    return Ok(user);
+}
+
+
+e)Dependency Injection (DI)
+Dependency Injection (DI) in .NET Core is a foundational feature that promotes loose coupling and testability.
+
+Example:
+// Interface
+public interface IMyService {
+    string GetMessage();
+}
+
+// Implementation
+public class MyService : IMyService {
+    public string GetMessage() => "Hello from DI!";
+}
+
+// Registration in Program.cs
+builder.Services.AddScoped<IMyService, MyService>();
+
+// Usage in Controller
+public class HomeController : Controller {
+    private readonly IMyService _service;
+
+    public HomeController(IMyService service) {
+        _service = service;
+    }
+
+    public IActionResult Index() {
+        var msg = _service.GetMessage();
+        return Content(msg);
+    }
+}
+
+Repository Pattern -Separation of concerns in data layer
+Dependency Injection (DI) -Loose coupling between classes
+
+
+
+
+*Separate but common in .net core
+🏗️ Architectural Patterns (Common in .NET Core)
+- MVC (Model-View-Controller)
+- MVVM (Model-View-ViewModel)
+- Clean Architecture
+- Onion Architecture
+
+
+
+project:
+Round Robin is a load balancing algorithm that distributes incoming traffic sequentially across multiple servers in a circular manner to ensure even distribution of requests.
+two servers are there

@@ -1,0 +1,191 @@
+Eager Loading
+Definition: Related data is loaded immediately with the main entity using .Include().
+
+✅ Example Setup (Eager Loading)
+csharp
+Copy
+Edit
+var blogWithPosts = context.Blogs
+    .Include(b => b.Posts)  // Load Posts immediately
+    .FirstOrDefault(b => b.Id == 1);
+
+
+Feature			Lazy Loading				Eager Loading
+Definition	Loads related data only when accessed.	Loads related data immediately with the main entity.
+Query Timing	Triggers separate SQL queries when navigation properties are accessed.	Single query with JOIN or multiple Includes.
+How to Enable	Use virtual keyword + enable proxy (UseLazyLoadingProxies)	Use .Include() method in your query
+Uses            If your related data is rarely used.                      If your related data is always needed.
+
+
+Fluent API:========
+https://www.entityframeworktutorial.net/efcore/configure-one-to-many-relationship-using-fluent-api-in-ef-core.aspx
+Fluent API is a way to configure your EF Core models using method chaining in OnModelCreating rather than using attributes like [Key], [Required], [MaxLength], etc.
+
+🧱 Basic Example – Fluent API in OnModelCreating
+
+public class ApplicationDbContext : DbContext
+{
+    public DbSet<User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Table name
+        modelBuilder.Entity<User>().ToTable("tbl_Users");
+
+        // Primary Key
+        modelBuilder.Entity<User>().HasKey(u => u.Id);
+
+        // Property configuration
+        modelBuilder.Entity<User>()
+            .Property(u => u.UserName)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        // Relationships
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Posts)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+✅ Example: Composite Key/Many to Many Relationship in EF Core
+Let’s say we have a StudentCourse table that represents a many-to-many relationship between Student and Course.
+
+🧩 Model Classes
+
+public class Student
+{
+    public int StudentId { get; set; }
+    public string Name { get; set; }
+
+    public ICollection<StudentCourse> StudentCourses { get; set; }
+}
+
+public class Course
+{
+    public int CourseId { get; set; }
+    public string Title { get; set; }
+
+    public ICollection<StudentCourse> StudentCourses { get; set; }
+}
+
+public class StudentCourse
+{
+    public int StudentId { get; set; }
+    public int CourseId { get; set; }
+
+    public Student Student { get; set; }
+    public Course Course { get; set; }
+
+    public DateTime EnrolledDate { get; set; }
+}
+
+
+🔧 Fluent API Configuration
+In your DbContext:
+
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    modelBuilder.Entity<StudentCourse>()
+        .HasKey(sc => new { sc.StudentId, sc.CourseId });
+
+    modelBuilder.Entity<StudentCourse>()
+        .HasOne(sc => sc.Student)
+        .WithMany(s => s.StudentCourses)
+        .HasForeignKey(sc => sc.StudentId);
+
+    modelBuilder.Entity<StudentCourse>()
+        .HasOne(sc => sc.Course)
+        .WithMany(c => c.StudentCourses)
+        .HasForeignKey(sc => sc.CourseId);
+}
+
+📝 Result
+StudentCourse will have a composite primary key made of StudentId + CourseId.
+
+
+
+
+
+
+ORM = Object-Relational Mapper
+
+It’s a tool or framework that:
+Maps your C# classes to database tables
+Lets you avoid manual SQL
+
+✅ EF Core is an ORM
+✅ EF Core uses LINQ(for queries)
+
+Term	What It Is		Role
+ORM	Concept/Framework	Maps C# classes to DB tables
+EF Core	ORM implementation	Most used ORM in .NET
+LINQ	Query syntax		Used with EF Core to query data
+
+for delegates and events in c#
+https://dev.to/sebastiandevelops/understanding-c-delegates-and-events-with-real-world-examples-2an6
+
+			Layered Architecture							Microservices Architecture
+---------------------------------------------------------------------------------------------------------------------------------------------------
+Deployment		Deployed as a single unit (monolith)					Each service is independently deployed
+Fault Isolation		❌ Changes or failure in one layer can crash the entire app		✅ Failure in one service doesn't bring down the 												entire system
+Scalability		Scales the whole application together					Can scale each service individually
+
+				
+=>Layered Architecture:
+[ UI Layer ]
+     ↓
+[ Business Logic Layer ]
+     ↓
+[ Data Access Layer ]
+     ↓
+[ Shared Database ]
+
+→ Deployed as one app  
+→ One crash = whole app down
+
+
+=>Microservices Architecture:
+[ Frontend (React / Blazor) ]
+           ↓
++---------------------+    +---------------------+    +----------------------+
+|  UserService (API)  |    |  ProductService     |    |  OrderService        |
+|  Own Database       |    |  Own Database       |    |  Own Database        |
++---------------------+    +---------------------+    +----------------------+
+
+→ Each service is deployed independently  
+→ One crash doesn't affect others
+
+
+
+
+
+Model Binding & Validation	[FromBody], [FromQuery], DataAnnotations
+✅ Middleware			Custom middleware, pipeline control
+
+ *Architecture & Design Patterns
+
+| Skill                  | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| ✅ Layered Architecture | Presentation → Service → Repository → DB               |
+| ✅ Clean Architecture   | Decoupled, testable structure                          |
+| ✅ SOLID Principles     | Especially Single Responsibility, Dependency Inversion |
+| ✅ Design Patterns      | Factory, Singleton, Repository, etc.                   |
+
+*DevOps & Deployment Awareness
+Skill	Description
+✅ Git	Branching, PRs, merge, conflict resolution
+✅ Docker (basic)	Containerize a .NET app
+✅ CI/CD (basic)	Azure DevOps, GitHub Actions, Jenkins
+✅ Environments	Development, staging, production setup
+
+
+
+
+
+

@@ -1,0 +1,284 @@
+design pattern
+
+creational
+-singleton
+-factory pattern
+-builder
+
+structural 
+-decorator
+
+Behavioral
+strategy(left)
+--------------------------------------------
+solid
+s— Single Responsibility Principle (SRP)
+✔ Q1: What is SRP?
+Each class should have only one reason to change.
+
+✔ Q2: Example of SRP in your project?
+A class should not handle both business logic and database logic.
+Break UserService and UserRepository separately.
+✔ Q3: Why is SRP important?
+Easier to debug
+Easy to test
+Cleaner code
+
+O — Open / Closed Principle (OCP)
+✔ Q1: Explain OCP
+Classes should be:
+✔ Open for extension
+✘ Closed for modification
+
+✔ Q2: Real example?
+Adding new payment methods without modifying existing payment code (Strategy Pattern).
+
+✔ Q3: Which design patterns follow OCP?
+Strategy
+Decorator
+
+
+I— Interface Segregation Principle (ISP)
+One big interface forces classes to implement methods they don’t need.
+
+public interface IWorker
+{
+    void Work();
+    void Eat();
+}
+
+Now:
+public class HumanWorker : IWorker
+{
+    public void Work() { }
+    public void Eat() { }
+}
+
+public class RobotWorker : IWorker
+{
+    public void Work() { }
+    public void Eat() { } // ❌ Robot does NOT eat but is forced to implement
+}
+
+👉 Problem:
+Robot does not eat, but interface forces it.
+
+✅ Good Example (Follows ISP)
+Split into small, focused interfaces.
+
+public interface IWork
+{
+    void Work();
+}
+
+public interface IEat
+{
+    void Eat();
+}
+
+Now implement only what you need:
+public class HumanWorker : IWork, IEat
+{
+    public void Work() { }
+    public void Eat() { }
+}
+
+public class RobotWorker : IWork
+{
+    public void Work() { }
+    // No Eat() required ✔
+}
+
+👉 Benefits:
+Classes implement only what they need.
+
+
+D — Dependency Inversion Principle (DIP)
+
+High-level class depends on low-level class.
+High-level classes should not depend on low-level classes.
+Both should depend on abstractions (interfaces).
+
+❌ Without DIP (bad)
+public class NotificationService
+{
+    private readonly EmailService _emailService = new EmailService();
+
+    public void Send(string message)
+    {
+        _emailService.SendEmail(message);
+    }
+}
+✅ With DIP (good)
+
+High-level class depends on an abstraction, not a concrete class.
+
+public interface INotificationSender
+{
+    void Send(string message);
+}
+
+public class EmailSender : INotificationSender
+{
+    public void Send(string message) => Console.WriteLine("Email: " + message);
+}
+
+public class SmsSender : INotificationSender
+{
+    public void Send(string message) => Console.WriteLine("SMS: " + message);
+}
+
+public class NotificationService
+{
+    private readonly INotificationSender _sender;
+
+    public NotificationService(INotificationSender sender)
+    {
+        _sender = sender;
+    }
+
+    public void Notify(string msg)
+    {
+        _sender.Send(msg);
+    }
+}
+
+Benefits:
+You can add WhatsApp, Push, Teams, Slack without touching NotificationService.
+Testable.
+Extensible.
+
+Interface and Abtract:Contain,Keyword,Contructor,Access Modifiers
+----------------------------------------------
+LINQ practice
+groupby
+Loading
+Leftjoin
+----------------------------------------------------
+delegats and events--
+GitHub
+Oops
+DI container
+Sync & async and await
+tight coupling and loose coupling	
+boxing and unboxing
+int a = 10;        // value type
+object b = a;      // boxing
+int c = (int)b;    // unboxing
+------------------
+Non-Generic Collection (ArrayList)
+Before generics, collections like ArrayList stored elements as object.
+That means value types (like int) must be boxed when added, and unboxed when retrieved.
+using System;
+using System.Collections;
+
+class Program {
+    static void Main() {
+        ArrayList list = new ArrayList();
+
+        int num = 42;
+        list.Add(num);   // Boxing happens here (int → object)
+
+        int retrieved = (int)list[0]; // Unboxing (object → int)
+        Console.WriteLine(retrieved);
+    }
+}
+⚠️ Problems:
+- Performance overhead: Boxing allocates memory on the heap, and unboxing requires type casting.
+- Type safety issues: If you accidentally cast to the wrong type, you’ll get a runtime error.
+
+✅ Generic Collection (List<int>)
+With generics, the collection is strongly typed.
+No boxing/unboxing occurs because the compiler knows the type (int in this case).
+using System;
+using System.Collections.Generic;
+
+class Program {
+    static void Main() {
+        List<int> list = new List<int>();
+
+        int num = 42;
+        list.Add(num);   // No boxing (stored directly as int)
+
+        int retrieved = list[0]; // No unboxing (already int)
+        Console.WriteLine(retrieved);
+    }
+}
+🎯 Benefits:
+- No boxing/unboxing overhead → faster performance.
+- Type safety → compiler prevents invalid casts.
+- Cleaner code → no need for explicit casting.
+
+Generic and non-generic	
+Feature		Non-Generic (int only)		Generic (T)
+Data Type	Fixed (int)			Any type (T)
+Reusability	Low				High
+Example         ArrayList                       List<T>, Dictionary<TKey,TValue>
+
+Generic use with any of data type while non generic not
+If you create int specific method using non-generic then want same for string then need to create another one so this done by generic method
+
+What are the differences between .NET Framework, .NET Core, and .NET 5+?
+string /Array operation
+Queries
+
+IQueryable,IEnumerable and List difference
+IQueryable
+-  Works with remote data sources (databases, APIs).
+Queries are translated into SQL, so filtering happens at the database level.
+IQueryable<User> users = db.Users;
+var adults = users.Where(u => u.Age > 18); // translated into SQL
+- Requires a query provider (like Entity Framework).
+IQueryable<User> users = db.Users;
+var adults = users.Where(u => u.Age > 18); // translated into SQL
+
+IEnumerable
+- : Works in-memory. Data must already be loaded.
+- Yes — LINQ queries on IEnumerable are executed only when iterated.
+- No indexing support.
+
+IEnumerable<int> numbers = new List<int> { 1, 2, 3, 4, 5 };
+var evens = numbers.Where(n => n % 2 == 0); // filtering in memory
+
+
+List:
+List<string> names = new List<string> { "Alice", "Bob", "Charlie" };
+names.Add("David");
+works in - Always in-memory.
+Indexing support.(Add,remove)
+
+
+Finalize and Dispose
+Finalize:-Cleanup unmanaged resources automatically
+Called by the Garbage Collector (GC)
+
+Dispose:Cleanup unmanaged resources manually
+Called explicitly by developer (Dispose() method)
+
+Microservices:Microservices are an architectural style where an application is broken into small, independent services that:
+
+Are loosely coupled (changes in one don’t affect others directly)
+Are highly maintainable and testable
+Can be deployed independently
+Own their data and domain logic
+
+Thread:It is sub-unit inside the main process that can execute code independently, but shares the process's memory (heap, global variables).
+Analogy: Think of a process as a company, and threads as employees. All employees work on the same company resources but can do different tasks simultaneously.
+
+
+Use AsNoTracking() for Read-Only Queries
+Proper Indexing on Database Columns
+Use Stored Procedures
+Select Only Required Columns
+I ensure filtering happens at the database level, not in memory
+For frequently accessed repeated data, I use caching mechanisms like Redis or MemoryCache.
+
+
+Authentiction via JWT,OAuth,Cookie based
+Authorizatoin via [Authorize(Roles = "Admin")]
+
+
+
+
+
+

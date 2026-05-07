@@ -1,0 +1,208 @@
+SeriLog
+Uses ILogger<T> from the default Microsoft Logging system and Logging is done using seriLog.
+This is a custom global exception-handling middleware written in C# for an ASP.NET Core application. It's used to catch unhandled exceptions during HTTP request processing and return a standard JSON error response, while also logging the error. 
+
+==>Add Required NuGet Packages
+✅ Serilog packages:
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.Console
+dotnet add package Serilog.Sinks.File
+
+==> Configure Serilog in Program.cs
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// 🔧 Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Debug()
+    .CreateLogger();
+
+// Replace default logger with Serilog
+builder.Host.UseSerilog();
+
+builder.Services.AddControllers();
+var app = builder.Build();
+
+// 🔥 Add your custom middleware (will create next)
+app.UseGlobalExceptionMiddleware();
+
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
+
+==>Create the Middleware Folder
+Create GlobalExceptionMiddleware.cs
+using System.Net;
+using System.Text.Json;
+
+namespace MeetEase.Middleware
+{
+    public class GlobalExceptionMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+        {
+            _next = next;
+            _logger = logger;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled exception caught by GlobalExceptionMiddleware");
+
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                var errorResponse = new
+                {
+                    StatusCode = context.Response.StatusCode,
+                    Message = "Something went wrong. Please try again later.",
+                    Error = ex.Message
+                };
+
+                var result = JsonSerializer.Serialize(errorResponse);
+                await context.Response.WriteAsync(result);
+            }
+        }
+    }
+}
+
+==>Register Middleware in Program.cs
+app.UseGlobalExceptionMiddleware(); // Use this before UseAuthorization
+
+==>Test Your Middleware
+Go to Controllers/WeatherForecastController.cs or any other controller and add this:
+[HttpGet("error")]
+public IActionResult CauseError()
+{
+    throw new Exception("Test exception");
+}
+and log file is generated
+-----------------------------------------------------------------------------------------------
+
+Use Serilog Directly in .NET Core
+
+==>Install Serilog NuGet Packages
+Run this in Package Manager Console or CLI:
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.File
+dotnet add package Serilog.Sinks.Console
+dotnet add package Serilog.Formatting.Compact
+
+==> 🛠️ 2. Edit Program.cs — Configure Serilog Directly
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog logger globally
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File(new Serilog.Formatting.Compact.RenderedCompactJsonFormatter(), 
+                  "Logs/log-.json", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+// Replace the default logger with Serilog
+builder.Host.UseSerilog();
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
+✅ Now you're using Serilog directly as the application's logger.
+
+==>Log using Serilog Directly Anywhere
+You can now use Serilog.Log instead of ILogger<T>.
+
+using Serilog;
+
+public class MyService
+{
+    public void DoSomething()
+    {
+        Log.Information("This is a Serilog log directly without ILogger.");
+        Log.Error("Something went wrong.");
+    }
+}
+and
+try
+{
+    // code
+}
+catch (Exception ex)
+{
+    Log.Error(ex, "An exception occurred");
+}
+simple method 
+
+==>Add Required NuGet Packages
+✅ Serilog packages:
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.Console
+dotnet add package Serilog.Sinks.File
+
+==> Configure Serilog in Program.cs
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// 🔧 Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Debug()
+    .CreateLogger();
+
+// Replace default logger with Serilog
+builder.Host.UseSerilog();
+
+builder.Services.AddControllers();
+var app = builder.Build();
+
+// 🔥 Add your custom middleware (will create next)
+app.UseGlobalExceptionMiddleware();
+
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
+
+
+then 
+In Any controller(HomeController) write 
+private readonly ILogger<HomeController> _logger;
+and dependency injection
+public HomeController(ILogger<HomeController> logger)
+    {
+        _logger = logger;
+    }
+In Any action(Privacy) you can use
+public IActionResult Privacy()
+    {
+       try
+       {
+         throw new Exception("Test exception without middleware");
+       }
+       catch (System.Exception)
+       {
+        
+            Log.Error("Hello from serilog2....");
+       }
+        return View();
+    }
