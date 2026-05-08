@@ -334,12 +334,15 @@ namespace MinimalApiDemo.Models
 
 Singleton → “once per app.”
 Lifetime: A single instance is created once and shared across the entire application.
+When your app starts, it reads your appsettings.json file
 
 Scoped → “once per request.”
 Lifetime: A new instance is created per HTTP request (or scope). Within that request, all usages get the same instance.
+Need a database connection? $\rightarrow$ Scoped
 
 Transient → “new every time.”
 Lifetime: A new instance is created every time the service is requested.
+email formatting helper? -  Transient
 
 
 
