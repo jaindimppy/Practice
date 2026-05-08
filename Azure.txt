@@ -1,0 +1,254 @@
+hybrid cloud
+db on primises + website and code are on cloud
+
+
+storage,vm,sql db ,app services are services if we are using them then we are using resources of it
+
+
+azure subscriptions:
+An Azure subscription is a logical container and foundational unit that connects your Azure resources to a specific billing account,
+An Azure subscription is a base container that comprises of a group of related business or technical resources. The group of resources are used and billed together.
+like we create 2 resource group of 1 site
+1 resource group is for testing and other for development
+then both are combining and 1 site billing is consider as subscriptions.
+
+->If a person is given access at the Subscription level, they automatically get access to all Resource Groups inside it. Typically, managers or leads have Subscription-level access to manage billing and overall control. Developers usually get access to specific Resource Groups (one or two) to prevent unintended changes across all resources.
+
+
+group of subscription groups is called management group
+
+management group
+     |
+subscription groups
+     |
+Resource groups
+
+Management group = main Lead
+Subscription = managers
+Resource groups = developers/testers
+
+
+
+ARM:It is central layer that allows the user to create delete and edit the resource via portal,CLI and visual studio.
+
+Azure region:A geographical area where Azure has multiple data centers. It provides cloud services close to users to improve performance and compliance.
+Azure Availability Zones: A physically separate data center
+
+Azure compute services:
+I provides computing power to run the application
+example:Azureapp service and azure function
+
+Azure VM:
+cloud based virtual server that allow user to run app without needing physical hardware.
+like computer in cloud and we are accessing it via internet
+
+Horizontal Scaling (Scale-Out/In)
+-Adds more instances (VMs/Containers
+-Best for Stateless applications (Microservices, Web Apps)
+-More cost-effective as auto scaling is possible because of VM scale sets
+
+Vertical Scaling (Scale-Up/Down)
+-Increases the size of a single VM (Increase size of CPU/ RAM)
+-Best for Stateful applications (Monolithic Apps)
+-Expensive as auto scaling is not possible
+
+
+1. Stateless Apps (Best for Horizontal Scaling)
+A Stateless app treats every request as a brand-new interaction. It doesn't store any client data on its own local hard drive or memory.
+
+How it works: If a user adds an item to a cart, that info is sent to an external database or cache (like Redis). The application server itself stays "clean."
+
+Why it's "Scale-Out" friendly: Since no data is stored on the server, you can have 100 identical copies of your app. A user’s first request can go to Server A, and their second can go to Server B without any issues, because both servers just pull the same data from the external database.
+
+2. Stateful Apps (Best for Vertical Scaling)
+A Stateful app remembers information about the client's session directly on the server where the app is running.
+
+How it works: If you log in, Server A stores your "Session" in its local RAM.
+
+The Scaling Problem: If you suddenly get more traffic and add Server B (Horizontal Scaling), and the user's next click hits Server B, Server B won't know who they are because the login "state" is stuck on Server A.
+
+Azure virtual machine scale set: allows you to add and remove the vm for Horizontal Scaling
+means when traffic is more we don't have to add or remove the vm in Horizontal Scaling thats way it is used.
+
+
+Azure apps service:Azure App Service is a fully managed Platform-as-a-Service (PaaS) that enables developers to host web applications, APIs, and mobile backends without managing the underlying infrastructure.
+Prose:
+. Supports Multiple Programming Languages
+. Built-in Scalability like horizontal scaling
+.OS Updates auto
+.It supports auto-failover and backups.
+
+Azure Virtual Machines (VMs)
+IaaS (Infrastructure-as-a-Service)
+User-managed. You handle Windows/Linux updates and security patches.
+Use for custom software, or hosting databases like SQL Server.	
+
+Azure App Services
+PaaS (Platform-as-a-Service)
+Fully managed. Microsoft handles all OS patches and security.
+Modern Web APIs, ASP.NET Core apps, and Mobile backends.
+
+
+Azure functions:
+Azure Functions is a serverless compute service by Microsoft that allows you to run small pieces of code (called functions) in response to events—without managing servers or infrastructure.
+Azure Functions = Run code automatically when something happens (no servers needed).
+Compress the image when it store in blob storage.
+Prose:
+we can write azure function code in main application but it is best to write it a serverless
+because it make main application to lighter and free from load of compress or background services.
+serverless means does not mean it is not on server but mean is it s code is running is free from main application
+
+Triggers:
+event + code = azure function
+event : someone upload image and we store it in blob storage.
+code : we write code to compress that store image
+ means image is arrive is event then our code execute that azure function working means once trigger is done than function will work.
+type of trigger:
+http trigger:when http request comes
+time trigger:at specific time 	like every 2 hours 
+blob trigger:when file uploaded
+
+
+Azure function example:
+using System.Net.Mail;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
+
+public static class SimpleEmailFunction
+{
+    [FunctionName("SimpleEmail")]
+    public static IActionResult Run(
+    [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+    {
+        string to = req.Query["to"];
+        string name = req.Query["name"];
+
+        MailMessage mail = new MailMessage("youremail@example.com", to);
+        mail.Subject = "Hello from Azure Function";
+        mail.Body = $"Hi {name}, this is a simple email.";
+
+        SmtpClient smtp = new SmtpClient("smtp.example.com", 587);
+        smtp.Credentials = new System.Net.NetworkCredential("a@abc.com", "pwd");
+        smtp.EnableSsl = true;
+        smtp.Send(mail);
+
+        return new OkObjectResult("Email sent.");
+    }
+}
+
+-Each function starts with a method marked by the [FunctionName("FunctionNameHere")] attribute.
+-Run is the method that executes when the function is triggered.
+-Specify the types of trigger
+
+
+difference:
+-Azure Logic Apps
+No-code/low-code with a visual designer.
+You need to automate a multi-step business process with minimal or no coding.
+
+-Azure Functions
+Code-first, supporting multiple languages (C#, Python, Java, etc.).
+You need to execute custom code or complex logic that isn't possible with Logic Apps' built-in expressions.
+
+
+Azure storage:
+blob storage:It is used to store images,videos,documents but editing in blob storage manually is difficult because the files are stored as object not regular files.
+
+file storage:File storage is a way of storing data in the form of files organized into folders (like you normally see on your computer).
+It is easy to open,edit and save files in file storage manually.
+
+Azure Table Storage : It is a NoSQL storage service that stores structured data as key-value pairs in tables without a fixed schema.
+It is like a table, but:
+
+No fixed schema (columns can vary)
+No relationships (unlike SQL databases)
+Stores data as entities (rows)
+Like need to stores the logs of applications.	
+
+Azure Que storage:Azure Queue Storage (by Microsoft) is mainly used for handling background tasks.
+Azure Disk Storage : It is used for storing data for virtual machines (VMs).
+It provides persistent block storage for virtual machines (VMs) in Azure even when VM is stopped or restarted.
+Azure Blobs: A massively scalable object store for text and binary data. Also includes support for big data analytics through Data Lake Storage Gen2.
+Azure Files: Managed file shares for cloud or on-premises deployments.
+Azure Queues: A messaging store for reliable messaging between application components.
+Azure Disks: Block-level storage volumes for Azure VMs.
+Azure Tables: NoSQL table option for structured, non-relational data.
+Database:
+	
+Azure SQL Managed Instance vs. Azure SQL Database
+Azure SQL Managed Instance:
+Migration. Moving existing on-prem servers with complex needs
+
+Azure SQL Database:
+New Apps. Modern cloud applications that need to scale fast and keep maintenance low.
+
+Azure cosmos DB(NoSQL):
+Azure Cosmos DB is a globally distributed NoSQL database service provided by Microsoft that allows you to store and manage data with high speed, scalability, and low latency across the world.
+It is a modern cloud database that:
+Stores data in flexible formats (like JSON)
+
+Azure SQL(RDBMS) vs Azure Cosmos DB(NO SQL):
+Azure SQL Database (RDBMS)
+Structured (tables, rows, columns)
+Fixed schema (predefined)
+Supports joins, foreign keys
+Used in Banking, ERP, traditional apps(High value data)
+
+Azure Cosmos DB (NoSQL):
+Unstructured / semi-structured (JSON)
+Flexible schema,No fix table need to craete all is dynamically
+No joins (denormalized data)
+that need large volumes data
+
+
+Type of cloud
+public
+private
+hybrid
+
+
+pay for use  and no upfront cost
+CapEx - upfront cost ex.Own car
+CapEx is the upfront spending of money on physical infrastructure. You pay for the entire cost of an asset at the beginning of a project, and then deduct that cost from your tax bill over time.
+OpEx like cloud computing ex. rented car
+OpEx is spending money on services or products as you use them. There is no upfront cost; instead, you pay a recurring bill for the resources you consume in real-time.
+
+SLA: 
+An SLA(Service Level Agreement) is a guarantee of availability, usually expressed as a percentage of uptime (e.g., $99.9\%$).
+scalability
+
+Reliability:centerliaze design and decenterliaze architecture
+Reliability is the ability of a system to perform its intended functions correctly and consistently under specified conditions for a specific period
+In Azure, Reliability is achieved through two core strategies:
+Resiliency:  To continue operating when things go wrong (e.g., a single server failing). It is about "staying up".
+Recoverability: The ability to restore a system to a fully functional state after a failure has occurred.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+daily Quesstions:
+https://prepforcerts.org/dashboard
+
+
+https://www.youtube.com/watch?v=Y455PAPLY9w&list=PL_qizAfcpJ-MroLLOhBYpcLhyxRtnFcj4
+or
+https://www.youtube.com/watch?v=vh8OhaWBNVc&list=PL5TTTZj-297mhekqKm19G6zykZ36TD72q
+
+
+https://www.youtube.com/watch?v=Y455PAPLY9w&list=PL_qizAfcpJ-MroLLOhBYpcLhyxRtnFcj4&index=1
+this one
+
+	
