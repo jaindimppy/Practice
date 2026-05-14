@@ -187,3 +187,41 @@ Immediately written to hard disk
 Next chunk
    ↓
 Hard disk
+
+
+6)Multiple Inheritance
+which occurs when a class inherits from two classes that both have a method with the same name, leading to ambiguity about which method the child class should use.
+Imagine you have two interfaces, IWork and IExercise, and both have a method called Start().
+public interface IWork
+{
+    void Start();
+}
+public interface IExercise
+{
+    void Start();
+}
+If a class implements both, C# doesn't know which Start() is which. To solve this, you prefix the method name with the Interface name.
+public class Manager : IWork, IExercise
+{
+    // This handles IWork.Start()
+    void IWork.Start() 
+    {Console.WriteLine("Opening Laptop and starting work...");
+    }
+    // This handles IExercise.Start()
+    void IExercise.Start() 
+    {
+        Console.WriteLine("Hitting the gym and starting exercise...");
+    }
+}
+
+How to call them
+Because the methods are "explicit," they are hidden from the class's normal public view. You must cast the object to the specific interface you want to use.
+Manager myManager = new Manager();
+// myManager.Start(); // This would cause a COMPILE ERROR (Ambiguous)
+
+// Correct Way:
+IWork worker = myManager;
+worker.Start(); // Outputs: Opening Laptop and starting work...
+
+IExercise athlete = myManager;
+athlete.Start(); // Outputs: Hitting the gym and starting exercise...
