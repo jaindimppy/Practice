@@ -1,0 +1,89 @@
+Using versioning
+
+Database: Add a version column (integer).
+
+Initial State: Balance = $100, Version = 1.
+
+Step 1: User A reads the row (Balance: $100, Version: 1).
+
+Step 2: User B reads the row (Balance: $100, Version: 1).
+
+Step 3: User A calculates $150 and sends: UPDATE account SET balance=150, version=2 WHERE id=1 AND version=1.
+
+
+
+Result: Success! The database sees version 1 matches, updates the row, and increments it to 2.
+
+Step 4: User B calculates $130 and sends: UPDATE account SET balance=130, version=2 WHERE id=1 AND version=1.
+
+
+
+Result: Fail! The database sees that the version is now 2, not 1. The WHERE clause fails.
+
+Next Step: Your API should catch this failure, re-read the new balance ($150), ask the user if they still want to add $30, or automatically retry the calculation.
+
+
+1)Two APIs updating same row, how to handle?
+Using
+Lock
+Step 1: User A initiates a transaction: SELECT * FROM account WHERE id=1 FOR UPDATE.
+Database action: The row is now locked.
+Step 2: User B initiates the same command: SELECT * FROM account WHERE id=1 FOR UPDATE.
+Database action: The database tells User B to wait (block) until User A finishes.
+Step 3: User A performs UPDATE account SET balance=150.
+Step 4: User A commits the transaction.
+Database action: The lock is released.
+Step 5: User B's pending command now proceeds. It reads the new balance ($150).
+Step 6: User B performs UPDATE account SET balance=180 and commits.
+User experiences a slight delay while waiting for the lock to release. use lock
+
+2)Difference between Encapsulation and Abstraction
+1. Encapsulation (Protecting the "Inside")
+You are 100% correct: Encapsulation is about access control. By making variables private, you prevent the "outside world" from breaking your object's internal state.
+Key Tool: Access Modifiers (private, protected).
+The "Hiding" Goal: To prevent corruption (e.g., someone setting age = -5 or balance = -999999).
+The "Getter/Setter" Bridge: These aren't just for reading/writing; they act as Gatekeepers. They are where you put your validation logic (if (age > 0) { ... }).
+
+2. Abstraction (Simplifying the "Outside")
+Abstraction is about hiding implementation complexity.
+Key Tool: Interfaces, Abstract Classes, and Public Methods.
+The "Hiding" Goal: To prevent cognitive overload. If I am using your Bank class, I don't want to see the 50 lines of code you wrote to verify a user's identity, calculate interest, and update a database. I just want to see the transfer() method.
+
+
+3)CTE and Temp table
+CTE-(Common Table Expression)
+A temporary named result set defined using WITH clause.
+WITH DuplicateEmail AS
+(
+    SELECT Id,
+           ROW_NUMBER() OVER
+           (
+               PARTITION BY Email
+               ORDER BY Id
+           ) AS RowNum
+    FROM Employee
+)
+DELETE FROM DuplicateEmail
+WHERE RowNum > 1
+cte:No physical storage
+No indexing
+Temp Table:
+Stored in TempDB
+Can create index
+
+
+CREATE TABLE #Employee
+(
+    Id INT,
+    Name VARCHAR(100)
+)
+
+INSERT INTO #Employee
+SELECT Id, Name FROM Employee
+
+SELECT * FROM #Employee
+
+
+A CTE contains:
+✅ Both rows AND columns (like a table)
+
