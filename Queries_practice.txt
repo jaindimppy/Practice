@@ -4,6 +4,12 @@ The "Second Highest Salary" (Classic)
 Find all Departments that have no employees assigned to them.
 Find employees and the names of their Managers (from the same Employees table).
 Finding the Nth Highest Salary
+SELECT Salary 
+FROM (
+    SELECT Salary, DENSE_RANK() OVER (ORDER BY Salary DESC) as Rank
+    FROM Employees
+) as SalaryTable
+WHERE Rank = N;
 Delete duplicate records (keeping the one with the smallest ID):
 DELETE FROM users 
 WHERE id NOT IN (
