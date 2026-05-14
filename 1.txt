@@ -225,3 +225,27 @@ worker.Start(); // Outputs: Opening Laptop and starting work...
 
 IExercise athlete = myManager;
 athlete.Start(); // Outputs: Hitting the gym and starting exercise...
+
+7)
+Protected
+Scope: Accessible within the same class AND by derived (child) classes.
+When to use: When you want to hide data from the outside world but allow "children" to use or override that logic.
+public class Animal
+{
+    protected string HeartbeatType = "Standard"; 
+}
+
+public class Dog : Animal
+{
+    public void CheckHeart()
+    {
+        Console.WriteLine(HeartbeatType); // Legal: Dog is a child of Animal
+    }
+}
+
+// Outside:
+// var a = new Animal();
+// a.HeartbeatType; // ERROR: Not accessible from outside
+but you will use like 
+a.CheckHeart()
+it will allow
