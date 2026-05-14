@@ -100,3 +100,90 @@ Eager Loading
 If you create an index on the Email column, SQL Server takes all those email addresses and puts them in order.
 Without an Index: The database sees: zack@mail.com, adam@mail.com, ben@mail.com. To find ben@mail.com, it might have to check every row because they are in no particular order.
 With an Index: SQL stores them as: adam@mail.com -> ben@mail.com -> zack@mail.com.
+
+5)
+1)Restrict or validate the file size 
+2)This is the most important fix. Instead of reading the whole file into a byte[] or a MemoryStream, you should stream it directly from the request body to the target (like Azure Blob Storage or a local disk).
+3)Use file stream not memory stream
+Entire file loaded into RAM first
+Suppose user uploads:
+movie.mp4 = 2 GB
+
+Flow:
+Client
+   ↓
+Server RAM Memory
+   ↓
+Application Processing
+
+Entire 2 GB file goes into RAMProblem
+Suppose:
+Server RAM = 4 GB
+3 users upload 2 GB files simultaneously
+Memory needed:
+2 GB × 3 = 6 GB
+
+[HttpPost]
+public async Task<IActionResult> Upload(IFormFile file)
+{
+    var ms = new MemoryStream();
+
+    await file.CopyToAsync(ms);
+
+    return Ok();
+}
+Client uploads file
+        ↓
+Server receives request
+        ↓
+Application copies file into RAM (MemoryStream)
+        ↓
+Then application may save to hard disk/database/cloud
+
+
+
+Streaming
+File processed little by little (chunks)
+Client
+   ↓
+Small chunk arrives
+   ↓
+Immediately written to disk
+   ↓
+Next chunk arrives
+   ↓
+Written to disk
+
+Chunk Example
+
+Suppose:
+
+File = 2 GB
+
+Streaming may process:
+
+Chunk 1 = 64 KB
+Chunk 2 = 64 KB
+Chunk 3 = 64 KB
+
+Only small chunk stays in memory at a time.
+[HttpPost]
+public async Task<IActionResult> Upload(IFormFile file)
+{
+    var path = Path.Combine("Uploads", file.FileName);
+
+    using var fs = new FileStream(path, FileMode.Create);
+
+    await file.CopyToAsync(fs);
+
+    return Ok();
+}
+Client
+   ↓
+Small chunk enters RAM buffer
+   ↓
+Immediately written to hard disk
+   ↓
+Next chunk
+   ↓
+Hard disk
