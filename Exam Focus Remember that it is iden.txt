@@ -1,0 +1,77 @@
+Exam Focus: Remember that it is identity-centric, meaning it manages access to cloud apps like Office 365 and SaaS applications, unlike traditional 
+Active Directory which is domain-centric (local network).
+
+Two APIs updating same row, how to handle?
+Difference between Encapsulation and Abstraction
+cte query
+optimaization
+apitaking a file and which is large amount of fileand api takes input as fileand it crashed how to handle it
+multiple inheritance
+private,public,protected
+liscove substition
+queries
+how to know the which query causes the problem in sql
+agile mthodology
+ACID
+unit of work
+constant,sttaic,read only
+static class and methods
+how to remove index or transation from table
+in table a email column enter should be unique how
+early binding and late binding
+ELMAH
+application is crashed how can you handle
+Access token and refresh token
+factory pattern
+List and dictionary
+date in sql
+Action and IAction
+view and partialview
+tempdb and cte
+what cte return column or row
+Common interview questions related to this topic:
+
+Difference between async and await
+Difference between Task, Thread, and async
+What happens if you don't use await?
+Difference between .Wait(), .Result, and await
+What is deadlock in async programming?
+Can we call async from sync and sync from async?
+Difference between Task.WhenAll() and sequential await
+What is ConfigureAwait(false)?
+Explain request pipeline in .NET Core.
+What is Kestrel Server?
+What is Configuration in .NET Core?
+How do you improve API performance?
+What is Caching?
+In-memory cache
+Distributed cache
+Redis cache
+How does validation work in MVC?
+How to handle large file upload in API?
+Difference between PUT, POST, and PATCH?
+What is REST API and Soap
+How to implement exception handling globally?
+Difference between Any() and Count()
+primary key and unique key
+What is execution plan?
+Difference between RANK(), DENSE_RANK(), ROW_NUMBER()
+What is deadlock in SQL?
+How would you optimize slow query?
+One API updates same table while another API also updates it—how to handle concurrency?
+Row Versioning
+Optimistic concurrency
+Transactions
+What is CI/CD pipeline?
+How do you secure secrets?
+What is Managed Identity?
+Explain one challenging issue you solved.
+Monolithic vs Microservices?
+How do you design scalable APIs?
+Difference between Partial View and View Component?
+What is Routing?
+Attribute routing vs conventional routing?
+Explain Model Binding.
+What is Session State?
+Difference between TempData and Session?
+
