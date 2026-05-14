@@ -87,3 +87,16 @@ SELECT * FROM #Employee
 A CTE contains:
 ✅ Both rows AND columns (like a table)
 
+
+3)Optimization
+Avoid "Select *"
+Solve the "N+1" Problem
+ Use Async/Await Always use the Async versions of database calls (e.g., ToListAsync(), ExecuteNonQueryAsync()). 
+SQL Profiler
+Indexing
+Eager Loading
+
+4)How index work
+If you create an index on the Email column, SQL Server takes all those email addresses and puts them in order.
+Without an Index: The database sees: zack@mail.com, adam@mail.com, ben@mail.com. To find ben@mail.com, it might have to check every row because they are in no particular order.
+With an Index: SQL stores them as: adam@mail.com -> ben@mail.com -> zack@mail.com.
