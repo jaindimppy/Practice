@@ -249,3 +249,62 @@ public class Dog : Animal
 but you will use like 
 a.CheckHeart()
 it will allow
+
+
+LSP:
+public class PaymentProcessor {
+
+    public virtual void Refund(double amount) {
+
+        Console.WriteLine($"Refunding {amount}...");
+
+    }
+
+}
+
+public class CashPayment : PaymentProcessor {
+
+    public override void Refund(double amount) {
+
+        // LSP VIOLATION: The program expects a refund to happen,
+
+        // but this class crashes the app instead.
+
+        throw new NotSupportedException("Cash cannot be refunded via system!");
+
+    }
+
+}
+
+parent class is there and child class called the method but violets it function then LSP violation so in this on't use inheritance. Use a simple interface or keep them as completely separate classes.
+in ISP:Why did you force me to add a Refund method to my CashPayment class when cash doesn't work that way?"
+means dont makee the all method in one interface so anyone not have to forcely use them.
+
+LSP Violation: You inherit from a class but have to "change the rules" (like throwing exceptions or making properties behave weirdly) to make it work.
+LSP Solution: If two things aren't truly swappable, don't use inheritance. Use a simple interface or keep them as completely separate classes.
+
+ACID
+Atomicity 
+It ensures that a transaction is treated as a single, indivisible unit. Either the entire transaction succeeds, or the entire transaction fails. There is no "half-finished" state.
+Consistency
+ If a database column has a rule that "Balance cannot be negative," and a transaction tries to withdraw more money than is available, the database will reject the transaction to maintain Consistency
+
+Isolation 
+Each transaction should feel like it is the only one running.
+If two people try to buy the last concert ticket at the exact same millisecond, Isolation ensures the system processes one first and tells the second person the ticket is sold out, rather than selling the same ticket twice.
+
+Durability 
+Durability guarantees that once a transaction has been committed, it will remain committed even in the case of a system failure 
+
+
+SQL Server Profiler is a powerful interface for creating and managing traces and analyzing trace results. It allows you to see exactly what queries are being sent to your database in real-time, which is incredibly helpful for debugging .NET applications or finding slow-running stored procedures.Go to the Tools menu at the top.
+
+Select SQL Server Profiler.
+
+RPC:Completed (Remote Procedure Call): This tracks Stored Procedures. When your C# code calls a procedure, it appears here. It shows you the name of the SP and the values of the parameters passed in.
+
+SQL:BatchCompleted: This tracks Ad-hoc Queries. If you are using Entity Framework (EF) or raw SQL strings like SELECT * FROM Users, they will appear here.
+Estimated Plan: Press Ctrl + L. This shows you the plan without running the query.
+
+Actual Plan: Press Ctrl + M (or click the "Include Actual Execution Plan" icon) and then Execute your query. A new tab called "Execution Plan" will appear in the results window.
+
