@@ -308,3 +308,25 @@ Estimated Plan: Press Ctrl + L. This shows you the plan without running the quer
 
 Actual Plan: Press Ctrl + M (or click the "Include Actual Execution Plan" icon) and then Execute your query. A new tab called "Execution Plan" will appear in the results window.
 
+static,readonly,const,static readonly
+
+static
+static members can only be accessed within the static methods. The non-static methods cannot access static members.
+static members can be accessed using ClassName.StaticMemberName, but cannot be accessed using object.
+Value of the static members can be modified using ClassName.StaticMemberName
+
+readonly
+readonly fields can be initialized at declaration or in the constructor.
+again in constructor it can be assign -reassign again like first time assign in default constructor and then reassign in parameterrized constructor not the static constructor
+Therefore, readonly variables are used for the run-time constants.
+readonly members can be accessed using object, but not ClassName.ReadOnlyVariableName.
+
+
+const
+Its value must be set exactly when you write the code, and it can never be changed.
+const members can be accessed using ClassName.ConstVariableName, but cannot be accessed using object.
+
+static readonly
+Value is change/assign in static constructor but only one time change 
+so it means it change only once at run time throgh the static constructor.
+
