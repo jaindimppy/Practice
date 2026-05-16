@@ -276,9 +276,9 @@ public class CashPayment : PaymentProcessor {
 
 }
 
-parent class is there and child class called the method but violets it function then LSP violation so in this on't use inheritance. Use a simple interface or keep them as completely separate classes.
+parent class is there and child class called the method but violets it function then LSP violation so in this not use inheritance. Use a simple interface or keep them as completely separate classes.
 in ISP:Why did you force me to add a Refund method to my CashPayment class when cash doesn't work that way?"
-means dont makee the all method in one interface so anyone not have to forcely use them.
+means dont make the all method in one interface so anyone not have to forcely use them.
 
 LSP Violation: You inherit from a class but have to "change the rules" (like throwing exceptions or making properties behave weirdly) to make it work.
 LSP Solution: If two things aren't truly swappable, don't use inheritance. Use a simple interface or keep them as completely separate classes.
