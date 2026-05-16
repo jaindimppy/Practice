@@ -1,6 +1,3 @@
-Exam Focus: Remember that it is identity-centric, meaning it manages access to cloud apps like Office 365 and SaaS applications, unlike traditional 
-Active Directory which is domain-centric (local network).
-
 Two APIs updating same row, how to handle?
 Difference between Encapsulation and Abstraction
 cte query
