@@ -26,8 +26,6 @@ Action and IAction
 view and partialview
 tempdb and cte
 what cte return column or row
-Common interview questions related to this topic:
-
 Difference between async and await
 Difference between Task, Thread, and async
 What happens if you don't use await?
