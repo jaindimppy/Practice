@@ -340,3 +340,17 @@ A static class is a class designed only to hold static members. It acts purely a
 when you handle the Orders of ecommerce system than you have to craete diffrent single order for every different user
 but when need to do calculation part which is same for all then no need to craete the object of class every time than use static class and methods.
 
+
+Agile Methodology
+Agile is a flexible approach to software development focused on delivering small, working pieces of software frequently, rather than waiting to deliver everything at the very end.
+The Backlog: A prioritized to-do list of features or fixes
+Sprint Planning: At the start of a sprint, the team selects a manageable amount of work from the backlog to complete in the next 2–3 weeks.
+Daily Standup: A quick 15-minute daily check-in where developers answer: What did I do yesterday? What will I do today? Is anything blocking my progress?
+Sprint Review / Demo: At the end of the sprint, the team demonstrates the newly built, functional features to stakeholders.
+
+how to remove index from table
+If you have an index named IX_Users_Email on a table called Users:
+and you want to drop the index then
+
+DROP INDEX IX_Users_Email ON Users;
+
