@@ -354,3 +354,25 @@ and you want to drop the index then
 
 DROP INDEX IX_Users_Email ON Users;
 
+
+Early binding and Late binding
+Early Binding (Compile-Time)
+public class Car
+{
+    public void Drive() { Console.WriteLine("Driving..."); }
+}
+// Usage:
+Car myCar = new Car(); 
+myCar.Drive(); // EARLY BINDING: The compiler knows 'myCar' is a Car and has a 'Drive' method.
+
+Late Binding (Run-Time)
+Late binding happens when the exact method or property to call is not known until the application is actually running.
+The application has to look up the object at runtime.
+Usin dynamic
+dynamic mysteryObject = new Car();
+
+// LATE BINDING: The compiler skips checks here. 
+// If 'mysteryObject' doesn't have a 'Fly' method at runtime, the app will crash.
+mysteryObject.Drive();
+
+
