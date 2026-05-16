@@ -57,11 +57,7 @@ primary key and unique key
 What is execution plan?
 Difference between RANK(), DENSE_RANK(), ROW_NUMBER()
 What is deadlock in SQL?
-How would you optimize slow query?
-One API updates same table while another API also updates it—how to handle concurrency?
-Row Versioning
 Optimistic concurrency
-Transactions
 What is CI/CD pipeline?
 How do you secure secrets?
 What is Managed Identity?
