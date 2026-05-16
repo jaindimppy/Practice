@@ -330,3 +330,13 @@ static readonly
 Value is change/assign in static constructor but only one time change 
 so it means it change only once at run time throgh the static constructor.
 
+static class-methods
+A static method is a method that can be called directly from the class without creating an instance (using new) first.
+Key Rules for Static Methods:
+No Instance Needed: You call it using ClassName.MethodName().
+The Golden Rule: A static method cannot access non-static fields or non-static methods of the class. Because it doesn't belong to a specific object, it has no idea which object's data to look at.
+What it can access: It can only access other static members (fields, properties, or methods) of that class
+A static class is a class designed only to hold static members. It acts purely as a container for utility functions.
+when you handle the Orders of ecommerce system than you have to craete diffrent single order for every different user
+but when need to do calculation part which is same for all then no need to craete the object of class every time than use static class and methods.
+
