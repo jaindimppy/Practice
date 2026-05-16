@@ -348,7 +348,7 @@ Sprint Planning: At the start of a sprint, the team selects a manageable amount 
 Daily Standup: A quick 15-minute daily check-in where developers answer: What did I do yesterday? What will I do today? Is anything blocking my progress?
 Sprint Review / Demo: At the end of the sprint, the team demonstrates the newly built, functional features to stakeholders.
 
-how to remove index from table
+How to remove index from table
 If you have an index named IX_Users_Email on a table called Users:
 and you want to drop the index then
 
