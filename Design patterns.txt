@@ -150,6 +150,71 @@ class Program
 }
 
 First create interface and write the another call for 2 methods and then abstract class for common method so now abstract must me override by the classes and call their version they want like sms or email.
+Another example
+public interface IPaymentProcessor
+{
+    void ProcessPayment(decimal amount);
+}
+Create Concrete Product Classes
+public class StripeProcessor : IPaymentProcessor
+{
+    public void ProcessPayment(decimal amount)
+    {
+        Console.WriteLine($"Processing ${amount} via Stripe Secure Gateway.");
+    }
+}
+
+public class PayPalProcessor : IPaymentProcessor
+{
+    public void ProcessPayment(decimal amount)
+    {
+        Console.WriteLine($"Redirecting to PayPal to authorize ${amount}.");
+    }
+}
+
+public class ApplePayProcessor : IPaymentProcessor
+{
+    public void ProcessPayment(decimal amount)
+    {
+        Console.WriteLine($"Processing ${amount} via Apple Pay.");
+    }
+}
+
+Implement the Factory
+public class PaymentFactory
+{
+    public IPaymentProcessor CreateProcessor(string paymentType)
+    {
+        switch (paymentType)
+        {
+            case "Stripe":
+                return new StripeProcessor();
+            case "PayPal":
+                return new PayPalProcessor();
+            case "ApplePay":
+                return new ApplePayProcessor();
+            default:
+                throw new ArgumentException("Invalid payment processor type specified.");
+        }
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        PaymentFactory factory = new PaymentFactory();
+
+        // The user chooses PayPal at checkout
+        IPaymentProcessor paypal = factory.CreateProcessor("PayPal");
+        paypal.ProcessPayment(49.99m); 
+        // Output: Redirecting to PayPal to authorize $49.99.
+
+        // The user chooses Stripe at checkout
+        IPaymentProcessor stripe = factory.CreateProcessor("Stripe");
+        stripe.ProcessPayment(120.00m); 
+        // Output: Processing $120.00 via Stripe Secure Gateway.
+    }
+}
 
 c) Abstract Factory Pattern
 d)Builder
