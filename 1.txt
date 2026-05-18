@@ -376,3 +376,193 @@ dynamic mysteryObject = new Car();
 mysteryObject.Drive();
 
 
+List and Dictionary
+add,remove,assign,update,iterate,count,clear,intialize,find,findall
+// Online C# Editor for free
+// Write, Edit and Run your C# code using C# Online Compiler
+using System.Collections.Generic;
+
+using System;
+
+public class HelloWorld
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine ("Start small. Ship something.");
+        List<int> objList = new List<int>{1,2,3};
+        List<int> objListV1 = new List<int>();
+         List<int> objListV2 = new List<int>();
+        objList.Add(3);
+        objList[0] = 5;
+        objList.Remove(2);
+        int intialVal = objList[0];
+        Console.WriteLine ($"List is: {intialVal}");
+        foreach(int val in objList)
+        {
+            Console.WriteLine ($"element is: {val}");
+        }
+        objListV1 = objList;
+        Console.WriteLine("New list-assign");
+        foreach(int val in objListV1)
+        {
+            Console.WriteLine ($"element is: {val}");
+        }
+        objListV2.AddRange(objListV1);
+        Console.WriteLine("New list-added list");
+        foreach(int val in objListV2)
+        {
+            Console.WriteLine ($"element is: {val}");
+        }
+        int count = objListV1.Count;
+        int gtVal = objList.Find(x => x > 5);
+        List<int>numbers = objListV1.FindAll(x => x > 2);
+        Console.WriteLine($"Greater than 5 value is {gtVal} and count is {count}");
+        Console.WriteLine($"Greater than 2 value are {string.Join(",",numbers)}");
+        objListV1.Clear();
+        Console.WriteLine ("Dictionary");
+        Dictionary<string,int> objDictionary = new Dictionary<string,int>{
+            {"Value1",1},
+            {"Value2",2}
+        };
+        if(!objDictionary.ContainsKey("Value3"))
+        {
+        objDictionary.Add("Value3",3);
+        }
+        else
+        {
+            Console.WriteLine("Already exists");
+        }
+        objDictionary["Value2"] = 22;
+        objDictionary.Remove("Value1");
+        foreach(KeyValuePair<string,int> val in objDictionary)
+        {
+            Console.WriteLine($"Key is {val.Key} and Value is {val.Value}");
+        }
+        int val1 = objDictionary["Value2"];
+        Console.WriteLine($"Assign value is {val1}");
+        int countD = objDictionary.Count;
+        Console.WriteLine($"Dictionary count is {countD}");
+        objDictionary.Clear();
+        int countDV1 = objDictionary.Count;
+        Console.WriteLine($"Dictionary count is {countDV1}");
+    }
+}
+
+Date in SQL
+GETDATE(): Returns the current system date and time 
+SELECT GETDATE() AS CurrentDateTime;
+
+Adding or Subtracting Time (DATEADD)
+Used to add or subtract days, months, years, hours, etc.
+select DATEADD(Month,2,GETDATE());
+-- Subtract 2 years from a specific dateSELECT DATEADD(year, -2, '2026-05-18');
+
+Finding the Difference Between Dates (DATEDIFF)
+SELECT DATEDIFF(day, '2026-01-01', '2026-05-18') AS DaysElapsed;
+
+Action vs IActionResultAction
+It is a controller method that handles requests, while IActionResult is a flexible return type used to return different HTTP responses such as View, JSON, Ok, BadRequest, or Redirect.
+View vs PartialView
+View is used to render a complete page with layout, whereas PartialView is used to render reusable UI components without a layout inside another view.
+View is complete page while partial view is  used inside another view.
+
+async makes a method asynchronous, while await pauses execution until the async operation completes without blocking the thread.
+When an async method hits await, execution pauses, the thread is released back to the thread pool to handle other work, and once the awaited task completes, execution resumes from the same point without blocking the application.
+
+Partial and RenderPartial
+Partial()
+-Slightly slower
+-syntax:
+@Html.Partial("_EmployeeList")
+-you can assign to variable
+Because it returns HTML string (MvcHtmlString)
+@{
+    var result = Html.Partial("_EmployeeList");
+}
+
+RenderPartial()
+-Faster
+-syntax:
+@{
+    Html.RenderPartial("_EmployeeList");
+}
+-cannot assign variable
+Because it returns void.
+so you have to use as it is way
+Example (wrong):
+@{
+    var result = Html.RenderPartial("_EmployeeList");
+}
+Correctway
+@{
+    Html.RenderPartial("_EmployeeList");
+}
+
+Calling Sync from Async (Safe & Normal)
+When an asynchronous method calls a traditional synchronous method, the async method simply pauses its asynchronous nature temporarily, executes the synchronous method line-by-line on the current thread, and then moves on.
+
+public async Task ProcessDataAsync()
+{
+
+    // 1. Doing some async work
+    await Task.Delay(1000); 
+
+
+    // 2. Calling a standard synchronous method (PERFECTLY FINE)
+    int result = CalculateTotal(5, 10); 
+
+
+    // 3. Continuing async work
+    await SaveResultAsync(result);
+}
+
+public int CalculateTotal(int a, int b)
+{
+ return a + b; // Normal sync code
+}
+
+Explain request pipeline in .NET Core.
+The Request Pipeline in .NET Core is the sequence of middleware components that an HTTP request passes through before getting a response.
+When a request comes to the application, it moves through multiple middleware components (authentication, authorization, routing, exception handling, etc.), and finally a response is returned.
+
+What is Kestrel Server?
+When Microsoft re-engineered .NET to be cross-platform (running on Linux, macOS, and Windows), they needed a brand new, highly efficient web server that didn't rely on Windows infrastructure. That savior was Kestrel.
+Kestrel Server does not exist in traditional ASP.NET application templates. It is only found in modern ASP.NET Core applications.
+
+Configuration 
+In .NET Core and modern .NET, configuration is a lightweight, key-value pair-based system that can read settings from multiple sources simultaneously.
+like we are using dbconnection in appsetting.json
+
+How does validation work in MVC?
+Validation in ASP.NET Core MVC uses a declarative approach called Data Annotations.
+[Required],[Range(min, max)],[EmailAddress],[Compare("OtherProperty")],[Display(Name = "Label")],[Key],[MaxLength(50)],[NotMapped],[Column("alternate_name")]
+
+When a request hits your MVC action, the framework automatically maps the incoming data into your object and runs the validation rules. It populates a special dictionary called ModelState.
+if (!ModelState.IsValid)
+    {
+        // Validation failed! Return the bad request along with the errors.
+        return BadRequest(ModelState);
+    }
+
+Client-Side Validation (Bonus)
+In a traditional MVC View app (HTML), you can include jQuery validation scripts 
+
+What is Caching?
+Caching is the process of storing copies of frequently requested data in a temporary, ultra-fast storage layer (usually RAM) so that future requests for that data can be served much quicker than fetching it from the original source (like a slow database or an external API).
+
+In-Memory Cache (IMemoryCache)
+The data is stored directly in the RAM of the web server hosting your application.
+Pros: Blazing fast because there is zero network overhead.
+Cons: If your app restarts, the cache is wiped out. More importantly, if you host your API on multiple servers (a server farm), Server A won't know what Server B has cached, leading to inconsistent data.
+
+Distributed Cache (IDistributedCache)
+The cache is stored in an external, independent service that all your web servers connect to.
+Pros: If your application servers restart, the cache survives. Every web server looks at the exact same cache pool, ensuring data consistency across your entire infrastructure.
+Cons: Slightly slower than in-memory because data has to travel over the network, and objects must be serialized to bytes/strings.
+
+Redis Cache
+Redis is the industry-standard software used to power a Distributed Cache. It is an open-source, in-memory, key-value data store. .NET provides native support to plug Redis directly into the IDistributedCache interface with a single line of setup code in Program.cs.
+
+
+
+
