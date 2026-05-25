@@ -564,5 +564,90 @@ Redis Cache
 Redis is the industry-standard software used to power a Distributed Cache. It is an open-source, in-memory, key-value data store. .NET provides native support to plug Redis directly into the IDistributedCache interface with a single line of setup code in Program.cs.
 
 
+Difference between PUT, POST, and PATCH?
+Get:data retrival
+Post:add datt via frombody
+Delete: for delete operation
+Put:for update 
+If an object in your database has 5 fields, and your PUT request only sends 2 of them, the other 3 fields will be completely wiped out or reset to NULL
+Patch:When you send a PATCH request, you only send the exact fields you want to change. The server looks at your payload, leaves the rest of the object completely alone, and surgically updates only the targeted properties.No overwrite to null.
+=>Why use GET for retrival and POST for insertions.
+Caching:
+If you use a GET request to perform an "Add" or "Create" operation (like adding a product to a cart, creating a user, or processing a payment), the internet infrastructure will treat it like any other GET request and cache it by default.
+User 101 clicks "Add Laptop to Cart".
+The browser sends GET /api/cart/add?userId=101&itemId=5.
+The laptop is added to the cart, and your API returns HTTP 200 OK with the JSON payload: {"totalItems": 1}.
+The Intermediary Reaction: Because it is a GET request, Cloudflare and the user's web browser say, "Great! This is a safe, read-only request. I will save this 200 OK response in my cache memory so I can serve it faster next time."
+Then user clciks again on same product and add the same data 
+The Cache Interception: The request never reaches your server or database. The web browser (or Cloudflare) intercepts it instantly and says, "Hey, I already know the answer to this exact URL! Here you go!"
+The browser instantly shows the user the cached response from two minutes ago: {"totalItems": 1}.
+so user might be show the totalitem=2 but it will see the totalitem=1 due to post operation done via get and cashing is done
+
+Automatic Retries
+When you use POST to do a PUT operation, you are lying to the network infrastructure.
+If you use POST for an update, and a network glitch happens, the internet will refuse to auto-retry the connection to keep things safe, forcing your app to lag or fail. If you had used PUT, the network infrastructure would have seamlessly retried and fixed the connection in the background without the user ever noticing a glitch!
+
+How to implement exception handling globally?
+In MVC (with Razor Views / .cshtml pages): We traditionally lean toward IExceptionFilter (or app.UseExceptionHandler("/Home/Error")) because it understands Views, controllers, and HTML web pages.
+
+Else (Web APIs, Microservices, Blazor, Minimal APIs, or general .NET apps): We use the modern IExceptionHandler because it is high-performance, handles raw JSON responses perfectly, and protects the entire application pipeline.
+
+Difference between Any() and Count()
+.Any() if your only goal is to find out if data exists. Only use .Count() if you genuinely need to print or use the exact number of items on your screen or in your logic.
+.Any() stops at the first item, while .Count() scans the entire collection.
+
+
+primary key and unique key
+Primary Key
+You can have exactly one Primary Key per table.
+Nulls: It never allows NULL values. Every row must have a valid identity.
+
+Unique Key 
+You can have as many Unique Keys as you want on a single table.Nulls: It allows NULL values (in SQL Server, it allows exactly one row to be NULL; in other databases like PostgreSQL, it can allow multiple NULL rows).
+
+What is REST API and Soap
+The SOAP approach is highly structured and uses XML data format. REST is more flexible and allows applications to exchange data in multiple formats.
+Formats like json,text,xml,html
+it have several HTTP methods like GET,POSt,PUT,DELETE
+
+Difference between RANK(), DENSE_RANK(), ROW_NUMBER()
+ROW_NUMBER(): Completely ignores ties. It strictly assigns a sequential number (1, 2, 3, 4) no matter what.
+RANK(): Assigns the same rank to ties, but skips the next sequential numbers to maintain the count. (Notice David jumps straight to 4, leaving a gap at 3).
+DENSE_RANK(): Assigns the same rank to ties, but never skips a number. The sequence remains perfectly dense (1, 2, 2, 3).
+
+SELECT 
+    Salesperson,
+    SalesAmount,
+    ROW_NUMBER() OVER (ORDER BY SalesAmount DESC) AS [Row_Number],
+    RANK()       OVER (ORDER BY SalesAmount DESC) AS [Rank],
+    DENSE_RANK() OVER (ORDER BY SalesAmount DESC) AS [Dense_Rank]
+FROM Sales;
+
+Optimistic concurrency
+Means two person/api  are updating the same row at same time 
+use lock or row version for it
+
+What is CI/CD pipeline?
+1.  Write & Push: Developer pushes code changes to a Git repository (GitHub/GitLab).
+2.  Trigger: The repository detects the push and spins up an automated cloud runner machine.
+3.  Build: The runner installs the .NET SDK and compiles the code (dotnet build) to check for syntax errors.
+4.  Test: The runner executes all automated unit and integration tests (dotnet test) to catch hidden bugs.
+5.  Package: Once tests pass, the compiled code is packed into a deployable artifact (ZIP file or Docker container).
+6.  Staging: The artifact is deployed to an internal test environment for QA sign-off.
+7.It invloves 
+Continuous Delivery (Click): Automated up to staging $\rightarrow$ Human clicks a button $\rightarrow$ Goes Live.
+OR
+Continuous Deployment (Auto): Automated all the way $\rightarrow$ Code goes live instantly without human intervention.
+
+How do you secure secrets?
+For Local Development
+In appsettings.json
+For Production Clouds
+Azure Key Vault or AWS Secrets Manager
+
+
+
+
+
 
 
