@@ -646,6 +646,94 @@ For Production Clouds
 Azure Key Vault or AWS Secrets Manager
 
 
+What is Managed Identity?
+Managed Identity is a feature of Microsoft Entra ID (formerly Azure Active Directory) that provides a secure, automatically managed identity for Azure resources (such as Virtual Machines, App Services, or Azure Functions).
+It eliminates the need for developers to manage credentials, connection strings, or secrets in code or configuration files.
+
+System-Assigned: Tied directly to a single Azure resource. If the resource is deleted, the identity is automatically cleaned up.
+User-Assigned: Created as a standalone Azure resource. It can be assigned to multiple Azure resources.
+
+
+Monolithic Architecture
+The entire application—UI, business logic, data access, and database—is built, compiled, and deployed as a single unit.
+Pros: Simpler to develop, test, debug locally, and deploy early on. Low latency since all code runs in the same process memory space.
+Cons: Hard to scale individual features; if one small module crashes (like a buggy reporting tool), the entire application goes down. Tight coupling makes large codebases difficult to maintain over time.
+
+Microservices Architecture
+The application is broken down into a collection of small, independent, loosely coupled services (e.g., an Auth Service, an Order Service, a Payment Service). Each service runs its own process, manages its own database, and communicates via lightweight APIs .
+Highly scalable (you can scale just the Payment service during peak hours), fault-isolated.
+High operational complexity.
+
+
+Difference between Partial View and View Component?
+Reusable UI
+Call from Parent view
+Partial View → Header, Footer, Common Form
+No independent logic. It cannot fetch its own data or talk to databases. It relies completely on the parent page to pass it a data model.
+
+
+Reusable UI + Logic
+Separate view
+View Component → Cart count, Notifications, Latest Orders widget
+Fully independent logic. It can inject services, fetch its own data from a database, and execute complex business logic.
+
+Note:
+You can use API data in a Partial View, but the API call should be done in the Controller, not inside the Partial View.
+✅ If the UI needs its own API/DB logic, use a View Component.
+
+
+Attribute routing vs conventional routing?
+Conventional routing uses a common route pattern defined in Program.cs, suitable for MVC apps.
+Attribute routing defines routes directly on controllers/actions using attributes and gives more flexibility, mainly used in APIs.
+Easy Remember:
+Conventional Routing = Centralized routing
+Attribute Routing = Route on controller/action
+Note:
+If attribute routing is applied, ASP.NET Core gives priority to attribute routing over conventional routing for that endpoint.
+
+What is Session State? OR
+session and caching
+Scope
+All users access the exact same cached data.
+Per-User (Private). Data belongs exclusively to one specific browser session. User A can never see User B's data.
+
+
+Goal
+State Management: To remember who the user is and what they are doing as they click from page to page.
+Performance Optimization: To reduce slow database queries, API calls, or heavy CPU calculations.
+
+Lifecycle
+Expires after a set period of user inactivity (typically 20 minutes) or when the browser is closed.
+Expires based on absolute time (e.g., exactly 2 hours), sliding time, or when database data changes.
+
+The Cache Layer: Sits globally. If 1,000 users visit an e-commerce site, they all read the exact same product list from this single global cache bucket. This saves your database from running 1,000 identical queries.
+
+The Session Layer: Sits in isolated tracks. If User A adds a pair of shoes to their cart, that data is locked directly into Session A. User B's session remains completely untouched and empty.
+
+
+Difference between TempData and Session?
+Use Session State when you need a user's data to remain alive and accessible across their entire browsing journey.
+TempData
+Use TempData when you just need to pass data  from one page to another or controller to controller or subsequent page
+Its defining feature is its automatic lifecycle: once the data is read on that subsequent page, it is automatically marked for deletion and vanishes on the next HTTP request.
+Think of TempData like a self-destructing message: once you open and read it, it vanishes—unless you explicitly press the .Keep() button to hold onto it for one more look.
+
+
+Explain Model Binding.
+Model Binding is the bridge between HTTP requests and C# code. It automatically looks at route values, query strings, forms, and JSON request bodies, extracts the data, converts it into strongly typed C# objects.
+[FromRoute],[FromQuery],[FromForm],[FromBody],[FromHeader]
+get the value or input from all of this and bind with c# code.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
