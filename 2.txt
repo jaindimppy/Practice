@@ -1,0 +1,201 @@
+Your company intends to subscribe to an Azure support plan.
+The support plan must allow for new support requests to be opened.
+Which of the following are support plans that will allow this? Answer by dragging the correct option from the list to the answer area.
+options
+Basic
+developer
+standard
+professional direct
+premier
+
+ans:all select but basic not
+in this basic plan is not added
+While the Basic plan (which is included for all Azure customers automatically) allows you to open support tickets for Billing, Quota increases, and Subscription management, it does not allow you to open technical support requests for break/fix issues or troubleshooting.
+
+Azure DevTest Labs
+Create: A developer spins up a Virtual Machine quickly to test some code or a new feature.
+Remove (or Shut Down): Once the testing is finished, the VM is easily deleted or automatically shut down so the company stops paying for it.
+
+Azure AD Identity Protection
+Azure AD Identity Protection is a security tool that uses advanced machine learning to detect, investigate, and automatically fix identity-based risks and suspicious behavior.
+Scenario: Your company wants to ensure that if a user connects to their cloud environment from an unfamiliar or unidentified IP address, they are automatically prompted to change their password to protect the account. Which service should you use?  
+
+Answer: Azure AD Identity Protection (or Microsoft Entra ID Protection)  
+
+
+What are two characteristics of the public cloud? Each correct answer presents a complete solution. NOTE: Each correct selection is worth one point. A. dedicated hardware B. unsecured connections C. limited storage D. metered pricing E. self-service management
+Ans.
+D. metered pricing
+E. self-service management
+
+When you are implementing a Software as a Service (SaaS) solution, you are responsible for ______
+Options:
+configuring high availability
+defining scalability rules
+installing the SaaS solution
+configuring the SaaS solution
+
+✅ Correct Answer: configuring the SaaS solution
+
+You can assign an Azure policy to a virtual machine.”
+✅ Answer: True
+
+Azure Storage is considered PaaS (Platform as a Service)
+
+
+North America is represented by a single Azure region.
+Answer: No (North America has dozens of separate Azure regions, such as East US, West US, Central US, Canada Central, etc.).
+
+Every Azure region has multiple datacenters.
+Answer: No (This is a notorious AZ-900 trick question! While a region is a set of datacenters deployed within a latency-defined perimeter, some smaller or legacy regions might consist of only a single massive datacenter structure).
+
+Data transfers between Azure services located in different Azure regions are always free.
+Answer: No (Data transferring in to an Azure region is free, but outbound data transferring out of a region to a different region carries a bandwidth cost).
+
+
+
+From Azure Service Health, an administrator can view the health of all the services deployed to an Azure environment and all the other services available in Azure.
+Answer: Yes (Azure Service Health provides a unified dashboard experience. It includes the broad Azure Status page—which shows the global health of all available services across all regions—as well as personalized sections tracking only the specific resources you have deployed).
+
+From Azure Service Health, an administrator can create a rule to be alerted if an Azure service fails.
+Answer: Yes (You can configure Service Health Alerts using Action Groups to proactively notify you via email, SMS, or webhooks if an outage or planned maintenance impacts your services).
+
+From Azure Service Health, an administrator can prevent a service failure from affecting a specific virtual machine.
+Answer: No (This is a common trick question. Service Health is strictly a monitoring, reporting, and alerting tool. It can tell you when a failure happens or why it happened, but it has no capability to physically prevent an underlying cloud infrastructure issue or outage).
+
+Azure logic app
+Azure Identity Protection
+Azure Virtual Network Gateway
+VPN gateway
+then diffrenc between Azure Identity Protection and Microsoft Defender for Endpoint
+local  network gateway
+Azure synpse analytics
+azure data lacks
+simple definition know what is it
+Azure sphare 
+iot hub
+
+
+Question: You can monitor health and performance of microservice app running on aks with---
+->Azure App Insights
+
+Question: ou can find recommendations for security best practices security configuration for Azure Kubernetes Service (AKS) with:
+-Microsoft Defender for Cloud
+
+Question: Azure VMs in different virtual networks can communicate by default
+False
+
+Azure Advisor = HSPOC: High Availability, Security, Performance, Operational Excellence, Cost. No “Scalability”!
+
+An Initiative (also called a Policy Set) is a collection of multiple policy definitions grouped together to achieve a single overarching compliance goal. Think of it as a “bundle” of policies, like “Enable Monitoring in Azure Security Center.”
+
+
+Statement 1: Trust Center is part of Microsoft Defender for Cloud. (No)
+Statement 2: Trust Center can only be accessed by users that have an Azure subscription. (No)
+Statement 3: Trust Center provides information about the Azure compliance offerings. (Yes)
+
+What is the longest term you can purchase for Azure Reserved VM Instances?-3 years
+
+
+Software updates and patches ➔ Compute
+Multifactor authentication (MFA) ➔ Identity and access
+Surveillance camera ➔ Physical security
+
+
+You can access Compliance Manager from the---
+ans:
+Microsoft Purview compliance portal  
+Microsoft 365 compliance center
+
+
+An Azure resource can have multiple Delete locks:yes
+
+
+In the infrastructure as a service (laaS) cloud service model, which two components are the responsibility of the cloud service provider? Each correct answer
+presents a complete solution. NOTE: Each correct selection is worth one point.
+A. the configuration and maintenance of storage
+B. the installation and configuration of the operating system
+C. maintaining the hardware
+D. the network configuration
+E. physical security of the datacenter infrastructure
+Answer: CE
+
+
+
+
+You can view your company's regulatory compliance report from Microsoft Defender for Cloud.:if no option for purview and trust portal
+
+
+
+
+You have an accounting application named App1 that uses a legacy database. You plan to move App1 to the cloud. Which service model should you use?
+A. software as a service (SaaS)
+B. infrastructure as a service (laaS)
+C. platform as a service (PaaS)
+Answer: B
+
+
+Monthly salaries for technical personnel are an example of operational expenditure (OpEx) costs.
+Leasing software is an example of operational expenditure (OpEx) costs.
+Both are as Opex
+
+You can view which user turn off the vm during last 14 dya:Activity log
+
+All azure resources deployed to same resource group can have the different region not necessary to use same region
+
+
+Azure sqldatta warehouse main advantage
+high availability
+scaling
+data comprision
+versioning
+-> High availability
+
+Users in Azure Active Directory (Azure AD) are organized by using resource groups.-No
+
+
+Your company has a Software Assurance agreement that includes Microsoft SQL Server licenses You plan to deploy SQL Server on Azure virtual machines.
+What should you do to minimize licensing costs for the deployment?
+A. Use Azure reservations.
+B. Use Azure Hybrid Benefit
+C. Deallocate the virtual machines during off hours.
+D. Configure Azure Cost Management budgets.
+Answer: B
+
+You have an Azure environment.
+You need to create a new Azure virtual machine from a tablet that runs the Android operating system. What are three possible solutions? Each correct answer
+presents a complete solution.
+NOTE: Each correct selection is worth one point.
+A. Use Bash in Azure Cloud Shell.
+B. Use PowerShell in Azure Cloud Shell.
+C. Use the PowerApps portal.
+D. Use the Security & Compliance admin center.
+E. Use the Azure porta
+Answer: ABE
+
+
+
+With Azure ExpressRoute, all inbound data transfer is free of charge. Box 2: No
+Data traffic between azure service within same region is so
+Inbound data traffic is free but outbound data traffic is not. Box 3: Yes
+
+Microsoft provides a minimum of 12 months’ notice before ending support for a service.
+
+You plan to migrate a web application to Azure. The web application is accessed by external users.
+You need to recommend a cloud deployment solution to minimize the amount of administrative effort used to manage the web application.
+What should you include in the recommendation?
+A. software as a service (SaaS)
+B. platform as a service (PaaS)
+C. infrastructure as a service (IaaS)
+D. database as a service (DaaS)
+ 
+->B
+
+
+You have an Azure environment that contains 10 virtual networks and 100 virtual machines. You need to limit the amount of inbound traffic to all the Azure virtual
+networks.
+What should you create?
+->one Azure firewall
+
+
+An Azure region contains one or more data centers that are connected by using a low-latency network
