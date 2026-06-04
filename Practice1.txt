@@ -142,7 +142,7 @@ public class NotificationService
         _sender.Send(msg);
     }
 }
-
+//payments(stretegy pattern) example can also use in this.
 Benefits:
 You can add WhatsApp, Push, Teams, Slack without touching NotificationService.
 Testable.
