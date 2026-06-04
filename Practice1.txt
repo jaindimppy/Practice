@@ -278,6 +278,38 @@ Authentiction via JWT,OAuth,Cookie based
 Authorizatoin via [Authorize(Roles = "Admin")]
 
 
+--------------------------------------------------------
+// Step 1: Create the first employee object
+Employee emp1 = new Employee();
+emp1.Name = "Dimpal";
+
+// Step 2: Reference Assignment (Copies the pointer, NOT the object!)
+Employee emp2 = emp1;
+
+// Step 3: Modify the property using the second variable
+emp2.Name = "Rajeshbhai";
+
+
+STACK:
+[ emp1 ] ──► Pointer [0x77] ──┐
+                              │
+[ emp2 ] ──► Pointer [0x77] ──┼─► Both variables point to the exact same object!
+                              │
+HEAP:                         ▼
+[0x77 Address Slot] ──► { Name = "Dimpal" }
+
+
+
+Step 3: emp2.Name = "Rajeshbhai";
+STACK:
+[ emp1 ] ──► Pointer [0x77] ──┐
+                              │
+[ emp2 ] ──► Pointer [0x77] ──┼─► Still pointing to the same address slot
+                              │
+HEAP:                         ▼
+[0x77 Address Slot] ──► { Name = "Rajeshbhai" }  (The data changed inside the shared object)
+
+If you print emp1.Name now, it will output Rajeshbhai
 
 
 
