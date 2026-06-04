@@ -73,6 +73,57 @@ https://app.sendgrid.com/settings/sender_auth/senders
 How to disable Lazy loading using DBContext?\
 myDBContext.Configuration.LazyLoadingEnabled = false;
 
+The Global Way (Recommended)
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+
+    options.UseLazyLoadingProxies(false) // <-- Explicitly disables the proxy engine globally
+
+           .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+
+
+
+The Context-Instance Way
+
+public class ApplicationDbContext : DbContext
+
+{
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+
+        : base(options)
+
+    {
+
+        // Modern EF Core syntax to shut down lazy loading for this context instance
+
+        this.ChangeTracker.LazyLoadingEnabled = false; 
+
+    }
+
+}
+
+he Property-Specific Way
+
+public class Project
+
+{
+
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+
+
+    // WITHOUT 'virtual', EF Core can never attach a lazy loading proxy to this relationship
+
+    public ProjectDetail Details { get; set; } 
+
+}
+
+
 
 📘 Example (Tracking enabled by default):
 var student = context.Students.FirstOrDefault(s => s.Id == 1);
