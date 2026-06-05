@@ -1,0 +1,100 @@
+1. Simple Action Filter
+An Action Filter runs logic right before and right after an action executes. Use this for logging, tracking, or modifying inputs.
+
+The Code
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics;
+
+public class MySimpleActionFilter : IActionFilter
+{
+    // Runs BEFORE the action
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        Debug.WriteLine("Action is about to start...");
+    }
+
+    // Runs AFTER the action
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        Debug.WriteLine("Action has finished.");
+    }
+}
+2. Simple Exception Filter
+An Exception Filter only triggers if an unhandled error occurs during the execution of your code. This is perfect for logging errors to a database or showing a friendly "Oops" page instead of a scary error screen.
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+public class MySimpleExceptionFilter : IExceptionFilter
+{
+    public void OnException(ExceptionContext context)
+    {
+        // 1. Log the error (you could inject a logger here)
+        string errorMessage = context.Exception.Message;
+
+        // 2. Decide what the user sees
+        context.Result = new ObjectResult(new { 
+            error = "A custom error occurred!", 
+            details = errorMessage 
+        }) { StatusCode = 500 };
+
+        // 3. Mark the exception as "handled" so the app doesn't crash
+        context.ExceptionHandled = true;
+    }
+}
+
+At the Method/Controller Level
+If you want them to apply only to certain parts, use attributes. (Note: You usually inherit from Attribute to use them this way).
+[TypeFilter(typeof(MySimpleActionFilter))]
+public class EmployeeController : Controller 
+{
+    [TypeFilter(typeof(MySimpleExceptionFilter))]
+    public IActionResult Index() => View();
+}
+At the Global Level (Recommended)
+This is usually what you want for Exception Filters—so you don't have to put them on every single controller. Add this in your Program.cs:
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<MySimpleActionFilter>();
+    options.Filters.Add<MySimpleExceptionFilter>();
+});
+
+3)Authorization filter:
+create authprizeFilter class
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+public class AuthFilter :Attribute, IAuthorizationFilter
+{
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var role = context.HttpContext.Session.GetString("Role");
+        if(role != "Admin")
+        {
+            context.Result = new ContentResult()
+            {
+                StatusCode = 403,
+                Content = "Access denied : you dont have admin permission to access this page"
+            };
+        }
+        //throw new NotImplementedException();
+    }
+}
+
+
+and use in controller
+[AuthFilter]
+public IActionResult UserList()
+ {
+     throw new DbUpdateException("DbException occurred");
+     var users = _appDbContext.Users.ToList();
+     return View(users);
+ }
+
+
+To check above functionality you have to saved the user's role at the time of login in Httpcontext
+like this
+ if(userDb != null)
+            {
+                HttpContext.Session.SetString("Name", userDb.Name);
+                HttpContext.Session.SetString("Password",userDb.Password);
+                HttpContext.Session.SetString("Role",userDb.Role);
