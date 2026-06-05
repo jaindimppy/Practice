@@ -1,15 +1,16 @@
 Queries:
 The "Second Highest Salary" (Classic)
 2. Group By with Having (Filtering Aggregates) like Find departments having more than 5 employees.
-Find all Departments that have no employees assigned to them.
-Find employees and the names of their Managers (from the same Employees table).
+Find all Departments that have no employees assigned to them.--
+Find employees and the names of their Managers (from the same Employees table).--
 Finding the Nth Highest Salary
 SELECT Salary 
 FROM (
-    SELECT Salary, DENSE_RANK() OVER (ORDER BY Salary DESC) as Rank
+    SELECT Salary, DENSE_RANK() OVER (ORDER BY Salary DESC) as SalaryRank
     FROM Employees
 ) as SalaryTable
-WHERE Rank = N;
+WHERE SalaryRank = N;
+
 Delete duplicate records (keeping the one with the smallest ID):
 DELETE FROM users 
 WHERE id NOT IN (
@@ -86,3 +87,268 @@ GROUP BY
 Categorizing data for analysis.
 Aggregations supported/Designed for SUM, COUNT, etc.
 Can use HAVING to filter groups.
+
+
+
+*Write a query using a Window Function to calculate a running total of salaries inside each department, ordered by employee hire date.
+SELECT name, 
+       deptId, 
+       hireDate, 
+       salary,
+       SUM(salary) OVER (
+           PARTITION BY deptId 
+           ORDER BY hireDate
+       ) AS running_total_salary
+FROM employee;
+If we want only numbering then we will use Rownumber and here we want sum dept wise then use sumover
+
+*Write a query to find the top 3 highest-paid employees in each department.
+Using a Subquery
+SELECT id, deptId, salary
+FROM (
+    SELECT id, 
+           deptId, 
+           salary,
+           ROW_NUMBER() OVER (PARTITION BY deptId ORDER BY salary DESC) AS salary_rank
+    FROM employee
+) AS temp_table
+WHERE salary_rank <= 3;
+
+Using a CTE
+WITH RankedEmployees AS (
+    SELECT id, 
+           deptId, 
+           salary,
+           ROW_NUMBER() OVER (
+               PARTITION BY deptId 
+               ORDER BY salary DESC
+           ) AS salary_rank
+    FROM employee
+)
+SELECT id, deptId, salary
+FROM RankedEmployees
+WHERE salary_rank <= 3;
+
+
+*Write a query to find all departments that have a total salary expense greater than 1,000,000
+WITH temp AS (
+    SELECT deptId, 
+           SUM(salary) OVER (PARTITION BY deptId) AS total_salary_expense
+    FROM employee
+)
+
+SELECT *
+FROM temp 
+WHERE total_salary_expense > 1000000;
+
+
+*Write a query to select all records from an orders table where the order_date falls exactly within the last 30 days from the current system time.
+SELECT * 
+FROM [Orders] 
+WHERE orderDate >= DATEADD(day, -30, GETDATE())
+  AND orderDate <= GETDATE(); -- Optional: prevents picking up accidental future datesWrite a query to find all employees who were hired in the same month and year as their direct manager.
+
+*Write a query to find all employees who were hired in the same month and year as their direct manager.
+SELECT e.id AS EmployeeId,
+       e.name AS EmployeeName,
+       e.joiningDate AS EmployeeHired,
+       m.name AS ManagerName,
+       m.joiningDate AS ManagerHired
+FROM employee e 
+INNER JOIN employee m ON e.managerid = m.id  
+WHERE MONTH(e.joiningDate) = MONTH(m.joiningDate)
+  AND YEAR(e.joiningDate) = YEAR(m.joiningDate);
+
+
+
+Reversing an Array
+int[] arr = new int[5]; 
+
+for (int i = 0; i < arr.Length; i++)
+{
+    // Accessing elements from index 0 to 4
+    Console.WriteLine(arr[i]); 
+}
+
+// Correct syntax to initialize an array with explicit values
+int[] arr = new int[5] { 1, 2, 3, 4, 5 }; 
+
+// Fix 1: Start at Length - 1 (index 4)
+// Fix 2: Loop while i >= 0
+for (int i = arr.Length - 1; i >= 0; i--)
+{
+    Console.WriteLine(arr[i]); // Outputs: 5, 4, 3, 2, 1
+}
+Finding the Maximum and Minimum Elements
+public static (int max, int min) FindMinMax(int[] arr)
+{
+    if (arr == null || arr.Length == 0)
+        throw new ArgumentException("Array cannot be empty");
+
+    int max = arr[0];
+    int min = arr[0];
+
+    for (int i = 1; i < arr.Length; i++)
+    {
+        if (arr[i] > max) max = arr[i];
+        if (arr[i] < min) min = arr[i];
+    }
+
+    return (max, min); // Returning a C# Tuple
+}
+5️⃣ Find 2nd / 3rd / 4th Highest Number using LINQ
+
+int[] numbers = { 10, 5, 20, 8, 20, 15 };
+
+
+
+var result = numbers
+
+ .Distinct()
+
+ .OrderByDescending(x => x)
+
+ .ToList();
+
+
+
+Console.WriteLine("2nd Highest: " + result[1]);
+
+Console.WriteLine("3rd Highest: " + result[2]);
+
+Console.WriteLine("4th Highest: " + result[3]);
+
+(Commonly asked with Employee Salaries → e.g., "Find the 3rd Highest Salary")
+
+3️⃣ Print duplicate values in an array using LINQ
+
+
+
+ char[] duplicate_values = { 'a','b','a','c','d','e','b' };
+
+ var duplicates = duplicate_values .GroupBy(x => x) .Where(g => g.Count() > 1) .Select(y => y.Key); 
+
+Console.WriteLine(string.Join(", ", duplicates));
+
+
+
+		
+
+What are the primary differences between a stack and a queue?
+
+What are the differences between IEnumerable<T>, ICollection<T>, and IList<T> interfaces?
+
+
+
+// C# program to find second largest element in an array
+// using Sorting
+
+using System;
+
+class GfG {
+    
+    // function to find the second largest element
+    public static int getSecondLargest(int[] arr) {
+        int n = arr.Length;
+        
+        // Sort the array in non-decreasing order
+        Array.Sort(arr);
+  
+        // start from second last element as last element is the largest
+        for (int i = n - 2; i >= 0; i--) {
+            
+            // return the first element which is not equal to the 
+            // largest element
+            if (arr[i] != arr[n - 1]) {
+                return arr[i];
+            }
+        }
+  
+        // If no second largest element was found, return -1
+        return -1;
+    }
+
+    static void Main() {
+        int[] arr = { 12, 35, 1, 10, 34, 1 };
+        Console.WriteLine(getSecondLargest(arr));
+    }
+}
+
+OR
+// C# program to find the second largest element in the array
+// using two traversals
+
+using System;
+
+class GfG {
+    
+    // Function to find the second largest element in the array
+    static int getSecondLargest(int[] arr) {
+        int n = arr.Length;
+
+        int largest = int.MinValue, secondLargest = int.MinValue;
+
+        // Finding the largest element
+        for (int i = 0; i < n; i++) {
+            if (arr[i] > largest)
+                largest = arr[i];
+        }
+
+        // Finding the second largest element
+        for (int i = 0; i < n; i++) {
+            
+            // Update second largest if the current element is greater
+            // than second largest and not equal to the largest
+            if (arr[i] > secondLargest && arr[i] != largest) {
+                secondLargest = arr[i];
+            }
+        }
+        return secondLargest;
+    }
+
+    static void Main() {
+        int[] arr = { 12, 35, 1, 10, 34, 1 };
+        Console.WriteLine(getSecondLargest(arr));
+    }
+}
+
+
+What is the difference between String and StringBuilder in C#?
+Once a string object is created in C#, it cannot be changed in memory. When you modify a string—such as appending text, converting to uppercase, or replacing characters—the .NET runtime does not update the existing text. Instead, it discards the reference, allocates a brand-new memory block on the heap for the result, and leaves the old string behind for the Garbage Collector to clean up.
+
+The Garbage Collector (GC) has to work overtime to clean them all up, freezing your application's performance.
+
+
+
+StringBuilder acts like an elastic wrapper around a dynamic array of characters. It allocates an internal memory block (a buffer) ahead of time. When you append, insert, or remove text, it alters the characters directly inside that same memory buffer without creating new objects on the heap.
+
+zero work is thrown onto the Garbage Collector. If it eventually runs out of those 16 slots, it automatically doubles its capacity in a single clean layout shift.
+
+
+IQueryable<User> smartPlan = database.Users.Where(u => u.Age > 18 && u.IsActive);
+
+What happens: It translates your C# code into raw SQL: SELECT * FROM Users WHERE Age > 18 AND IsActive = 1.
+
+direct filter on db
+
+
+
+IEnumerable<User> streamPlan = database.Users.where(x=>x.age>18);
+
+in this 
+
+The Network Load: If your database has 500,000 users, all 500,000 rows are pulled across the network grid into your application server's RAM.
+
+The RAM Waste: Your application's local CPU has to manually loop through all 500,000 records in memory, check if age > 18, and throw away the ones that don't match. This causes high memory spikes and can crash your application under heavy production loads.
+
+
+
+List<User> cachedList = database.Users.Where(u => u.Age > 18).ToList();
+
+What happens: The database connection closes instantly. If you loop through cachedList five times, it reads instantly from your local system RAM without ever touching or querying the database server again.
+
+
+
+
+
+
