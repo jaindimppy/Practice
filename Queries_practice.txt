@@ -347,6 +347,7 @@ List<User> cachedList = database.Users.Where(u => u.Age > 18).ToList();
 
 What happens: The database connection closes instantly. If you loop through cachedList five times, it reads instantly from your local system RAM without ever touching or querying the database server again.
 
+geeksforgeeks.org/c-sharp/difference-between-abstract-class-and-interface-in-c-sharp/
 
 
 
