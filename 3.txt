@@ -363,5 +363,5 @@ viewcomponent
 
 global exceptionhandler
 
-
+AzCopy ,Azure Storage Explorer ,Microsoft Entra ID ,Microsoft Entra Connect ,Zero Trust,Microsoft Defender for Cloud,Resource locks,IAC and ARM templates&Bicep,Azure Service Health,Application Insights,Azure Monitor Alerts,Azure Monitor,Azure Azure Monitor,Azure policy
 
