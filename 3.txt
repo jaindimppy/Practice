@@ -1,0 +1,367 @@
+What is the difference between Deferred (Lazy) Execution and Immediate Execution in LINQ?
+Answer: Deferred Execution means the query is not evaluated when constructed; it executes only when the data is iterated over (e.g., using a foreach loop). Immediate Execution forces the query to evaluate immediately and cache results (e.g., using .ToList(), .ToArray(), or .Count()).
+
+What is the "N+1 Query Problem" in EF Core, and how do you prevent it?
+Answer: It happens when code loads a parent entity and then fires a separate database query for each child entity inside a loop. You prevent it by using Eager Loading with the .Include() and .ThenInclude() methods to fetch all required data in a single SQL JOIN statement.
+
+When and why would you use .AsNoTracking() in Entity Framework Core?
+Answer: You use it for read-only queries. It tells EF Core not to waste CPU and memory tracking changes on the fetched entities, significantly improving performance for search results or report views.
+
+
+Azure Managed Identity vs. Connection Strings
+What is Azure Managed Identity?
+Managed Identity eliminates the need for your code to maintain credentials (like passwords, client secrets, or connection strings).
+No Credential Exposure: You don't store passwords or access keys in your appsettings.json, environment variables, or Azure App Configuration. Even if your source control or server config is leaked, there are no secrets to steal.
+Automatic Lifecycle & Rotation: Microsoft handles credential rotation completely under the hood. You never have to worry about an app breaking because an expiring secret wasn't updated.
+Granular Access Control (RBAC): You grant specific Azure permissions to the identity itself. For example, your App Service identity can be granted only Azure SQL Data Reader and Data Writer roles—nothing more.
+
+
+
+Zero-Downtime Deployments with Deployment Slots
+Deploy to Staging: You deploy your new version of code to the Staging slot instead of production.
+Warm-Up and Test: While the app is in the staging slot, you can run smoke tests and hit its specific URL.
+The Swap: When you trigger a "Swap", Azure updates the routing rules at the internal load balancer level.  The swap happens seamlessly in seconds without dropped HTTP connections.
+
+
+
+What is the difference between Eager Loading, Explicit Loading, and Lazy Loading?
+Answer: * Eager Loading: Fetches related data along with the main entity in a single query using .Include() (e.g., loading an Order along with its OrderItems via a SQL JOIN).
+Explicit Loading: Loads related data explicitly at a later point after the main query has executed, using context.Entry(order).Collection(o => o.OrderItems).Load().
+Lazy Loading: Delays the loading of related data until the navigation property is accessed for the first time in code. It relies on proxy runtime wrappers and can easily trigger performance bugs (like the N+1 query problem) if not used carefully.
+
+
+
+Difference between IActionResult and ActionResult<T> 
+IActionResult = Good for actions that don't return data (like a Delete operation where you just return NoContent()).
+ActionResult<T> = Best for actions that do return data (like a Get operation), because it gives you compile-time type safety and automatically builds your Swagger documentation.
+
+
+Difference between app.Use() vs. app.Map()
+app.Map() = The Exit Ramp (Branching Out)
+app.Map() is used to split the pipeline based on the URL path. If the incoming request matches a specific URL, it pulls the request off the main highway and diverts it down a completely separate side road.
+means in middleware we find the .map and any route is matched then we call that specific url and got to that page or url
+but in middleware  like .use() we given the test means pass it and continue to other use() middleware in program.cs
+Methods using Use (like UseStaticFiles or UseAuthorization) are pass-through stations on the main highway pipeline that processing flows through sequentially via a next() delegate.
+
+Explain Await() and Wait or Result()
+The Right Way: Using await
+When a Chef uses await for a database query:
+The Chef puts the cake in the oven.
+Because it is awaited, the Chef walks away and helps another customer or prepares another order.
+When the oven timer goes off (the database returns data), any available Chef comes back to finish the cake.
+Result: The kitchen runs efficiently. Even with only a few Chefs, hundreds of orders move smoothly because no one is standing around idle.
+
+1. The Healthy Async Flow (await)
+When a request comes in, a thread is assigned to handle it. If that request needs to perform an asynchronous I/O operation (like fetching data from a database or calling a third-party API) and uses the await keyword:
+The thread kicks off the database task and is immediately released back to the thread pool.
+While the database is busy working, that thread is free to handle other incoming user requests.
+When the database finishes, a thread is pulled from the pool to resume your method.
+Result: High throughput. A small number of threads can handle thousands of concurrent users.
+
+2. The Choking Sync Flow (.Result / .Wait())
+When a developer calls a background async method but forces it to run synchronously using .Result or .Wait():
+The assigned thread kicks off the database task.
+Instead of releasing itself, the thread blocks and stands completely still, crossing its arms and waiting for the database to return a value.
+Under heavy traffic, if 100 users hit endpoints that use .Result, 100 threads are instantly frozen and locked up.
+calling sync from async method
+
+// This looks harmless but will crash your server under heavy load
+
+[HttpGet("user/{id}")]
+public IActionResult GetUserData(int id)
+{
+    // Hitting .Result blocks the executing thread completely!
+    var data = _userService.GetProfileAsync(id).Result; 
+    return Ok(data);
+}
+
+
+How do you secure an ASP.NET Core API in Azure?
+Application-Level Security (In Code)
+JWT Authentication & Microsoft Entra ID(SSO,AUTH,MFA,Conditional Access):
+Infrastructure-Level Security (In Azure)
+Azure Key Vault & Managed Identity:
+
+
+
+What does “PostBack” mean in ASP.NET?
+A PostBack is the process of sending an ASP.NET page from the client browser back to the server for processing.
+
+
+
+How to maintain sessions in MVC?
+We can maintain sessions in MVC using three different ways:
+Temp data
+Viewdata
+View bag
+
+If you are being interviewed for modern ASP.NET Core (versions 3.1 through .NET 8/9), the interviewer will likely ask: "What replaced the Global.asax file?"
+The Answer: Global.asax no longer exists in modern .NET. It has been entirely replaced by the Program.cs file.
+
+
+For database performance, IQueryable is almost always the winner when filtering data.
+
+
+
+Find() — Synchronous (Blocking)
+How it handles the thread: The thread handling the web request tells the database: "Go find the user with ID 5." While the database is searching the disk, that thread blocks (freezes) and stands completely still. It cannot do any other work until the database returns the data.
+
+FindAsync() — Asynchronous (Non-Blocking)
+How it handles the thread: The thread tells the database: "Go find the user with ID 5." Because it is awaited, that thread immediately releases itself and goes back to the thread pool. It can now handle new incoming requests for other users. The moment the database finishes finding the record, an available thread from the pool wakes up and resumes your code.
+
+
+What are the stack and the heap?
+How to craete custome middleware in .net c#
+Create new class with name as CustomMiddleware
+public class CustomMiddleware
+{
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var clientIp = context.Connection.RemoteIpAddress?.ToString();
+        if (clientIp == "192.168.1.50") // The bad actor's IP address
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden; // Forbidden status
+            await context.Response.WriteAsync("Short-Circuit: Your IP address is blocked.");
+            return; // Stop here
+//so direct return if ip is equal to this otherwise we call /move to   next middleware
+        }
+        await _next(context);
+    }
+}
+
+in this   public async Task InvokeAsync(HttpContext context)
+The class should use the Middleware suffix by convention.
+The execution method must be named precisely InvokeAsync or Invoke.
+The method must return a Task and accept HttpContext as its first parameter.
+
+in program.cs
+app.UseMiddleware<AuthCheckMiddleware>();
+before  app.run()
+
+OR
+Direct in program.cs without creating separate class
+---------------------------------------------------------------
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+// ========================================================
+// 🛡️ INLINE CUSTOM MIDDLEWARE (No separate class file needed!)
+// ========================================================
+app.Use(async (context, next) =>
+{
+    // 1. Get the client's incoming IP address
+    var clientIp = context.Connection.RemoteIpAddress?.ToString();
+
+    // 2. Run the security check (including loopback strings for local testing)
+    if (clientIp == "192.168.1.50" || clientIp == "::1" || clientIp == "127.0.0.1")
+    {
+        // Set response metadata
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        context.Response.ContentType = "text/plain";
+
+        // Write the error message back to the client
+        await context.Response.WriteAsync("Inline Short-Circuit: Your IP address is blocked.");
+
+        // 🛑 THE SHORT-CIRCUIT: Exit the method immediately.
+        // Because we return here, 'await next(context)' below is completely bypassed.
+        return;
+    }
+
+    // ✅ PASS-THROUGH: If the IP is safe, keep moving down the pipeline highway
+    // Note: 'next(context)' is called because 'next' is a RequestDelegate parameter passed by app.Use
+    await next(context);
+});
+
+// ========================================================
+// Standard .NET Pipeline Components Follow
+// ========================================================
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+------------------------------------------------------
+
+
+ApiController and Regular Controller
+ApiController
+
+Base class:
+Inherits from ControllerBase (No View support)
+Return:
+JSON / XML Data (Objects)
+Validation:
+Automatic. If the data is bad, it instantly returns an automatic 400 Bad Request
+
+
+Regular Controller (MVC)
+Base class:
+Inherits from Controller (Includes View support)
+Return:
+HTML Views (return View();)
+Validation:
+Manual. You must write if (!ModelState.IsValid) inside your action methods.
+
+
+.net core request pipeline-sequence of middleware
+The ASP.NET Core request pipeline is configured using a series of middleware components executed sequentially in a bidirectional 'U-turn' architecture. Each component receives an HttpContext and handles logic on both the inbound request and outbound response phases.
+The ordering of components inside Program.cs is critical; middleware handles tasks like exception safety, CORS validation, routing, and authentication before passing execution to the terminal endpoint map. Any middleware component can cleanly short-circuit the pipeline by generating a response and returning early without invoking the next delegate.
+
+CORS and how to handle it
+CORS means you are allowing specific frontend URLs (origins) to access your API from a browser.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+
+Version in the api in .net core api
+API Versioning allows us to introduce changes to an API without breaking existing consumers. It helps maintain backward compatibility while enabling new functionality and schema changes for newer clients.
+4 ways:
+URL Versioning
+Header Versioning-in header  we pass version number
+Query String Versioning-GET /api/products?api-version=2.0
+Media Type (Accept Header) Versioning
+
+1. Install API Versioning Package
+For ASP.NET Core:
+dotnet add package Asp.Versioning.Mvc
+
+2. Configure Versioning in Program.cs
+
+using Asp.Versioning;
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
+
+
+var app = builder.Build();
+app.MapControllers();
+app.Run();
+
+
+
+Via separate controller
+
+[ApiController]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok("Products API V1");
+    }
+}
+
+and 
+
+[ApiController]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class ProductsV2Controller : ControllerBase
+{
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok("Products API V2");
+    }
+}
+
+Multiple Versions in Same Controller
+
+[ApiController]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    [MapToApiVersion("1.0")]
+    public IActionResult GetV1()
+    {
+        return Ok("V1");
+    }
+
+
+
+    [HttpGet]
+    [MapToApiVersion("2.0")]
+    public IActionResult GetV2()
+    {
+        return Ok("V2");
+    }
+}
+
+
+Array and ArrayList
+Array
+An array stores elements of the same type and has a fixed size.
+
+ArrayList
+An ArrayList can grow dynamically and can store any type.
+
+
+Wait,Sleep and Join
+Join()
+join is use by the main thread to complete or finish the when the worker thread are completed
+Thread worker = new Thread(() =>
+{
+
+    Console.WriteLine("Worker started");
+    Thread.Sleep(3000);
+    Console.WriteLine("Worker finished");
+
+});
+worker.Start();
+worker.Join();   // Main thread waits here
+Console.WriteLine("Main thread finished");
+
+Output:
+------------------------
+Worker started
+Worker finished
+Main thread finished
+----------------------------
+in this main thread called and then wait for "worker finished" then it is finished
+Join() blocks the calling thread (often the main thread) until the worker thread completes. After the worker thread finishes, the main thread continues its execution.
+without join()
+----------------------------
+Worker started
+Main thread finished
+Worker finished
+--------------------------------
+
+Wait()
+It is to wait the until the taskis completed.
+
+Sleep()
+Thread.Sleep() pauses the current thread for a specified duration.
+Thread.Sleep(3000);
+
+
+what is cqrs  pattern in .net core
+viewcomponent
+
+global exceptionhandler
+
+
+
