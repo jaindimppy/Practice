@@ -248,6 +248,16 @@ works in - Always in-memory.
 Indexing support.(Add,remove)
 
 
+IEnumerable<User> users = context.Users.Where(u => u.City == "Jaipur").ToList();
+Mutability 
+// ❌ COMPILE ERROR: IEnumerable does not contain a definition for 'Add'
+users.Add(new User { Name = "New Developer", City = "Jaipur" }); // ❌ COMPILE ERROR: IEnumerable does not contain a definition for 'Remove'
+users.Remove(someUser); 
+Indexing
+// ❌ COMPILE ERROR: Cannot apply indexing with [] to an expression of type IEnumerable
+User firstUser = users[0];
+
+
 Finalize and Dispose
 Finalize:-Cleanup unmanaged resources automatically
 Called by the Garbage Collector (GC)
