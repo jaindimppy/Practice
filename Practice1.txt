@@ -258,6 +258,9 @@ Indexing
 User firstUser = users[0];
 
 
+
+ToList,FirstOrDefault,Any,Count,.Sum(), .Max(), .Min(), .Average() allare used to execute the IQuerable
+
 Finalize and Dispose
 Finalize:-Cleanup unmanaged resources automatically
 Called by the Garbage Collector (GC)
@@ -266,6 +269,26 @@ Dispose:Cleanup unmanaged resources manually
 Called explicitly by developer (Dispose() method)
 
 Microservices:Microservices are an architectural style where an application is broken into small, independent services that:
+IQueryable builds the SQL string step-by-step. It defers execution so that any future filtering, sorting, or paging (.Skip()/.Take()) you append happens directly on the Database Server.
+IEnumerable assumes the data is already in RAM. The moment you cast your database data to IEnumerable, any future filtering or processing happens entirely on your Application Server, consuming local memory and CPU cycles.
+// Line 1: Executes immediately and pulls all Jaipur users into RAM
+IEnumerable<User> users = context.Users.Where(u => u.City == "Jaipur").ToList();
+
+// Line 2: You add a second filter later in your code
+var activeJaipurUsers = users.Where(u => u.IsActive == true).ToList();
+now it is in memory...
+
+-------------------------------
+// Line 1: No SQL is executed yet! It just builds the query plan.
+IQueryable<User> usersQuery = context.Users.Where(u => u.City == "Jaipur");
+
+// Line 2: You append the second filter to the query plan. Still no SQL executed!
+IQueryable<User> finalQuery = usersQuery.Where(u => u.IsActive == true);
+
+// Line 3: The TRIGGER command. SQL executes NOW.
+var activeJaipurUsers = finalQuery.ToList();
+at db level
+-------------------------------------------
 
 Are loosely coupled (changes in one don’t affect others directly)
 Are highly maintainable and testable
