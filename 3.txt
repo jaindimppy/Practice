@@ -31,13 +31,13 @@ Lazy Loading: Delays the loading of related data until the navigation property i
 
 
 
-Difference between IActionResult and ActionResult<T> 
+-Difference between IActionResult and ActionResult<T> 
 IActionResult = Good for actions that don't return data (like a Delete operation where you just return NoContent()).
 ActionResult<T> = Best for actions that do return data (like a Get operation), because it gives you compile-time type safety and automatically builds your Swagger documentation.
 
 
-Difference between app.Use() vs. app.Map()
-app.Map() = The Exit Ramp (Branching Out)
+-Difference between app.Use() vs. app.Map()
+app.Use() = The Exit Ramp (Branching Out)
 app.Map() is used to split the pipeline based on the URL path. If the incoming request matches a specific URL, it pulls the request off the main highway and diverts it down a completely separate side road.
 means in middleware we find the .map and any route is matched then we call that specific url and got to that page or url
 but in middleware  like .use() we given the test means pass it and continue to other use() middleware in program.cs
@@ -111,7 +111,7 @@ How it handles the thread: The thread tells the database: "Go find the user with
 
 
 What are the stack and the heap?
-How to craete custome middleware in .net c#
+-How to craete custome middleware in .net c#
 Create new class with name as CustomMiddleware
 public class CustomMiddleware
 {
@@ -189,7 +189,7 @@ app.Run();
 ------------------------------------------------------
 
 
-ApiController and Regular Controller
+-ApiController and Regular Controller
 ApiController
 
 Base class:
@@ -213,7 +213,7 @@ Manual. You must write if (!ModelState.IsValid) inside your action methods.
 The ASP.NET Core request pipeline is configured using a series of middleware components executed sequentially in a bidirectional 'U-turn' architecture. Each component receives an HttpContext and handles logic on both the inbound request and outbound response phases.
 The ordering of components inside Program.cs is critical; middleware handles tasks like exception safety, CORS validation, routing, and authentication before passing execution to the terminal endpoint map. Any middleware component can cleanly short-circuit the pipeline by generating a response and returning early without invoking the next delegate.
 
-CORS and how to handle it
+-CORS and how to handle it
 CORS means you are allowing specific frontend URLs (origins) to access your API from a browser.
 builder.Services.AddCors(options =>
 {
@@ -358,10 +358,17 @@ Thread.Sleep() pauses the current thread for a specified duration.
 Thread.Sleep(3000);
 
 
+If an interviewer asks you about Thread.Join(), you can give an answer that proves you understand both the theory and modern engineering realities:
+
+"Thread.Join() is used in low-level multithreading to block the calling thread until a specific background thread completes its execution. It's essentially a way to coordinate dependency order between raw threads.
+
+However, in modern, real-life .NET development, we rarely manage raw threads or use Join(). Instead, we rely on the Task Parallel Library (TPL) using async and await. This allows us to wait for asynchronous background tasks without blocking our execution threads, which keeps our web applications and APIs highly scalable and responsive."
+
 what is cqrs  pattern in .net core
 viewcomponent
 
+
 global exceptionhandler
 
-AzCopy ,Azure Storage Explorer ,Microsoft Entra ID ,Microsoft Entra Connect ,Zero Trust,Microsoft Defender for Cloud,Resource locks,IAC and ARM templates&Bicep,Azure Service Health,Application Insights,Azure Monitor Alerts,Azure Monitor,Azure Azure Monitor,Azure policy
+
 
