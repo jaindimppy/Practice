@@ -36,6 +36,10 @@ Database action: The lock is released.
 Step 5: User B's pending command now proceeds. It reads the new balance ($150).
 Step 6: User B performs UPDATE account SET balance=180 and commits.
 User experiences a slight delay while waiting for the lock to release. use lock
+OR
+FOR UPDATE NOWAIT: If the row is locked, API 2 will instantly throw an error (e.g., Resource Busy). You can catch this error in your application code and retry or alert the user.
+
+SELECT * FROM employee WHERE emp_id = 42 FOR UPDATE NOWAIT;
 
 2)Difference between Encapsulation and Abstraction
 1. Encapsulation (Protecting the "Inside")
