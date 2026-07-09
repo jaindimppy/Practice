@@ -115,6 +115,51 @@ namespace FireAlarmExample
         }
     }
 }
+----------------------------------------------------------------
+using System;
+
+public class Program
+{
+    // 1. Define the delegate blueprint
+    public delegate void RemoteAction();
+
+    public static void Main()
+    {
+        Program remote = new Program();
+
+        // Target Method 1: Increase Volume
+        RemoteAction volumeAction = remote.IncreaseVolume;
+        
+        // Target Method 2: Power Off
+        RemoteAction powerAction = remote.PowerOff;
+
+        Console.WriteLine("--- Testing Volume Button ---");
+        // 3. Pass the delegate instance as an argument into the method!
+        remote.PressButton(volumeAction);
+
+        Console.WriteLine("\n--- Testing Power Button ---");
+        remote.PressButton(powerAction);
+        
+        Console.WriteLine("\n--- Testing Inline Lambda ---");
+        // Pro-Tip: You can also pass a lambda expression directly inline!
+        remote.PressButton(() => Console.WriteLine("Muted TV!"));
+    }
+
+    // 2. The method that ACCEPTS the delegate as a parameter
+    public void PressButton(RemoteAction actionToExecute)
+    {
+        Console.WriteLine("Button physically pressed on the hardware...");
+        
+        // Execute whatever method was passed into us
+        actionToExecute(); 
+        
+        Console.WriteLine("Button click cycle complete.");
+    }
+
+    // Target Methods matching the delegate signature
+    public void IncreaseVolume() => Console.WriteLine("Volume increased!");
+    public void PowerOff() => Console.WriteLine("TV turning off...");
+}
 -------------------------------------------------------------------------------------------------
 First we create delegate and then event which correspond to delegates
 now The FireAlarm event is just a declaration — it defines what can happen.
