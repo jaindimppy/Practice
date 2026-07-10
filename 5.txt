@@ -1,0 +1,143 @@
+import React from "react";
+
+function TestAll() {
+  const arr = [1, 4, 5, 6, 7];
+
+  // 1. Map: Transform numbers into visual JSX elements (Fixed: "=" added and "</li>" closed)
+  const map1 = arr.map((val) => (
+    <li key={val}>Value: {val}</li>
+  ));
+
+  // 2. Filter: Keep only numbers that match 5 (Output array: [5])
+  const fil1 = arr.filter((x) => x === 5);
+
+  // 3. Reduce: Sum all numbers together (Fixed: parameters and calculation block completed)
+  const rduce = arr.reduce((accumulator, currentVal) => {
+    return accumulator + currentVal;
+  }, 0); // Starting at 0
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+      <h3>1. Map Layout Output:</h3>
+      <ul>{map1}</ul>
+
+      <h3>2. Filter Output:</h3>
+      <div>Found matches: {fil1.join(", ")}</div>
+
+      <h3>3. Reduce Aggregation Output:</h3>
+      <div>Total Mathematical Sum: <strong>{rduce}</strong></div>
+    </div>
+  );
+}
+
+export default TestAll;
+
+
+Minimal APIs	
+Endpoints are defined directly in Program.cs using MapGet(), MapPost(), etc.	
+Controller-Based APIs
+Endpoints are organized into separate controller classes and action methods.
+
+
+Modern Developer Client Tooling: It features a highly interactive 3-panel layout equipped with an integrated client (acting like a built-in Postman environment) that automatically outputs immediate consumption code request snippets for front-end teams in Axios, fetch, or cURL configurations with a single click.
+
+
+
+
+What is the difference between .NET Framework, .NET Core, and modern unified .NET (5, 6, 7, 8, etc.)?
+NET Framework
+Runs only on Windows
+Used for older enterprise applications
+ASP.NET MVC + IIS + Windows Server
+
+.NET Core
+Cross-platform
+Better performance
+Built for microservices and cloud
+ASP.NET Core API running on Windows, Linux, or Docker
+
+Modern .NET (.NET 6/8)
+Continuation of .NET Core
+One platform for web, APIs, cloud, desktop, and mobile apps
+ASP.NET Core API + Docker + Azure + Linux
+
+
+
+What is the role of the CLR (Common Language Runtime) and CoreCLR?
+Responsibilities of CLR
+JIT Compilation – Converts IL into machine code.
+Garbage Collection (GC) – Automatically frees unused memory.
+Exception Handling – Manages exceptions.
+Memory Management – Allocates and deallocates memory.
+Security – Provides runtime security checks.
+Thread Management – Manages multithreading.
+
+CoreCLR is same as CLR but is:
+Cross-platform (Windows, Linux, macOS)
+Faster and more optimized
+Designed for cloud, containers, and microservices
+
+
+What is the middleware pipeline in ASP.NET Core? How do app.Use(), app.Run(), and app.Map() differ?
+
+| Method      | Purpose                     | Calls Next Middleware? | Terminates Pipeline? |
+| ----------- | --------------------------- | ---------------------- | -------------------- |
+| `app.Use()` | Add middleware              | Yes (`next()`)         | No                   |
+| `app.Run()` | Terminal middleware         | No                     | Yes                  |
+| `app.Map()` | Create branch based on path | Depends on branch      | Branch can terminate |
+
+
+
+
+What is the difference between a class, a struct, and a record in C#? When would you use a record?
+Classes are reference types, so assignment copies the reference. Structs are value types, so assignment copies the entire object.Struct Not supported Inheritance.
+public class Emp
+{
+    public int Id = 5;
+}
+
+static void Main()
+{
+    Emp e1 = new Emp();
+    Emp e2 = e1;
+    e1.Id = 15;
+    Console.WriteLine(e1.Id); // 15
+    Console.WriteLine(e2.Id); // 15
+}
+
+public struct Emp
+{
+    public int Id;
+}
+
+static void Main()
+{
+    Emp e1 = new Emp();
+    e1.Id = 5;
+    Emp e2 = e1;
+    e1.Id = 15;
+    Console.WriteLine(e1.Id); // 15
+    Console.WriteLine(e2.Id); // 5
+}
+
+
+
+How does Garbage Collector (GC) work?
+The Garbage Collector automatically manages memory by identifying objects that are no longer reachable and reclaiming their memory. It uses a generational model (Gen 0, Gen 1, Gen 2) where short-lived objects are collected frequently and reside in Gen0 and If there is not sufficient memory in generation 0 then it will promote the generation o to generation 1.
+If space occupied by some generation 0 objects that are not released in a garbage collection run, then these objects get moved to generation 1.
+This generation contains short-lived objects and serves as a buffer between short-lived objects and long-lived objects.
+When there is no sufficient memory the object from the generation 1 will be promoted to the generation 2.
+Generation 2 will contains longest lived object such as static objects, global variables as they remain in the heap memory for the whole process duration.
+
+
+What is the difference between Task.Run() and using async/await?
+However, I know Task.Run() is meant for CPU-bound tasks (like heavy data processing, calculations, or image manipulation). It is used to explicitly throw heavy work onto a background thread so it doesn't block the calling thread, which is incredibly useful in Desktop/Mobile apps to keep the UI from freezing, or when doing heavy parallel data crunching."
+
+Why avoid async void except in event handlers?
+Writing a normal method- Always use async Task (or async Task<T>).
+Writing an event handler-Use async void.
+The short explanation is: async void is a "fire-and-forget" mechanism. When you use it, the calling code has no way to track when the method finishes, and more importantly, any exception thrown inside an async void method will crash your entire application.
+When an exception is thrown in a standard async Task method, the exception is caught and placed inside the returned Task object. When you await that task, the exception is re-thrown safely, allowing you to catch it with a standard try/catch block.
+
+simple form
+

@@ -1,0 +1,14 @@
+*Explain the structural and architectural difference between a Clustered Index and a Non-Clustered Index. How many clustered indexes can a single table have, and why?
+When you create a Clustered Index (usually on your Primary Key ID), the database physically sorts the rows on the hard drive by that ID.
+It just contains the keyword and a page number (pointer) telling you where to find the real information. When the database searches a non-clustered index, it finds the match, but it only finds a pointer.
+It then has to take an extra step: use that pointer to jump over to the main table to fetch the rest of the row information. 
+We have only one clutered index per table because we have only one PK and clustered index created on PK.
+
+
+*Describe the difference between an Index Scan and an Index Seek when reviewing an execution plan. Which one is generally preferred for performance, and how do you resolve an unexpected scan?
+The Culprit: WHERE YEAR(CreatedDate) = 2026
+The Fix: Rewrite the query to use a flat data range so the raw column is exposed:
+WHERE CreatedDate >= '2026-01-01' AND CreatedDate < '2027-01-01'
+The Culprit: WHERE Email LIKE '%gmail.com' (Forces a full scan because the engine doesn't know what character the email starts with).
+so we have made the index on column ut throgh the seaech like above can causes the index scan problem
+Because the wildcard % is at the beginning, the sorting of the index becomes completely useless to the search engine. The database engine cannot calculate where the matching data starts.
