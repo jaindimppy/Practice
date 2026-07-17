@@ -1,0 +1,388 @@
+Trust Center is part of Microsoft Defender for Cloud.-No
+"Azure China is a distinct separate instance of Microsoft Azure."
+Azure Files-paas
+A DNS server that runs on an Azure virtual machin-Iaas
+Microsoft Intune-Saas
+You must install Azure Cloud Shell on your computer before you can use it.-No
+The Azure Command-Line Interface (CLI) is installed by default in Windows 11.-NO
+Azure PowerShell can be used on computers that run Windows, Linux, or macOS.-Yes
+
+Azure AD requires domain controllers on Azure virtual machines.-No
+Azure AD provides authentication services for Azure and Microsoft 365.-Yes
+Each user account in Azure AD can be assigned only one Microsoft 365 license-No
+
+
+Data that is stored in an Azure Storage account automatically has at least three copies.-Yes
+All data that is copied to an Azure Storage account is backed up automatically to another Azure data center.-No
+An Azure Storage account can contain only up to 2 TB of data and up to one million files.-No
+
+The Archive access tier for Azure Storage can be set at the account level.-No
+The Cool access tier offers the lowest costs for storing blobs in Azure Storage.-No
+After blobs are uploaded to an Azure Storage container, the access tier of the storage account can be changed.-Yes
+
+You need to compare a company's cloud usage to industry standard best practices. What should you use?
+A. Azure Monitor
+B. Azure Advisor
+C. Application Insights in Azure Monitor
+D. Azure Service Health
+->B
+
+
+You plan to Implement a solution that enables the client computers on your on-premises network to communicate to the Azure virtual machines.
+You need to recommend which Azure resources must be created for the planned solution.
+Which two Azure resources should you Include in the recommendation? Each correct answer presents part of the solution.
+NOTE: Each correct selection is worth one point.
+A. a load balancer
+B. a virtual network
+C. an application gateway
+D. a gateway subnet
+E. a virtual network gateway
+de
+
+
+You have an accounting application named App1 that uses a legacy database. You plan to move App1 to the cloud. Which service model should you use?
+A. software as a service (SaaS)
+B. infrastructure as a service (laaS)
+C. platform as a service (PaaS
+B
+
+To implement an Azure Multi-Factor Authentication (MFA) solution, you must sync on-premises identities to the cloud.-No
+Two valid methods for Azure Multi-Factor Authentication (MFA) are picture identification and a passport number.-No
+Azure Multi-Factor Authentication (MFA) can be required for administrative and non-administrative user accounts.-Yes
+
+
+Monthly salaries for technical and operational personnel are ongoing, day-to-day business costs. These are classified as Operational Expenditure (OpEx).
+
+
+[ Azure Sentinel ] - Analyze security log files from Azure virtual machines
+[ Azure Security Center ] - Display the secure score for an Azure subscription
+
+
+
+An Azure subscription can be associated to multiple Azure Active Directory (Azure AD) tenants.-No
+(There is a strict 1-to-many relationship. A single Azure subscription can only trust and be associated with exactly one Azure AD directory at a time. However, a single Azure AD tenant can have multiple subscriptions associated with it.)
+
+You can change the Azure Active Directory (Azure AD) tenant to which an Azure subscription is associated.-YesWhen an Azure subscription expires, the associated Azure Active Directory (Azure AD) tenant is deleted automatically.-No  
+(An Azure AD tenant is a completely independent identity resource. If a billing subscription associated with it expires or is canceled, the tenant remains intact so you can continue to manage other directory resources, users, or other active subscriptions.)
+
+
+This question requires that you evaluate the Bold text to determine if it is correct.
+From Azure Cloud Shell, you can track your company's regulatory standards and regulations, such as ISO 27001.
+Instructions: Review the underlined text. If it makes the statement correct, select "No change is needed/' If the statement is incorrect, select the answer choice that
+makes the statement correct.
+A. No change is needed.
+B. the Microsoft Cloud Partner Portal
+C. Compliance Manager
+D. the Trust Center
+
+C
+
+Which statement accurately describes the Modern Lifecycle Policy for Azure services?
+A. Microsoft provides mainstream support for a service for five years.
+B. Microsoft provides a minimum of 12 months’ notice before ending support for a service.
+C. After a service is made generally available, Microsoft provides support for the service for a minimum of four years.
+D. When a service is retired, you can purchase extended support for the service for up to five years
+
+B
+
+Deploying your own datacenter is an example of CapEx.-Yes
+
+This question requires that you evaluate the underlined text to determine if it is correct. An Availability Zone in Azure has physically separate locations across two
+continents.
+Instructions: Review the underlined text. If it makes the statement correct, select “No change is needed.” If the statement is incorrect, select the answer choice
+that makes the statement correct.
+A. No change is needed.
+B. within a single Azure region
+C. within multiple Azure regions
+D. within a single Azure datacenter
+Answer: B
+
+You can create Group Polices in Azure Active Directory (Azure AD).-No
+
+Your company plans to deploy several web servers and several database servers to Azure.
+You need to recommend an Azure solution to limit the types of connections from the web servers to the database servers.
+What should you include in the recommendation?
+A. network security groups (NSGs)
+B. Azure Service Bus
+C. a local network gateway
+D. a route filter
+A
+A local network gateway (C) is used to define the configuration of your on-premises VPN device for cross-premises connectivity.
+
+A Standard support plan is included in an Azure free account.-No
+A Premier support plan can only be purchased by companies that have an Enterprise Agreement (EA).-No
+Support from MSDN forums is only provided to companies that have a pay-as-you-go subscription.-No
+
+No, actually, PowerShell is available on Linux!
+An Azure administrator plans to run a PowerShell script that creates Azure resources. You need to recommend which computer configuration to use to run the
+script.
+Solution: Run the script from a computer that runs Linux and has the Azure CLI tools installed. Does this meet the goal?
+A. Yes
+B. No 
+No
+
+
+Your company has an on-premises network that contains multiple servers.
+The company plans to reduce the following administrative responsibilities of network administrators:
+• Backing up application data
+• Replacing failed server hardware
+• Managing physical server security
+• Updating server operating systems
+• Managing permissions to shared documents
+The company plans to migrate several servers to Azure virtual machines.
+You need to identify which administrative responsibilities will be reduced after the planned migration. Which two responsibilities should you identify? Each correct
+answer presents a complete solution. NOTE:
+Each correct selection is worth one point.
+A. Replacing failed server hardware
+B. Backing up application data
+C. Managing physical server security
+D. Updating server operating systems
+E. Managing permissions to shared documents
+AC
+
+
+You plan to map a network drive from several computers that run Windows 10 to Azure Storage. You need to create a storage solution in Azure for the planned
+mapped drive.
+What should you create?
+A. an Azure SQL database
+B. a virtual machine data disk
+C. a Files service in a storage account
+D. a Blobs service in a storage account
+C
+
+
+
+A Standard support plan is included in an Azure free account. ➡️ No
+A Premier support plan can only be purchased by companies that have an Enterprise Agreement (EA). ➡️ No
+
+
+Azure Advisor provides recommendations on how to improve the security of an Azure Active Directory (Azure AD) environment.-Yes
+Azure Advisor provides recommendations on how to reduce the cost of running Azure virtual machines.-Yes
+Azure Advisor provides recommendations on how to configure the network settings on Azure virtual machines.-No 
+
+Your company plans to deploy several million sensors that will upload data to Azure. You need to identify which Azure resources must be created to support the
+planned solution. Which two Azure resources should you identify? Each correct answer presents part of the solution. NOTE: Each correct selection is worth one
+point
+A. Azure Data Lake
+B. Azure Queue storage
+C. Azure File Storage
+D. Azure IoT Hub
+E. Azure Notification Hubs
+AD
+
+This question requires that you evaluate the underlined text to determine if it is correct.
+After you create a virtual machine, you need to modify the network security group (NSG) to allow connections from TCP port 8080.
+Instructions: Review the underlined text. If it makes the statement correct, select “No change is needed”. If the statement is incorrect, select the answer choice
+that makes the statement correct.
+A. No change is needed
+B. virtual network gateway
+C. virtual network
+D. route table
+A
+
+Azure China is operated by Microsoft.—No
+
+
+Azure Advisor provides personalized recommendations.—Yes
+Azure Advisor can provide cost recommendations for virtual machines.—Yes
+Azure Advisor can provide recommendations across multiple Azure subscriptions.—Yes
+
+
+What is the longest term you can purchase for Azure Reserved VM Instances?
+A. three years
+
+
+"An Azure container instance is an example of an Azure [ compute service ]."
+
+Trust Center is part of Microsoft Defender for Cloud.-No
+Trust Center can only be accessed by users that have an Azure subscription.-No
+
+
+
+In the software as a service (SaaS) cloud service, which responsibility is shared between Microsoft and the customer?
+A. identity and directory infrastructure management
+B. application management
+C. information and data management
+D. operating system updates
+Answer: C
+
+
+
+You have an Azure subscription and 100 Windows 10 devices.
+You need to ensure that only users whose devices have the latest security patches installed can access Azure AD-integrated applications.
+What should you implement?
+A. Azure Bastion
+B. a conditional access policy
+C. Azure Policy
+D. Azure Firewall
+C
+
+
+You plan to reduce ongoing Azure expenditures.
+You need to identify which factors affect the costs of a resource.
+Which three factors should you identify? Each correct answer presents a complete solution. NOTE: Each correct selection is worth one point.
+A. the Azure region
+B. the type of processed data
+C. the volume of inbound data
+D. the volume of outbound data
+E. the service tier
+ADE
+
+
+
+In an Azure virtual machine scale set, the virtual machines are configured identically.—Yes
+The number of Azure virtual machines in a virtual machine scale set can increase automatically.—Yes
+The number of Azure virtual machines in a virtual machine scale set can decrease automatically.—Yes
+
+
+ExpressRoute uses Border Gateway Protocol (BGP).—Yes
+ExpressRoute uses the internet to connect an on-premises network to Azure.—No
+You can configure multiple ExpressRoute circuits to connect an on-premises datacenter to Azure.—Yes
+
+
+
+A company can extend an internal network by adding its own physical servers to the public cloud.—No
+A private cloud must be disconnected from the internet.—No
+Part of a hybrid cloud is the public cloud.—Yes
+
+Data transfers between Azure services located in different Azure regions are always free.—No
+Azure Monitor can send alerts to Azure AD security groups.—No
+Azure Monitor can trigger alerts based on data in an Azure Log Analytics workspace. — Yes
+The cost of Azure resources can vary between regions. — Yes
+Single sign-on (SSO) requires that all users sign in by using the Microsoft Authenticator app. — No
+You can have two Azure Storage accounts that have the same name in different Azure regions. — No
+You can have two Azure Storage accounts that have the same name in the same Azure subscription. — No
+You can have two Azure Storage accounts that have the same name in two different Azure subscriptions. — No
+Azure virtual networks deployed to the same Azure region are connected by default.—No
+Virtual networks created in the same resource group must have unique names.—Yes
+The Azure virtual network's address space must be unique within a subscription.—No
+
+
+iOS devices can be registered in Azure Active Directory.-Yes
+You can assign an Azure policy to a virtual machine.	No
+If an Azure policy is assigned to a resource group, only compliant resources can be deployed to the group.	Yes
+If an Azure policy is assigned to a resource group, noncompliant resources are removed from the group.	No
+The Service Level Agreement (SLA) guaranteed uptime for paid Azure services is at least 99.9 percent.	No
+
+To use Azure Active Directory (Azure AD) credentials to sign in to a computer that runs Windows 10, the computer must be joined to Azure AD.	Yes
+Azure Active Directory (Azure AD) groups support dynamic membership rules.	Yes
+Users in Azure Active Directory (Azure AD) are organized by using resource groups.	No
+
+With a consumption-based plan, you reduce overall costs by paying only for extra capacity when it is required.No
+Availability zones can be implemented in all Azure regions.No
+You can configure the Azure Active Directory (Azure AD) activity logs to appear in Azure Monitor.Yes
+From Azure Monitor, you can monitor resources across multiple Azure subscriptions.Yes
+
+Leasing software is an example of operational expenditure (OpEx) costs.	Yes
+
+
+
+In which type of cloud model are all the hardware resources owned by a third-party and shared between multiple tenants?
+Correct Answer: C. public
+
+
+If Microsoft plans to end support for an Azure service that does NOT have a successor service, Microsoft will provide notification at least 12 months before. Yes
+Agility ➡️ Applications can be developed, tested, and launched rapidly.
+Azure Site Recovery provides disaster recovery for virtual machines.
+
+From the Azure portal, you can distinguish between services that are generally available and services that are in public preview.	Yes
+After an Azure service becomes generally available, the service is no longer updated with new features.	No
+When you create Azure resources for a service in public preview, you must recreate the resources once the service becomes generally available.	No
+An Azure service in private preview is released to all Azure customers.	No
+An Azure service in public preview is released to all Azure customers.	Yes
+An Azure service in general availability is released to a subset of Azure customers.	No
+A user who is assigned the Owner role can transfer ownership of an Azure subscription.	Yes
+The Azure spending limit is fixed and cannot be increased or decreased.	No
+
+
+Your company has a Software Assurance agreement that includes Microsoft SQL Server licenses You plan to deploy SQL Server on Azure virtual machines.
+What should you do to minimize licensing costs for the deployment?
+A. Use Azure reservations.
+B. Use Azure Hybrid Benefit
+C. Deallocate the virtual machines during off hours.
+D. Configure Azure Cost Management budgets.
+B
+
+
+Azure Firewall will encrypt all the network traffic sent from Azure to the Internet.No
+A network security group (NSG) will encrypt all the network traffic sent from Azure to the Internet.	No
+Azure virtual machines that run Windows Server 2016 can encrypt the network traffic sent from the virtual machines to a host on the Internet.	Yes
+
+
+
+Azure PowerShell modules can be installed on macOS.Yes
+Azure Cloud Shell can be accessed from a web browser on a Linux computer.Yes
+An Azure subscription can have multiple account administrators.No
+An Azure subscription can be managed by using a Microsoft account only.No(personal account also used)
+An Azure resource group can contain multiple Azure subscriptions.No
+You can create a resource group inside of an other resource group.No
+An Azure virtual machine can be in multiple resource groups.No
+A resource group can contain resources from multiple Azure regions.Yes
+
+
+Azure services in public preview can be managed only by using the Azure CLI.	No
+The cost of an Azure service in private preview decreases when the service becomes generally available.	No
+When an Azure virtual machine is stopped, you continue to pay storage costs associated to the virtual machine.	Yes
+
+
+Can you REGISTER iOS/Android? ➡️ YES
+Can you JOIN iOS/Android? ➡️ NO (Only Windows/Linux desktops can be fully Joined)
+For Azure active directory
+
+
+
+You need to ensure that when Azure Active Directory (Azure AD) users connect to Azure AD from the Internet by using an anonymous IP address, the users are
+prompted automatically to change their password.
+Which Azure service should you use?
+A. Azure AD Connect Health
+B. Azure AD Privileged Identity Management
+C. Azure Advanced Threat Protection (ATP)
+D. Azure AD Identity Protection
+D
+
+
+Your company plans to request an architectural review of an Azure environment from Microsoft. The company currently has a Basic support plan.
+You need to recommend a new support plan for the company. The solution must minimize costs. Which support plan should you recommend?
+A. Premier
+B. Developer
+C. Professional Direct
+D. Standard
+A
+
+
+Two Azure subscriptions can be merged into a single subscription by creating a support request.	No
+A company can store resources in multiple subscriptions.	Yes
+
+The Service Level Agreement (SLA) for Azure Active Directory Basic is the same as the SLA for Azure Active Directory Free.	No
+
+
+What should you use to evaluate whether your company's Azure environment meets regulatory requirements?
+A. Compliance Manager from the Security Trust Portal
+B. the Advisor blade from the Azure policy
+C. the Knowledge Center website
+D. the Security Center blade from the Azure portal
+A
+
+
+Azure provides flexibility between capital expenditure (CapEx) and operational expenditure (OpEx). Yes
+All Azure services in private preview must be accessed by using a separate Azure portal.	No
+
+
+If your company uses an Azure free account, you will only be exposed to a subset of Azure services. No
+
+The Basic support plan does not have any technical support for engineers.
+The Developer support plan has only technical support for engineers via email.
+The Standard, Professional Direct, and Premier support plans have technical support for engineers via email and phone
+
+
+
+
+You attempt to create several managed Microsoft SQL Server instances in an Azure environment and receive a message that you must increase your Azure
+subscription limits.
+What should you do to increase the limits?
+A. Create a service health alert
+B. Upgrade your support plan
+C. Modify an Azure policy
+D. Create a new support request
+D
+
