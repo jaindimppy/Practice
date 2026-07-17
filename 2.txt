@@ -199,3 +199,566 @@ What should you create?
 
 
 An Azure region contains one or more data centers that are connected by using a low-latency network
+
+
+
+What can Azure Information Protection encrypt?
+A. an Azure Storage account
+B. documents and email messages
+C. an Azure SQL database
+D. network traffic
+Answer: B
+
+
+What is guaranteed in an Azure Service Level Agreement (SLA) for virtual machines?
+A. uptime
+B. feature availability
+C. bandwidth
+D. performance
+Answer: A
+
+
+
+You have an Azure environment.
+You need to create a new Azure virtual machine from an Android laptop. Solution: You use Bash in Azure Cloud Shell.
+Does this meet the goal?
+A. Yes
+B. No 
+->A
+
+
+You need to configure an Azure solution that meets the following requirements:
+ Secures websites from attacks
+ Generates reports that contain details of attempted attacks What should you include in the solution?
+A. Azure Firewall
+B. a network security group (NSG)
+C. Azure Information Protection
+D. DDoS protection
+
+
+
+IoT Hub is a Platform-as-a-Service (PaaS) gateway explicitly designed to handle secure, high-volume, bidirectional messaging between millions of connected endpoints and backend systems.
+
+IoT Central is a Software-as-a-Service (SaaS) dashboard wrapper. It hides the underlying infrastructure components (like IoT Hub) under a ready-made UI template so you can manage devices without needing cloud architecture experience.
+
+Azure Sphere is an end-to-end security solution consisting of three parts: a custom-designed hardware chip (microcontroller), a secure Linux-based OS, and a cloud-based security service that continuously monitors device integrity.
+
+IoT Hub  A managed service that provides bidirectional communication between IoT devices and Azure
+IoT Central  A fully managed software as a service (SaaS) solution to connect, monitor, and manage IoT devices at scale
+Azure Sphere  A software and hardware solution that provides communication and security features for IoT devices
+
+
+
+*Azure Blueprints:
+Instead of setting up security, rules, and servers manually for every new project, you use a blueprint to stamp out a perfect, safe, pre-configured setup every single time
+
+When you build a blueprint, you compose it using four types of resources, known as artifacts:
+Role Assignments: Automatically grants Role-Based Access Control (RBAC) permissions to specific users or groups when the blueprint is deployed.
+Policy Assignments: Assigns Azure Policies to enforce specific rules or guardrails (e.g., "Only allow resources to be created in the East US region").
+Azure Resource Manager (ARM) Templates: Embeds infrastructure-as-code templates to automatically deploy specific resources (like virtual networks, storage accounts, or VMs).
+Resource Groups: Creates logical containers to organize the deployed resources.to resource only not to direct resource group.
+
+
+Blueprints are created and saved at the Management Group or Subscription level. They cannot be assigned directly to a single resource group. Instead, you assign a blueprint to a subscription, and it configures everything inside that subscription from the top down.
+
+
+What should you use to track the costs of Azure resources?
+A. Tags
+B. usage and quotas
+C. Azure Quickstart templates
+D. budgets
+Answer: D
+usage and quotas
+It Measures Quantity, Not Currency
+
+
+A Platform as a Service (PaaS) solution provides additional memory to apps by changing pricing tiers.
+
+You can apply an Azure Policy directly to a single Virtual Machine (VM) and Management Group level,Subscription level,Resource Group level,Individual Resource level (such as a single VM)
+->Yes
+
+
+Azure SQL Database  and Azure Storage accounts are Paas
+SQL Server on Azure VMs-Iaas
+
+What can you use to identify underutilized or unused Azure virtual machines?
+
+A. Azure Advisor
+
+B. Azure Cost Management + Billing
+
+C. Azure reservations
+
+D. Azure Policy
+
+Answer: A
+
+
+
+- (Exam Topic 2)
+Your Azure environment contains multiple Azure virtual machines.
+You need to ensure that a virtual machine named VM1 is accessible from the Internet over HTTP. What are two possible solutions? Each correct answer presents
+a complete solution.
+A. Modify a DDoS protection plan.
+B. Modify an Azure firewall.
+C. Modify an Azure Traffic Manager profile.
+D. Modify a network security group (NGS)
+Answer: BD
+
+
+
+Your company has an Azure subscription that contains resources in several regions. You need to ensure that administrators can only create resources in those
+regions. What should you use?
+A. a read-only lock
+B. an Azure policy
+C. a management group
+D. a reservation
+Answer: B
+
+Your company has an Azure subscription that contains resources in several regions. You need to ensure that administrators can only create resources in those
+regions. What should you use?
+A. a read-only lock
+B. an Azure policy
+C. a management group
+D. a reservation
+
+
+You plan to use Azure to host two apps named App1 and App2 The apps must meet the following requirements
+• You must be able to modify the code of App1
+• Administrative effort to manage the operating system of App1 must be minimized.
+• App2 must run interactively with the operating system of the server. Which type of cloud service should you use for each app?
+Ans:
+App1: Platform as a service (PaaS)
+App2: Infrastructure as a service (IaaS)
+
+
+What is required to use Azure Cost Management?
+A. a Dev/Test subscription
+B. Software Assurance
+C. an Enterprise Agreement (EA)
+D. a pay-as-you-go subscription
+Answer: C
+
+
+Data that is stored in the Archive access tier of an Azure Storage account can be access at any time by using azcopy.exe
+
+
+
+You plan to map a network drive from several computers that run Windows 10 to Azure Storage. You need to create a storage solution in Azure for the planned
+mapped drive.
+What should you create?
+A. an Azure SQL database
+B. a virtual machine data disk
+C. a Files service in a storage account
+D. a Blobs service in a storage account
+Answer: C
+
+
+This question requires that you evaluate the underlined text to determine if it is correct.
+Resource groups provide organizations with the ability to manage the compliance of Azure resources across multiple subscriptions.
+Instructions: Review the underlined text. If it makes the statement correct, select “No change is needed”. If the statement is incorrect, select the answer choice
+that makes the statement correct.
+A. No change is needed
+B. Management groups
+C. Azure policies
+D. Azure App Service plans
+Answer: C
+
+
+This question requires that you evaluate the underlined text to determine if it is correct.
+An organization that hosts its infrastructure in a private cloud can decommission its data center.
+Instructions: Review the underlined text. If it makes the statement correct, select “No change is needed”. If the statement is incorrect, select the answer choice
+that makes the statement correct.
+A. No change is needed.
+B. in a hybrid cloud
+C. in the public cloud
+D. on a Hyper-V host
+Answer: C
+
+
+You need to collect and automatically analyze security events from Azure Active Directory (Azure AD). What should you use?
+Analyze security log files from Azure virtual machines.
+A. Azure Sentinel
+B. Azure Key Vault
+C. Azure Synapse Analytics
+D. Azure AD Connect
+->A
+
+You can use Azure Cost Management to view costs associated to management groups. → Yes
+
+
+You can stop an Azure SQL Database instance to decrease costs. -> No
+
+You need to compare a company's cloud usage to industry standard best practices. What should you use?
+A. Azure Monitor
+B. Azure Advisor
+C. Application Insights in Azure Monitor
+D. Azure Service Health
+Answer: B
+
+
+An Azure administrator plans to run a PowerShell script that creates Azure resources. You need to recommend which computer configuration to use to run the
+script.
+Which three computers can run the script? Each correct answer presents a complete solution NOTE: Each correct selection is worth one point.
+A. a computer that runs macOS and has PowerShell Core 6.0 installed
+B. a computer that runs Windows 10 and has the Azure PowerShell module installed
+C. a computer that runs Chrome OS and uses Azure Cloud Shell
+D. a computer that runs Linux and has the Azure CLI tools installed
+Answer: ABC
+
+
+From the Azure portal, you can distinguish between services that are generally available and services that are in public preview. Yes
+After an Azure service becomes generally available, the service is no longer updated with new features. No
+When you create Azure resources for a service in public preview, you must recreate the resources once the service becomes generally available.  No
+
+
+
+Your company uses management groups to manage resources in your Azure tenant more efficiently. User1 should be able to assign access and assign policies to
+management groups. You need to determine to which role-based access control (RBAC) role User1 should be added.
+Your solution should follow the principle of least privilege. To which role should you add User1?
+A. Owner
+B. User Access Administrator
+C. Management Group Contributor
+D. Contributor
+->B
+
+Owner:full control over all resources, including the ability to delete management groups or modify any infrastructure. 
+Management Group Contributor: This role allows a user to manage the management group properties.
+Contributor: A Contributor can create and manage Azure resources and can assign policies, but they cannot manage access control or assign RBAC roles to others.
+
+You need to request that Microsoft increase a subscription quota limit for your company.
+Which blade should you use from the Azure portal? 
+OR
+To view a list of planned maintenance events that can affect the availability of an Azure subscription, you should select the following blade from the portal menu:
+->Help + support
+
+What should you use to evaluate whether your company’s Azure environment meets regulatory requirements?
+A. Azure Security Center
+B. Azure Advisor
+C. Azure Service Health
+D. Azure Knowledge Center
+->A
+
+A team has an Azure Cosmos DB account. A solution needs to be in place to generate an alert from Azure Log Analytics when a query request charge exceeds 40
+units more than 10 times during a 10-minute window.
+Which of the following would you recommend? (Choose two)
+A. Create a search query to identify when the requestCharge_s exceeds 10.
+B. Configure a period of 10 and a frequency of 10.
+C. Create a search query to identify when the requestCharge_s exceeds
+D. Create a search query to identify when the duration_s exceeds 10.
+Answer: BC
+
+Azure Backup is an example of platform as a service (PaaS). Yes
+
+You have a resource group named RG1.
+You plan to create virtual networks and app services in RG1.
+You need to prevent the creation of virtual machines only in RG1. What should you use?
+A. a lock
+B. an Azure role
+C. a tag
+D. an Azure policy
+Answer: D
+
+
+Run the script from a computer that runs Linux and has the Azure CLI tools installed. No
+
+
+
+Your company plans to request an architectural review of an Azure environment from Microsoft. The company currently has a Basic support plan.
+You need to recommend a new support plan for the company. The solution must minimize costs. Which support plan should you recommend?
+A. Premier
+B. Developer
+C. Professional Direct
+D. Standard
+->A
+
+
+Your company has 10 departments.
+The company plans to implement an Azure environment.
+You need to ensure that each department can use a different payment option for the Azure services it consumes.
+What should you create for each department?
+A. a reservation
+B. a subscription
+C. a resource group
+D. a container instance
+->B
+
+In which Azure support plans can you open a new support request?
+A. Premier and Professional Direct only
+B. Premier, Professional Direct, and Standard only
+C. Premier, Professional Direct, Standard, and Developer only
+D. Premier, Professional Direct, Standard, Developer, and Basic
+Answer: D
+
+
+You have an on-premises network that contains several servers. You plan to migrate all the servers to Azure.
+You need to recommend a solution to ensure that some of the servers are available if a single Azure data center goes offline for an extended period.
+What should you include in the recommendation?
+A. fault tolerance
+B. elasticity
+C. scalability
+D. low latency
+Answer: A
+
+You have an Azure environment.
+You need to create a new Azure virtual machine from an Android laptop. Solution: You use Bash in Azure Cloud Shell.
+Does this meet the goal?
+A. Yes
+B. No
+-> A
+
+What should you use to evaluate whether your company's Azure environment meets regulatory requirements?
+A. Compliance Manager from the Security Trust Portal
+B. the Advisor blade from the Azure policy
+C. the Knowledge Center website
+D. the Security Center blade from the Azure portal
+-> D
+
+What are two characteristics of the public cloud? Each correct answer presents a complete solution. NOTE: Each correct selection is worth one point.
+A. dedicated hardware
+B. unsecured connections
+C. limited storage
+D. metered pricing
+E. self-service management
+Answer: DE
+
+This question requires that you evaluate the underlined text to determine if it is correct.
+Resource groups provide organizations with the ability to manage the compliance of Azure resources across multiple subscriptions.
+Instructions: Review the underlined text. If it makes the statement correct, select “No change is needed”. If the statement is incorrect, select the answer choice
+that makes the statement correct.
+A. No change is needed
+B. Management groups
+C. Azure policies
+D. Azure App Service plans
+Answer: C
+
+Your Azure environment contains multiple Azure virtual machines.
+You need to ensure that a virtual machine named VM1 is accessible from the Internet over HTTP. Solution: You modify an Azure firewall.
+Does this meet the goal?
+->Yes
+
+What is the longest term you can purchase for Azure Reserved VM Instances?
+A. three years
+B. four years
+C. one year
+D. five years
+Answer: A
+
+After blobs are uploaded to an Azure Storage container, the access tier of the storage account can be changed. (Yes)
+You are free to change the default access tier of your storage account (e.g., switching it from Hot to Cool or vice versa) at any time, even if data has already been uploaded. Changing this account-level setting will automatically apply to any blobs inside the containers that are configured to infer their access tier from the account.
+
+What can you use to identify underutilized or unused Azure virtual machines?
+A. Azure Advisor
+B. Azure Cost Management + Billing
+C. Azure reservations
+D. Azure Policy
+Answer: A
+
+Azure Policy is an enforcement tool. It ensures that your resources stay compliant with your corporate standards and service level agreements (SLAs) by preventing non-compliant resources from being created.
+Azure Advisor is a recommendation tool. It looks at your existing running resources and suggests ways you can improve them across cost, security, reliability, operational excellence, and performance.
+
+
+
+Your company is planning a deployment using Azure Database for PostgreSQL. The deployment should meet the following requirements:- Up to 10 TB storage- Azure Premium Storage- Point-in-time-restore for up to 35 days
+You need to select the appropriate deployment and pricing tier to meet these requirements and minimize costs. What should you select?
+A. Azure Database for PostgreSQL Single Server Memory Optimized tier
+B. Azure Database for PostgreSQL Hyperscale (Citus)
+C. Azure Database for PostgreSQL Single Server General Purpose tier
+D. Azure Database for PostgreSQL Single Server Basic tier
+Answer: C
+
+
+
+You have an azure virtual machine named VM1.
+You plan to encrypt VM1 by using Azure Disk Encryption. Which Azure resource must you create first?
+A. An Azure Storage account
+B. An Azure Information Protection policy
+C. An Encryption Key
+D. An Azure Key Vault
+->D
+
+
+
+Rules to block or permit traffic within your virtual network-NSGs
+For entire or more than virtual network-Firewall
+
+
+
+Deploying your own datacenter is an example of CapEx. Yes
+
+
+
+
+In the fixed price model, you pay for resources even if you do not use them. Yes
+
+
+GDPR
+Simply put, GDPR (General Data Protection Regulation) is a strict data privacy law that protects individuals in the European Union (EU).
+It gives people total control over how companies collect, store, and use their personal information (like names, emails, and photos).
+The 3 Golden Rules to Remember:
+It’s Global: It doesn't matter where your company is based. If you serve customers living in the EU, you must follow the law.
+Huge Penalties: Companies that break the rules face massive fines.
+Your Rights: It gives individuals the "right to be forgotten," meaning they can ask a company to delete all their personal data permanently.
+
+
+
+Your company plans to deploy several web servers and several database servers to Azure.
+You need to recommend an Azure solution to limit the types of connections from the web servers to the database servers.
+What should you include in the recommendation?
+A. network security groups (NSGs)
+B. Azure Service Bus
+C. a local network gateway
+D. a route filter
+Answer: A
+
+
+
+Plans:
+Basic and Developer: Provide only generic online documentation access or non-production business-hour email support. No architectural services are included.
+Standard: This plan is limited to 24/7 break-fix technical support for production workloads, but it does not include personalized design or architectural review services.
+Professional Direct is the most economical tier that explicitly lists architectural support and advisory design consultations among its core benefits.
+Premier support contract absolutely provides deep architectural reviews, design sessions, and dedicated Cloud Solution Architect but too much cost.
+
+
+
+Your company has an on-premises network that contains multiple servers.
+The company plans to reduce the following administrative responsibilities of network administrators:
+• Backing up application data
+• Replacing failed server hardware
+• Managing physical server security
+• Updating server operating systems
+• Managing permissions to shared documents
+The company plans to migrate several servers to Azure virtual machines.
+You need to identify which administrative responsibilities will be reduced after the planned migration. Which two responsibilities should you identify? Each correct
+answer presents a complete solution. NOTE:
+Each correct selection is worth one point.
+A. Replacing failed server hardware
+B. Backing up application data
+C. Managing physical server security
+D. Updating server operating systems
+E. Managing permissions to shared documents
+->A,C
+
+
+
+
+Your company plans to migrate to Azure. The company has several departments. All the Azure resources used by each department will be managed by a
+department administrator.
+You need to recommend an Azure deployment that provides the ability to segment Azure for the departments. What are two possible techniques to segment Azure
+for the departments? Each correct answer presents a
+complete solution. NOTE: Each correct selection is worth one point.
+A. multiple subscriptions
+B. multiple Azure Active Directory (Azure AD) directories
+C. multiple regions
+D. multiple resource groups
+Answer: AD
+
+
+You have an Azure subscription and 100 Windows 10 devices.
+You need to ensure that only users whose devices have the latest security patches installed can access Azure AD-integrated applications.
+What should you implement?
+A. Azure Bastion
+B. a conditional access policy
+C. Azure Policy
+D. Azure Firewall
+->B
+
+
+
+You have an Azure environment that contains multiple Azure virtual machines.
+You plan to Implement a solution that enables the client computers on your on-premises network to communicate to the Azure virtual machines.
+You need to recommend which Azure resources must be created for the planned solution.
+Which two Azure resources should you Include in the recommendation? Each correct answer presents part of the solution.
+NOTE: Each correct selection is worth one point.
+A. a load balancer
+B. a virtual network
+C. an application gateway
+D. a gateway subnet
+E. a virtual network gateway
+->DE
+
+
+
+What can you use to identify underutilized or unused Azure virtual machines?
+A. Azure Advisor
+B. Azure Cost Management + Billing
+C. Azure reservations
+D. Azure Policy
+->D
+
+
+Your company is planning a deployment using Azure Database for PostgreSQL. The deployment should meet the following requirements:- Up to 10 TB storage- Azure Premium Storage- Point-in-time-restore for up to 35 days
+You need to select the appropriate deployment and pricing tier to meet these requirements and minimize costs. What should you select?
+A. Azure Database for PostgreSQL Single Server Memory Optimized tier
+B. Azure Database for PostgreSQL Hyperscale (Citus)
+C. Azure Database for PostgreSQL Single Server General Purpose tier
+D. Azure Database for PostgreSQL Single Server Basic tier
+->C
+
+
+
+You plan to use Azure to host two apps named App1 and App2 The apps must meet the following requirements
+• You must be able to modify the code of App1
+• Administrative effort to manage the operating system of App1 must be minimized.
+• App2 must run interactively with the operating system of the server. Which type of cloud service should you use for each app?
+->App1-Paas and App2-IaaS
+
+
+
+
+You plan to migrate a web application to Azure. The web application is accessed by external users.
+You need to recommend a cloud deployment solution to minimize the amount of administrative effort used to manage the web application.
+What should you include in the recommendation?
+A. software as a service (SaaS)
+B. platform as a service (PaaS)
+C. infrastructure as a service (IaaS)
+D. database as a service (DaaS)
+->B
+
+"Azure China is a distinct separate instance of Microsoft Azure."
+
+
+
+
+
+
+
+
+
+
+
+
+
+Links
+									
+https://www.youtube.com/watch?v=NPEsD6n9A_I									
+https://www.dumpscollection.net/dumps/AZ-900/									
+									
+									
+AZ-900: Azure Fundamentals - Microsoft Learn									
+https://www.youtube.com/playlist?list=PLahhVEj9XNTd6H2vpsvm_kBSMsMw9EMUL									
+									
+AZ-900 Azure Fundamentals Exam Cram - Inside Cloud and Security									
+https://www.youtube.com/watch?v=8n-kWJetQRk									
+									
+AZ 900 Exam Prep Full Course - Tech Pub									
+https://www.youtube.com/watch?v=_cjr8cRS-Gw									
+									
+Practice quizzes:									
+									
+https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/practice/assessment?assessment-type=practice&assessmentId=23&practice-assessment-type=certification									
+									
+https://insidethemicrosoftcloud.com/az900quiz									
+https://www.youtube.com/watch?v=IUCEFBmYIog									
+https://certificationpractice.com/practice-exams/microsoft-azure-fundamentals			again						
+									
+https://www.certlibrary.com/exam/AZ-900		done							
+https://techcloudsolution.in/az-900-practice-test/									
+https://www.youtube.com/watch?v=qc0xBz2h4dw		cmnts							
+https://www.clearcatnet.com/Papers?provider=Microsoft%20Azure&exam=AZ-900									
+https://www.dumps-files.com/files/AZ-900/									
+https://www.slideshare.net/slideshow/microsoft-az900-dumps/239178207									
+https://www.microsoftbraindumps.com/wp-content/uploads/2020/05/PassLeader-Microsoft-Azure-AZ-900-Exam-Dumps-Braindumps-PDF-VCE.pdf									
+									
+
+
