@@ -315,7 +315,7 @@ Actual Plan: Press Ctrl + M (or click the "Include Actual Execution Plan" icon) 
 static,readonly,const,static readonly
 
 static
-static members can only be accessed within the static methods. The non-static methods cannot access static members.
+static members can only be accessed within the static methods. The non-static methods can access static members.
 static members can be accessed using ClassName.StaticMemberName, but cannot be accessed using object.
 Value of the static members can be modified using ClassName.StaticMemberName
 
