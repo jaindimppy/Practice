@@ -422,7 +422,8 @@ dnblevel operation
 transient
 Once the order is saved, we need to send an email. We pass a raw text layout along with the customer's name into a parser utility. This utility does a quick string transformation job, returns the finalized HTML text, and can be immediately destroyed from memory because it doesn't need to hold onto any data.
 If a service just does a job without holding request state (like sending emails, formatting strings, or calculating hashes), make it Transient.
-
+suppose you use scoped for emialsending class then 
+the EmailService instance stays alive in memory for the entire lifecycle of the HTTP request (until the response is returned to the user), even though the email was sent in milliseconds at the beginning.
 
 
 
