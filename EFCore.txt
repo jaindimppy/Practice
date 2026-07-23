@@ -2,9 +2,6 @@ Eager Loading
 Definition: Related data is loaded immediately with the main entity using .Include().
 
 ✅ Example Setup (Eager Loading)
-csharp
-Copy
-Edit
 var blogWithPosts = context.Blogs
     .Include(b => b.Posts)  // Load Posts immediately
     .FirstOrDefault(b => b.Id == 1);
