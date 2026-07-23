@@ -262,6 +262,11 @@ Dispose:Cleanup unmanaged resources manually
 Called explicitly by developer (Dispose() method)
 
 Microservices:Microservices are an architectural style where an application is broken into small, independent services that:
+Are loosely coupled (changes in one don’t affect others directly)
+Are highly maintainable and testable
+Can be deployed independently
+Own their data and domain logic
+
 IQueryable builds the SQL string step-by-step. It defers execution so that any future filtering, sorting, or paging (.Skip()/.Take()) you append happens directly on the Database Server.
 IEnumerable assumes the data is already in RAM. The moment you cast your database data to IEnumerable, any future filtering or processing happens entirely on your Application Server, consuming local memory and CPU cycles.
 // Line 1: Executes immediately and pulls all Jaipur users into RAM
@@ -282,11 +287,6 @@ IQueryable<User> finalQuery = usersQuery.Where(u => u.IsActive == true);
 var activeJaipurUsers = finalQuery.ToList();
 at db level
 -------------------------------------------
-
-Are loosely coupled (changes in one don’t affect others directly)
-Are highly maintainable and testable
-Can be deployed independently
-Own their data and domain logic
 
 Thread:It is sub-unit inside the main process that can execute code independently, but shares the process's memory (heap, global variables).
 Analogy: Think of a process as a company, and threads as employees. All employees work on the same company resources but can do different tasks simultaneously.
