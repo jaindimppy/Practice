@@ -408,7 +408,7 @@ When your app starts, it reads your appsettings.json file
 
 Scoped → “once per request.”
 Lifetime: A new instance is created per HTTP request (or scope). Within that request, all usages get the same instance.
-Need a database connection? $\rightarrow$ Scoped
+Need a database connection?-> Scoped
 
 Transient → “new every time.”
 Lifetime: A new instance is created every time the service is requested.
