@@ -209,14 +209,7 @@ class Program {
 - Type safety → compiler prevents invalid casts.
 - Cleaner code → no need for explicit casting.
 
-Generic and non-generic	
-Feature		Non-Generic (int only)		Generic (T)
-Data Type	Fixed (int)			Any type (T)
-Reusability	Low				High
-Example         ArrayList                       List<T>, Dictionary<TKey,TValue>
 
-Generic use with any of data type while non generic not
-If you create int specific method using non-generic then want same for string then need to create another one so this done by generic method
 
 What are the differences between .NET Framework, .NET Core, and .NET 5+?
 string /Array operation
