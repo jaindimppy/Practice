@@ -1,0 +1,157 @@
+CI Flow Diagram :
+Developer → Git Push → CI Server
+                     ↓
+            Build → Test → Validate
+                     ↓
+                 Success/Fail
+
+
+
+CI Completed
+     ↓
+Build Artifact Created (.dll/.zip/.docker image)
+     ↓
+Deploy to Staging Environment
+     ↓
+Manual Approval
+     ↓
+Deploy to Production
+
+
+
+full
+Code Push
+   ↓
+Build + Test
+   ↓
+Deploy to Staging
+   ↓
+Manual Approval Given
+   ↓
+Automatically Deploy to Production
+
+
+🔹 Here’s what happens:
+
+Human gives approval (clicks Approve)
+
+After that, deployment to production happens automatically
+
+No further human action is needed
+
+👉 So yes — after manual approval, it goes to production automatically
+---------------------------------------------------------------------------------------
+Step 1: Create Two App Services in Azure
+In the Azure Portal:
+
+Create your Staging Web App (e.g., my-dotnet-app-staging).
+
+Create your Production Web App (e.g., my-dotnet-app-prod).
+
+Step 2: Connect Staging App to the develop Branch
+Open my-dotnet-app-staging in the Azure Portal.
+
+In the left menu, go to Deployment Center.
+
+Select Source: GitHub.
+
+Sign in to your GitHub account and select:
+
+Organization: Your GitHub username
+
+Repository: Your .NET repo
+
+Branch: develop
+
+Click Save at the top.
+
+🤖 What Azure does instantly: Azure automatically generates a .yml file inside your GitHub repository (under .github/workflows/develop_my-dotnet-app-staging.yml) and saves all the secret keys for you automatically!
+
+Step 3: Connect Production App to the main Branch
+Open my-dotnet-app-prod in the Azure Portal.
+
+Go to Deployment Center.
+
+Select Source: GitHub.
+
+Select the same repository, but this time select:
+
+Branch: main
+
+Click Save at the top.
+
+🤖 What Azure does instantly: Azure automatically creates a second .yml file (under .github/workflows/main_my-dotnet-app-prod.yml) with the production keys configured.
+1. Write C# Code ➔ Push to 'develop' branch
+   └──> 🤖 Azure's auto-generated YAML runs ➔ Deploys to STAGING APP
+
+2. Test Staging Site ➔ Verify changes look good
+
+3. Ready for Live? ➔ Open GitHub PR ('develop' ➔ 'main')
+   └──> 🔴 Click "Merge Pull Request" (HUMAN CLICK)
+
+4. Code hits 'main'
+   └──> 🤖 Azure's second auto-generated YAML runs ➔ Deploys straight to LIVE APP!
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+1. The Azure Deployment Slots Swap Strategy (Single App Service)
+Instead of using two completely separate App Services, you use one App Service with a Staging Slot.
+
+[ Push to 'main' ] ➔ Auto-deploys to STAGING SLOT ➔ Open Azure Portal ➔ Click "SWAP" ➔ LIVE!
+How it works:
+In Azure Portal, go to your Web App ➔ Deployment slots ➔ Add a slot named staging.
+
+Link Azure Deployment Center on the staging slot to your main branch.
+
+Every time you push or merge to main, code automatically deploys to Staging (my-app-staging.azurewebsites.net).
+
+The Human Interaction: You test the staging URL. When you are happy, you go to the Azure Portal and click the Swap button.
+
+Azure instantly switches the traffic—Staging becomes Production with zero downtime.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+Yes! In my .NET projects, I work with automated CI/CD pipelines using GitHub Actions and Azure App Services.
+
+For CI (Continuous Integration): When a PR is created or merged into our develop branch, GitHub Actions automatically triggers a build using dotnet build, restores dependencies, and runs unit tests to ensure the code isn't broken.
+
+For CD (Continuous Delivery):
+
+The pipeline packages the app (dotnet publish) and automatically deploys it to our Staging environment (or Staging Slot).
+
+We test and verify the feature on Staging to ensure everything runs smoothly.
+
+Once approved, we push the changes to Production either by merging a PR into the main branch or performing an Azure Slot Swap for zero-downtime deployment."*
+
+Summary
+You have the complete picture:
+
+CI = Automated build + automated tests on code push.
+
+CD = Automated staging deploy + human-approved production release.
+
+Azure Slot Swap = Instant live release with zero downtime.
+--------------------------------------------------------------------------------------
+Not used /self learning purpose
+Deploying a standard .NET Web API or Web App directly from VS Code to Azure App Service
+Step 1: Install the Required Extension
+Open VS Code.
+Click on the Extensions icon on the far-left sidebar (or press Ctrl + Shift + X).
+Search for Azure App Service (published by Microsoft) and click Install.
+Step 2: Publish Your .NET Code Locally
+Before pushing to Azure, compile your .NET app into a release package so all .dll files are ready:
+
+Open the VS Code Integrated Terminal (Ctrl + ` ).
+Run the following command:
+
+Bash
+
+dotnet publish -c Release -o ./publish
+Step 3: Connect to Azure in VS Code
+Click on the Azure icon on the far-left sidebar.
+Under the RESOURCES section, click Sign in to Azure...
+A browser window will pop up—log in with your Azure credentials.
+Step 4: Deploy Directly to Azure
+Now you can deploy the published folder straight to Azure:
+Option A: Deploy to an Existing Azure App Service
+Option B: Create a Brand New App Service and Deploy
