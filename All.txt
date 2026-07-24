@@ -1,0 +1,700 @@
+Find all Departments that have no employees assigned to them
+delete from Employee where Id not in(select min(Id) form employee group by email)
+Running total of salaries inside each department (ordered by hire date)
+ Find all departments with total salary expense > 1,000,000
+Orders in the last 30 days from current system time
+Find all employees who do not belong to any department, and all departments that have no employees.
+-- Employees without a department
+SELECT e.* 
+FROM Employee e 
+LEFT JOIN Department d ON e.deptId = d.Id 
+WHERE d.Id IS NULL;
+
+-- Departments with no employees
+SELECT d.* 
+FROM Department d 
+LEFT JOIN Employee e ON d.Id = e.deptId 
+WHERE e.Id IS NULL;
+
+
+
+Retrieve all orders placed within the last 30 days up to current system time, excluding weekends (Saturday/Sunday).
+SELECT *
+FROM [Orders]
+WHERE OrderDate >= DATEADD(day, -30, GETDATE())
+  AND OrderDate <= GETDATE()
+  -- 1 = Sunday, 7 = Saturday in default DATEPART setting
+  AND DATEPART(dw, OrderDate) NOT IN (1, 7);
+
+WHERE YEAR(joiningDate) NOT IN (2016, 2017)
+WHERE DATEPART(yyyy, joiningDate) NOT IN (2016, 2017);
+-------------------------------------------------------------------
+year -yyyy
+month-mm/m
+day- dd/d
+weekday-dw
+hour-hh
+
+
+Find all employees whose salary is higher than the average salary of their specific department.
+
+SQL
+WITH DeptAvg AS (
+    SELECT 
+        Id,
+        Name,
+        Salary,
+        deptId,
+        AVG(Salary) OVER(PARTITION BY deptId) AS AvgDeptSalary
+    FROM Employee
+)
+SELECT Id, Name, Salary, deptId, AvgDeptSalary
+FROM DeptAvg
+WHERE Salary > AvgDeptSalary;
+
+
+
+Deleting Absolute Duplicates (No Primary Key / Id Column)
+-- Create an artificial ROW_NUMBER using CTE and delete directly
+WITH CTE_Duplicates AS (
+    SELECT 
+        Email, 
+        Name, 
+        deptId,
+        ROW_NUMBER() OVER(
+            PARTITION BY Email, Name, deptId 
+            ORDER BY (SELECT NULL) -- Dummy order since no ID exists
+        ) AS RowNum
+    FROM Employee
+)
+DELETE FROM CTE_Duplicates 
+WHERE RowNum > 1;
+
+
+
+Modern .NET Core Alternative: Tag Helpers
+<partial name="_PartialViewName" />
+
+
+
+via normal and attribute routing
+// URL: /api/departments/3/employees?page=2&pageSize=10
+[HttpGet("api/departments/{deptId:int}/employees")]
+public IActionResult GetDeptEmployees(
+    [FromRoute] int deptId, 
+    [FromQuery] int page, 
+    [FromQuery] int pageSize)
+{
+    return Ok($"Dept: {deptId}, Loading Page: {page} with size {pageSize}");
+}
+
+
+string word = "jain"; // Length is 4
+
+// ❌ CRASHES instantly! (Tries to look at slot 4 on the first turn)
+for (int i = word.Length; i >= 0; i--) { ... } 
+
+//  PERFECT! (Starts at slot 3, which is 'n')
+for (int i = word.Length - 1; i >= 0; i--) { ... }
+
+
+the initial pipeline templates and configuration files were set up by my Team Lead.
+However, as a developer on the team, I interacted with the pipeline daily. Every time I completed a feature, I pushed my code and raised a Pull Request. The pipeline would automatically trigger to run builds and execute our test suite. >
+Deployment slots:-azure via git
+
+
+
+Step B: Docker to Registry (Storing & Versioning)
+Think of the Azure Container Registry (ACR) as a "GitHub for Containers."
+Benefit: You can store v1, v2, and v3 of your app. if v2 has a bug, you can tell Azure to switch back to v1 in seconds.
+
+
+MVC vs API app
+You don't need to manage two separate codebases (frontend and backend) or deal with complex deployment pipelines for both. Everything is contained in one place.
+For SEO Friendly -The server sends fully rendered HTML pages to the browser so  MVC is good.
+Tight Integration of UI and Logic: Because the View and Controller live in the same project and not then go for Rest APIs
+
+You only need a Web Application: You don't have plans for an iPhone or Android app anytime soon.
+If your business relies heavily on Google Search traffic (like a blog, e-commerce shop, or public directory), MVC handles this effortlessly.
+
+
+You need a website and a mobile app (iOS/Android) now or in the near future.
+budget structure
+Building a decoupled system (REST API + a separate modern Frontend) generally requires a slightly higher initial investment because you are building two distinct pieces that talk to each other. MVC is typically more budget-friendly on day one.
+
+
+Http and Https
+Google penalizes websites that use the old HTTP. If a site is on HTTP, Google will rank it lower in search results. Furthermore, modern browsers (like Chrome and Safari) will display a bright red "Not Secure" warning next to the website URL, which scares away potential customers. HTTPS gives the site a clean, trustworthy padlock icon.
+A stark Warning Triangle icon (⚠️).
+Branded, bright red text that explicitly reads "Not Secure" or "Your connection to this site is not private.
+When a user clicks it, the browser confirms that the 'Connection is secure.' That is HTTPS at work. It tells our users two things: their data is 100% encrypted so no one can spy on it, and the browser guarantees they are on our official, legitimate website.
+It verifies a digital "ID card" (called an SSL/TLS Certificate) issued to the domain. If a hacker tries to mimic this page to steal data, the browser will instantly block it and show a massive red warning instead of this clean settings menu.
+
+
+
+abstraction example code
+multiple inheritance
+// Correct Way:
+IWork worker = myManager;
+worker.Start(); // Outputs: Opening Laptop and starting work...
+int gtVal = objList.Find(x => x > 5);
+List<int>numbers = objListV1.FindAll(x => x > 2);
+select DATEADD(Month,2,GETDATE());
+
+// Html.Partial
+@Html.Partial("_UserProfile", Model)
+
+// Html.RenderPartial
+@{ Html.RenderPartial("_UserProfile", Model); }
+
+viewcomponent
+<vc:user-badge username="Alex" role="Admin" />
+
+How to implement exception handling globally?
+Tag helper
+
+
+Any()
+Return Type: bool (true or false).
+Return Value:
+true if the collection contains at least one item (or if at least one item satisfies a condition).
+false if the collection is completely empty.
+Count()
+Return Type: int (an integer number).
+Return Value: The total number of elements in the collection (or matching a condition).
+
+
+Custom middleware
+ApiController and Regular Controller
+what is cqrs  pattern in .net core
+
+
+React
+
+
+ASP.NET Framework
+Razor Views (.cshtml in MVC)
+Razor Pages (@page + PageModel)
+page and page.cs file not available
+
+Modern ASP.NET Core (.NET 6 / 8 / 9)
+Razor Views (.cshtml in MVC)
+Razor Pages (@page + PageModel)
+page and page.cs file not available
+
+
+Factory pattern
+Filters in MVC
+
+entity.Property(s => s.Name)
+          .HasColumnName("student_name")          // Rename column
+          .HasColumnType("varchar(100)")          // Specific SQL data type
+          .IsRequired()                          // NOT NULL constraint
+          .HasMaxLength(100);  
+  .HasIndex(s => s.Email)
+
+Disable lazy loading
+
+for (int i = str.Length - 1; i >= 0; i--)
+        {
+            strRev.Append(str[i]); // Use .Append() instead of +=
+        }
+
+        string result = strRev.ToString();
+
+
+If one character in sentence no loop required
+If all first character of word in sentence require a loop
+string capitalizedWord = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+
+//Route parameter
+app.MapGet("/TempTestWithRoute/{Id}", (int Id) => $"Route param is:{Id}");
+
+//Query parameter
+app.MapGet("/TempwithQueryParam", (string? name, int Id) => $"Query params are Id:{Id} and name:{name}");
+app.Run();
+
+
+
+Suppose you read thousand s of rows from Orders table for finding penidng table that causes  website feel slow or frozen for actual users trying to buy things.so better is craete the temp table for the pending table and use it.
+
+Now you run a transaction to apply the charges. But what if something goes wrong and you have to ROLLBACK (undo) the changes?
+If you try to log errors into a regular table or a temp table inside that transaction, the ROLLBACK will wipe out your error log too!
+
+Why use @TableVariable here? Table variables ignore rollbacks. Anything written to @ErrorTracker stays there, even if the main process crashes.
+
+
+
+
+//Route parameter
+app.MapGet("/TempTestWithRoute/{Id}", (int Id) => $"Route param is:{Id}");
+
+//Query parameter
+app.MapGet("/TempwithQueryParam", (string? name, int Id) => $"Query params are Id:{Id} and name:{name}");
+app.Run();
+
+
+
+
+The Golden Rule for .NET Developers
+To ensure you never accidentally run into a captive dependency in Production, you can force .NET Core to always check for it, no matter what environment it's running in.
+
+In your Program.cs, you can explicitly force scope validation like this:
+var builder = WebApplication.CreateBuilder(args);
+
+// Force DI validation everywhere, even in Production
+builder.Host.UseDefaultServiceProvider(options => 
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
+
+Stale Data: If the database connection drops or times out, the Singleton is stuck holding a dead connection object and will throw errors forever until you restart the entire server.
+sp memory or instance of scoped is need to be dispose but due to hold on singleton it is not disposed that causes memepory issue.
+
+
+ToList,FirstOrDefault,Any,Count,.Sum(), .Max(), .Min(), .Average() allare used to execute the IQuerable
+
+
+Abstraction example
+Method overriding
+public class Parent
+{
+    // 'virtual' means the Child is allowed to change this method
+    public virtual void ShowMessage()
+    {
+        Console.WriteLine("Hello from the Parent Class!");
+    }
+}
+
+public class Child : Parent
+{
+    // 'override' means the Child is replacing the Parent's message with its own
+    public override void ShowMessage()
+    {
+        Console.WriteLine("Hello from the Child Class!");
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Parent myParent = new Parent();
+        myParent.ShowMessage(); // Output: Hello from the Parent Class!
+
+        Parent myChild = new Child();
+        myChild.ShowMessage();  // Output: Hello from the Child Class!
+    }
+}
+
+//Abstraction example
+using System;
+
+// ABSTRACTION: We define the "what" without the "how"
+public abstract class Test
+{
+    // Abstract methods have NO body {}
+    public abstract void Getdata(); 
+}
+
+// METHOD OVERRIDING: Child class provides the specific implementation
+public class My : Test
+{
+    // Must use 'override' and match the method name exactly
+    public override void Getdata() 
+    {
+        Console.WriteLine("Getting data from the Child (My) class!");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // ERROR FIX: 'Test obj = new Test();' is illegal because Test is abstract.
+        // Instead, we use Polymorphism: Parent reference pointing to Child object.
+        Test obj = new My();
+        
+        // This calls the overridden method in the 'My' class
+        obj.Getdata(); 
+    }
+}
+
+And also this
+public class Father
+{
+public virtual void Test()
+{}
+}
+public class Child : Father
+{
+public override void Test()
+{}
+}
+Main()
+{
+Father obj = new Father();
+obj.Test();
+
+Father obj1 = new Father();
+obj1.Test();
+Child obj2 = new Child();
+obj2.Test();
+}
+
+ToList,FirstOrDefault,Any,Count,.Sum(), .Max(), .Min(), .Average() allare used to execute the IQuerable
+
+sum over example
+
+
+
+*Write a query to find all employees who were hired in the same month and year as their direct manager.
+SELECT e.id AS EmployeeId,
+       e.name AS EmployeeName,
+       e.joiningDate AS EmployeeHired,
+       m.name AS ManagerName,
+       m.joiningDate AS ManagerHired
+FROM employee e 
+INNER JOIN employee m ON e.managerid = m.id  
+WHERE MONTH(e.joiningDate) = MONTH(m.joiningDate)
+  AND YEAR(e.joiningDate) = YEAR(m.joiningDate);
+
+
+
+Contains
+The contains keyword checks if a sequence contains a specific element.
+var employeesWithA = context.Employees
+                           .Where(e => e.LastName.Contains("A"))
+                           .ToList();
+
+
+serilize and deserilize
+temp table vs. table variable
+cookie and session
+
+
+
+
+
+public class Payment
+{
+public void pay()
+{}
+}
+public class myClass
+{
+Payment p = new Payment();
+public void myMethod()
+{
+p.pay();
+}}
+
+
+Loosely coupled
+public interface Ipayment 
+{
+void Pay();
+}
+public class credit:Ipayment
+{
+public void Pay()
+{
+}
+}
+//anotegr  also addede in futire
+
+is it okay for tigtly coupled and loosely coupled
+
+Your first example perfectly shows tight coupling because myClass has hardcoded control over exactly which payment method it uses. If you wanted to change it to a credit card later, you would be forced to modify myClass.
+
+Difference between IActionResult and ActionResult<T> 
+[HttpGet("{id}")]
+public IActionResult GetStudent(int id)
+{
+    var student = _repository.GetById(id);
+    
+    if (student == null)
+    {
+        return NotFound(); // 404 Not Found
+    }
+
+    return Ok(student); // Returns 200 OK wrapping the student
+}
+
+and
+
+[HttpGet("{id}")]
+public ActionResult<StudentObjModel> GetStudent(int id)
+{
+    var student = _repository.GetById(id);
+    
+    if (student == null)
+    {
+        return NotFound(); // 404 Not Found (ActionResult)
+    }
+
+    return student; // Directly return object! Implicitly converted to Ok(student)
+}
+
+async methods example/define it
+
+[Route("api/v{version:apiversion}/[controller]")]
+
+
+[Authorize]-Allows only authenticated/authorized users
+
+[AllowAnonymous]-Bypasses [Authorize]
+
+[ValidateAntiForgeryToken]-Validates anti-forgery token to prevent CSRF attacks
+
+[RequireHttps]-Forces requests to use HTTPS
+What it does: Enforces encrypted HTTPS communication over plain HTTP.
+How it works: If a client tries to connect via http://, this attribute rejects the connection or redirects them to https:// to ensure sensitive data (passwords, tokens) isn't sent in cleartext over the network.
+
+[ApiController]-Enables automatic model validation and API conventions
+------------------------------
+public async Task<ActionResult<int/User>> GetStockCountAsync(int id)
+{
+
+}
+ 
+
+
+public void PrintDetails<T>(T item)
+logger.PrintDetails(10); 
+logger.PrintDetails("C# Generics"); 
+
+oR
+public T Echo<T>(T value)
+    {
+        return value;
+    }
+int num = util.Echo(10);
+
+
+public T GetDefault<T>()
+    {
+        // Since we don't pass a value in, we return the default value for T
+        return default(T); 
+    }
+int num = util.GetDefault<int>(); 
+
+
+
+
+
+Viewstate
+constraints in sql
+dll and exe
+why cookie and session used
+
+
+How do you secure an ASP.NET Core API in Azure?
+Application-Level Security (In Code)
+JWT Authentication & Microsoft Entra ID(SSO,AUTH,MFA,Conditional Access):
+Infrastructure-Level Security (In Azure)
+Azure Key Vault & Managed Identity:
+
+
+
+(int)ViewData["Key"]- Fast and direct, but crashes if the data is missing.
+ViewData["Key"] as int? - Safe and flexible; 
+gives you a null value instead of a crash if the data is missing.
+
+
+
+viewcomponenent
+custom middleware
+Apiversion
+
+
+SQL: Write a query to find duplicate records in a table based on a specific column (e.g., Email). (Solved using GROUP BY column HAVING COUNT(*) > 1).
+
+ControllerBase vs. Controller
+Both are base classes used to build HTTP endpoints, but they serve different architectural styles:
+
+ControllerBase: The bare-bones base class that provides core HTTP functionality (access to HttpContext, Request, Response, and helpers like Ok(), BadRequest(), NotFound()).
+
+Used for: Web APIs. It avoids the extra overhead of view rendering.
+
+Controller: Inherits directly from ControllerBase and adds built-in support for rendering HTML views and working with ViewData, ViewBag, and PartialView().
+
+Used for: Traditional MVC Web Apps that serve HTML pages.
+
+
+---------------------------
+Explain the difference between UNION and UNION ALL. Which one is faster and why?
+UNION vs. UNION ALL
+Both operators combine the result sets of two or more SELECT queries into a single output.
+
+UNION: Combines the results and removes duplicate rows.
+
+UNION ALL: Combines the results and keeps all rows, including duplicates.
+
+Which is faster? UNION ALL is significantly faster.
+To remove duplicates, UNION forces the database engine to perform a distinct/sort operation behind the scenes to scan for identical rows. UNION ALL simply appends the datasets together and streams them back without any extra processing or memory consumption.
+
+
+------------------------
+Deadlock prevention
+Keep Transactions Short: Avoid long-running logic, API calls, or massive updates inside an open explicit transaction.
+Always access tables in the exact same order across all your stored procedures or queries (e.g., always update Table A, then Table B).
+
+--------------------------
+[Authorize]: Restricts access to authenticated users (or specific roles/policies).
+
+[RequireHttps]: Forces the request to use HTTPS by redirecting HTTP requests.
+
+[ResponseCache]: Configures caching headers for the HTTP response.
+
+[ValidateAntiForgeryToken]: Prevents Cross-Site Request Forgery (CSRF) attacks in MVC views.
+
+-----------------------------------------
+app.UseHttpsRedirection();
+"In modern application development, HTTPS is the baseline standard. When building web applications or APIs, we treat plain HTTP as an exposure risk. We use tools like the [RequireHttps] filter or pipeline middleware like app.UseHttpsRedirection() in .NET to enforce secure connections globally, protecting sensitive payloads like session cookies, tokens, and user credentials."
+Http:Browsers flag it as "Not Secure".
+Displays a padlock icon in the address bar.
+SEO advantage :No
+
+Https:
+Displays a padlock icon in the address bar.
+SEO advantage:yes
+Search engines prioritize secure sites because their primary goal is to provide a safe browsing experience for their users.
+
+
+
+
+Abstract Classes vs. Interface
+How do you secure an ASP.NET Core API in Azure?
+Application-Level Security (In Code)
+JWT Authentication & Microsoft Entra ID(SSO,AUTH,MFA,Conditional Access):
+Infrastructure-Level Security (In Azure)
+Azure Key Vault & Managed Identity:
+find,firstdefault
+
+
+
+
+
+*What is a Deadlock, and how does a database engine detect and resolve one? What design patterns can you enforce in your backend data access layer to minimize deadlock occurrences?
+A Deadlock is a situation where two or more concurrent database transactions are permanently blocked because each transaction holds a lock on a resource that the other transaction needs to proceed. Neither can move forward, and neither will release the lock it currently holds.
+
+The Victim Selection: The engine picks one of the transactions to be the "Deadlock Victim." It usually selects the transaction that is the cheapest to kill (the one that has written the least amount of data to the log file, minimizing rollback cost).
+The Rollback: The engine forcibly kills the victim's database connection and rolls back all of its uncommitted changes. This automatically releases all the locks that the victim was holding.
+The Survivor Wins: With the locks released, the surviving transaction instantly gets the resource it was waiting for and completes its work successfully.
+
+Use Optimistic Concurrency
+Example
+Suppose two users edit the same record:
+Both read the record (no locks).
+User A updates → row version increments.
+User B tries to update → version mismatch → update fails, retry needed.
+No deadlock, just a retry.
+
+*Check max occurrence character in the string
+using System;
+using System.Collections.Generic;
+
+string str = "Jaindimple";
+Dictionary<char, int> objDict = new Dictionary<char, int>(); // Fixed casing to match objDict
+
+for (int i = 0; i < str.Length; i++) // 1. Fixed 'Length'
+{
+    // Convert to lowercase immediately so we only ever store lowercase keys
+    char ch = char.ToLowerInvariant(str[i]);
+
+    // 2. Fixed 'ContainsKey' syntax
+    if (objDict.ContainsKey(ch))
+    {
+        objDict[ch]++;
+    }
+    else
+    {
+        objDict[ch] = 1;
+    }
+}
+
+int maxCount = 0;
+char maxChar = ' ';
+
+foreach (var item in objDict)
+{
+    if (item.Value > maxCount)
+    {
+        maxCount = item.Value;
+        maxChar = item.Key; // 3. Added missing semicolon
+    }
+}
+
+Console.WriteLine($"Max character: '{maxChar}' appearing {maxCount} times.");
+
+
+
+Anagram string
+using System;
+
+public class Program
+{
+    public static bool IsAnagram(string str1, string str2)
+    {
+        // 1. If lengths are different, they can't be anagrams
+        if (str1.Length != str2.Length) 
+            return false;
+
+        // 2. Convert to char array and sort both
+        char[] charArray1 = str1.ToLower().ToCharArray();
+        char[] charArray2 = str2.ToLower().ToCharArray();
+
+        Array.Sort(charArray1);
+        Array.Sort(charArray2);
+
+        // 3. Compare the sorted strings
+        return new string(charArray1) == new string(charArray2);
+    }
+
+    public static void Main()
+    {
+        Console.WriteLine(IsAnagram("listen", "silent")); // True
+        Console.WriteLine(IsAnagram("apple", "pappl"));   // False
+    }
+}
+
+------------------------------
+AZ
+n
+Queries
+5,6 docker
+ci/cd
+
+Finding the frequency or count of a specific character in a string
+
+Repository & Unit of Work: Expect deep questions on how you separate your data access layers and handle transactions cleanly in Entity Framework.
+
+how to use tools like execution plans to fix a slow, timing-out Stored Procedure.
+
+https://www.youtube.com/watch?v=Lo26ZYB4Eis
+
+Common Topics They Usually Ask
+
+Longest substring without repeating characters
+
+Palindrome substring
+
+Count substrings
+
+Anagram substring matching
+
+https://medium.com/@preetjit82/infosys-interview-experience-2026-net-azure-sql-angular-questions-asked-3a0ba55f5ee1
+
+4. Scenario-Based Coding Challenges
+Scenario A: Finding Gaps in Data
+Problem: You have a table called OrderLog with a column OrderNumber that should be strictly sequential. Due to system errors, some numbers are missing. Write a query to identify all missing numbers or gaps in the sequence.
+
+Scenario B: Cumulative Tracking
+Problem: Write a query for a Transactions table containing TransactionDate and Amount that calculates a running total (cumulative balance) for each day, ordered chronologically.
+
+Scenario C: Deduplication
+Problem: A staging table accidentally received duplicate customer records with identical details except for a unique auto-incremented ID column. Write a query or a script using a Common Table Expression (CTE) to safely delete the duplicate rows while retaining exactly one record per customer.
+
+https://rr-rohitsharma01.medium.com/infosys-interview-questions-and-answers-net-and-why-i-rejected-the-offer-fcf4236a55ba
