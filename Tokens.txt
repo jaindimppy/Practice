@@ -1,0 +1,51 @@
+Phase 1: The Initial Login
+The frontend client sends credentials (username/password) to /api/auth/login.
+
+The .NET backend validates credentials against the user table.
+
+The backend generates two tokens: a short-lived Access Token and a random Refresh Token string.
+
+The Security Handshake:
+
+The backend adds the Refresh Token to the database as a SHA256 Hash.
+
+The backend appends the plain-text Refresh Token to the HTTP Response as an HttpOnly; Secure; SameSite=None cookie.
+
+The backend returns the plain-text Access Token in the JSON response body.
+
+The frontend stores the Access Token in application memory (RAM) or local storage. The browser automatically locks the cookie down safely away from JavaScript.
+
+Phase 2: Standard API Requests
+For the next 15 minutes, every time the frontend communicates with the API, it attaches the Access Token to the header:
+
+HTTP
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+The .NET API validates the token's cryptographic signature instantly without hitting the database, making requests lightning-fast.
+
+Phase 3: Silent Token Renewal (The Interceptor Flow)
+At minute 16, the Access Token expires. The frontend sends an API request to fetch data (e.g., /api/dashboard).
+
+The .NET backend detects the expired expiration claim and rejects the call with an HTTP 401 Unauthorized error.
+
+The frontend HTTP Interceptor catches the 401 error before the user sees it, pausing the dashboard request.
+
+The Interceptor automatically makes a background POST call to /api/auth/refresh.
+Thi spage /action we create in our code to redirect and match the refresh token with db refresh token
+
+The browser automatically attaches the secure HttpOnly cookie containing the plain-text refresh token to this request.
+
+The Backend Validation:
+
+The .NET controller reads the plain-text token from the incoming cookie.
+
+The C# code converts it into a SHA256 Hash.
+
+It queries the DB: SELECT * FROM RefreshTokens WHERE HashedToken = @hash.
+
+It checks if ExpiryDate > DateTime.UtcNow.
+
+If valid, the backend generates a brand-new Access Token (valid for a fresh 15 minutes) and returns it in the JSON body.
+
+The frontend Interceptor updates its memory with the new Access Token, clones the original paused dashboard request, swaps in the new token, and fires it again.
+
+The dashboard data loads smoothly. The user notices absolutely nothing.

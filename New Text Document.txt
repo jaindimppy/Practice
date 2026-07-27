@@ -1,0 +1,94 @@
+for and for each loop
+generic and non generic----
+managed and unmanaged
+gc
+design pattern---
+sync and async
+delegates-----
+reve
+string stringbuilder
+mutable immutable
+boxing and unboxing
+can we have multiple constructor yes
+viewsate--------------
+page
+cookie and session
+.dll and .exe
+reference type and value type
+constraints in sql-----------------
+
+
+
+
+# id
+. class
+
+ $(document).ready(function() {
+            $("button").click(function() {
+                $("#div1").hide();
+            });
+        });
+
+4. What would be the result of 3+2+”7″?
+Here, 3 and 2 behave like an integer, and “7” behaves like a string. So 3 plus 2 will be 5. Then the output will be 5+”7″ = 57.
+
+5. What is the use of the isNaN function?
+The number isNan function determines whether the passed value is NaN (Not a number) and is of the type “Number”.
+
+
+19. What is the difference between ViewState and SessionState?
+ViewState: It is specific to a single page in a session.
+SessionState: It is user specific that can access all the data on the web pages.
+
+
+let x = 10;
+let y = (x++, x + 1, x * 2);
+console.log(y);
+ans ==22
+The comma operator ( , ) evaluates all expressions but returns the value of the last one.
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Yes, in C#, strings are immutable, meaning their values cannot be changed once they are assigned. However, you can reassign a new value to a string variable, which will effectively "change" the value.
+
+string name = "dimple";  // Initial value of the string
+name = "jain dimple";    // Reassigning a new value to the string
+In this case, the value of the name variable changes from "dimple" to "jain dimple". However, under the hood, a new string object is created when you assign "jain dimple", and the original string ("dimple") still exists in memory (unless it is no longer referenced and garbage collected).
+
+To summarize: while the string itself cannot be changed directly due to immutability, you can assign a new value to the variable, as shown in your example.
+
+
+You said:
+then expain how the string is called immutable
+
+When we say that a string is immutable, it means that once a string object is created, its value cannot be changed. Any operation that appears to modify a string actually creates a new string object instead of changing the original one. Here's how it works:
+
+1. Creating a String:
+When you create a string, such as:
+
+string name = "dimple";
+The string "dimple" is stored in memory. Strings are reference types, so the variable name holds a reference to that string.
+
+2. Reassigning a String:
+If you reassign a new value to name, like this:
+
+name = "jain dimple";
+What happens behind the scenes is:
+
+A new string object with the value "jain dimple" is created in memory.
+The name variable now holds a reference to this new string object.
+The original string "dimple" is still in memory until it is no longer used, at which point it may be garbage collected.
+
+
+string operation
+array operation
+
+
+reverse number video
+
+
+
+
+

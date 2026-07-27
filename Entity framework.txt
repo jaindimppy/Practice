@@ -1,0 +1,261 @@
+Entity framework is an Object Relational Mapping (ORM) framework that offers an automated mechanism to developers for storing and accessing the data in the database.
+
+The Entity Data Model:
+(EDM) is an extended version of the Entity-Relationship model which specifies the conceptual model of the data using various modelling technique.
+Following are the three core parts of EDM.
+The Storage Schema Model = representation of the backend data store.
+The Conceptual Model =  we write our queries.
+The Mapping Model = mapping between the Conceptual model and the Storage model.
+
+types of entities:
+POCO:
+A simple, plain class that has no EF-specific behavior.
+Suitable for situations where you don't need advanced EF Core features like lazy loading.
+They don't need to inherit from any specific base.
+
+Proxy:
+A subclass of your POCO created dynamically by EF Core at runtime.
+Provides additional behavior like lazy loading, change tracking, and automatic loading of navigation properties.
+used for lazy loading
+
+
+Detached
+Description: An entity is in the Detached state if it is not being tracked by the DbContext. This can happen if the entity has not been loaded by the DbContext
+When an entity is newly created.
+
+Unchanged
+Description: An entity is in the Unchanged state if it is being tracked by the DbContext and its values are the same as what is in the database.
+
+Added
+Description: An entity is in the Added state if it has been added to the DbContext and is being tracked, but it has not yet been persisted to the database.
+ EF Core will treat the entity as new and will insert it into the database when Save Changes is called.
+
+Modified
+An entity is in the Modified state if it has been loaded from the database or added to the context, and its property values have been changed.
+EF Core tracks the changes made to the entity and will generate an UPDATE SQL query when Save Changes is called.
+
+Deleted
+Description: An entity is in then Deleted state if it has been marked for deletion but has not yet been removed from the database.
+EF Core will generate a DELETE SQL query for the entity when Save Changes is called.
+
+Two Approches:
+1)Code First Approch
+2) Db First Approch
+
+*Asynchronous:
+ 
+Asynchronous operations can help your application in the following ways −
+
+Make your application more responsive to user interactions
+Improve the overall performance of your application
+
+
+where,select,Orderby,distinct,Contains,let,join,group by
+where,select
+var employeeNames = context.Employees
+                           .Where(e => e.Department == "HR")
+                           .Select(e => e.FirstName + " " + e.LastName)
+                           .ToList();
+
+Orderby
+var sortedEmployees = context.Employees
+                             .OrderBy(e => e.LastName)
+                             .ThenBy(e => e.FirstName) // secondary sorting by FirstName
+                             .ToList();
+
+join
+
+var employeeDepartments = context.Employees
+                                 .Join(context.Departments,
+                                       e => e.DepartmentId,
+                                       d => d.Id,
+                                       (e, d) => new
+                                       {
+                                           EmployeeName = e.FirstName + " " + e.LastName,
+                                           DepartmentName = d.Name
+                                       })
+                                 .ToList();
+
+distinct()
+var distinctDepartments = context.Employees
+                                 .Select(e => e.Department)
+                                 .Distinct()
+                                 .ToList();
+
+
+any
+The any keyword is used to check if any element in a collection satisfies a condition.
+bool hasEmployeesInHR = context.Employees
+                               .Any(e => e.Department == "HR");
+
+
+let
+The let keyword is used to introduce a temporary variable within a LINQ query to store results or expressions.
+var query = from e in context.Employees
+            let fullName = e.FirstName + " " + e.LastName
+            select new { e.Id, FullName = fullName };
+
+Contains
+The contains keyword checks if a sequence contains a specific element.
+var employeesWithA = context.Employees
+                           .Where(e => e.LastName.Contains("A"))
+                           .ToList();
+
+
+Group by
+var employeesGroupedByDepartment = context.Employees
+                                          .GroupBy(e => e.Department)  // Grouping by Department
+                                          .Select(g => new
+                                          {
+                                              Department = g.Key,  // The key of the group (department name)
+                                              EmployeeCount = g.Count()  // The number of employees in that department
+                                          })
+                                          .ToList();
+
+Logging
+context.Database.Log = Console.Write
+by writting this u can check the query in console in the ef6 but in later version it is not available
+
+Spatial Data Type
+Spatial data types are used to store geometric and geographic data such as points, lines, polygons, etc., in a relational database. These types are particularly useful in applications that deal with geographic information systems (GIS) or spatial operations (like calculating distances, areas, or performing geographic queries).
+context.CricketGrounds.Add(new CricketGround() {
+            Name = "Shalimar Cricket Ground", 
+            Location = DbGeography.FromText("POINT(-122.336106 47.605049)"), 
+         });
+When the above code is executed, you will receive the following output −
+
+The closest Cricket Ground to you is: Marghazar Stadium
+
+Data annotations
+
+public class User
+{
+    public int Id { get; set; }
+
+    [Required]
+    [StringLength(50, ErrorMessage = "Username cannot be longer than 50 characters.")]
+    public string Username { get; set; }
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Range(18, 100, ErrorMessage = "Age must be between 18 and 100.")]
+    public int Age { get; set; }
+
+    [Required]
+    [Compare("PasswordConfirmation", ErrorMessage = "Passwords do not match.")]
+    public string Password { get; set; }
+
+    public string PasswordConfirmation { get; set; }
+[MaxLength(24)]
+   public string Title { get; set; }
+ [MaxLength(24) , MinLength(5)]
+   public string Title { get; set; }
+[StringLength (24)]
+   public string Title { get; set; }
+StringLength applied to only string type variable
+
+[NotMapped]
+
+   public int FatherName { get; set; }
+You can see that NotMapped attribute is applied to the FatherName property. When the table is generated you will see that FatherName column will not be created in a database, but it is present in Student class.
+
+[ConcurrencyCheck] // For optimistic concurrency control
+    public int Version { get; set; }
+In this example, if two users try to update the same Course entity at the same time, EF Core will throw a DbUpdateConcurrencyException
+
+[ForeignKey("InstructorID")]
+    public int InstructorID { get; set; }
+
+[Key]
+    public int CourseID { get; set;}
+[Key] marks CourseID as the primary key.
+}
+
+Seeding data
+The most common way to seed data in EF Core is through the OnModelCreating method in the DbContext class. This method allows you to configure the model and insert initial data into the tables.
+using Microsoft.EntityFrameworkCore;
+
+public class AppDbContext : DbContext
+{
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Course> Courses { get; set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Seeding data for the "Students" table
+        modelBuilder.Entity<Student>().HasData(
+            new Student { StudentId = 1, Name = "John Doe", Age = 20 },
+            new Student { StudentId = 2, Name = "Jane Smith", Age = 22 },
+            new Student { StudentId = 3, Name = "Sam Brown", Age = 21 }
+        );
+
+        // Seeding data for the "Courses" table
+        modelBuilder.Entity<Course>().HasData(
+            new Course { CourseId = 1, CourseName = "Math 101", Credits = 3 },
+            new Course { CourseId = 2, CourseName = "English 101", interfaceCredits = 3 },
+            new Course { CourseId = 3, CourseName = "Science 101", Credits = 4 }
+        );
+    }
+}
+Note: You must ensure that the primary key values are set correctly, as EF Core will not auto-generate them for seeded data when using HasData().
+HasData(): This method is used to insert predefined data into the database
+
+Native Query
+/////////////////////////////////////////////////////////
+persistance
+Projection Queries
+Entity Framework - Command Interception
+Inheritance
+Fluent API
+Model First Approch
+dynamic polymorphism
+lossly coupled interface
+
+
+* 
+* * 
+* * * 
+* * * * 
+* * * * * 
+
+for (int i = 0; i < n; i++) {
+
+        // Inner loop to handle number of columns
+        // values changing acc. to outer loop
+        for (int j = 0; j <= i; j++) {
+
+            // Printing stars
+            cout << "* ";
+        }
+
+        // Ending line after each row
+        cout << endl;
+    }
+
+
+
+          * 
+      * * 
+    * * * 
+  * * * * 
+* * * * * 
+
+for (int i = 1; i <= n; i++) {
+        
+        // 1. Inner loop for leading spaces
+        for (int j = 1; j <= n - i; j++) {
+            cout << "  "; // Two spaces to match the visual gap
+        }
+
+        // 2. Inner loop for stars
+        for (int k = 1; k <= i; k++) {
+            cout << "* ";
+        }
+
+        // Move to the next line
+        cout << endl;
+    }
