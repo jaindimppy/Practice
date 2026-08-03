@@ -84,6 +84,7 @@ public IActionResult GetDeptEmployees(
     [FromRoute] int deptId, 
     [FromQuery] int page, 
     [FromQuery] int pageSize)
+
 {
     return Ok($"Dept: {deptId}, Loading Page: {page} with size {pageSize}");
 }
@@ -192,6 +193,7 @@ entity.Property(s => s.Name)
           .IsRequired()                          // NOT NULL constraint
           .HasMaxLength(100);  
   .HasIndex(s => s.Email)
+.HasOne(s => s.Department)
 
 Disable lazy loading
 
