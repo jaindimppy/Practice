@@ -28,6 +28,8 @@ Types of resource locks
 Delete means authorized users can still read and modify a resource, but they can't delete the resource.
 ReadOnly means authorized users can read a resource, but they can't delete or update the resource.
 Azure arc and ARM:
+Azure Arc:A bridge service extending ARM to non-Azure environments.
+ARM:Azure's central control plane and API layer.
 When you send a request to create, update, or delete a resource, ARM acts as a gatekeeper:  
 Authentication: It confirms who you are (using your Entra ID/Azure AD credentials).  
 Authorization: It checks if you have the correct permissions (Role-Based Access Control, or RBAC) to perform that action.  
