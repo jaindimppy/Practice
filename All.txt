@@ -84,7 +84,6 @@ public IActionResult GetDeptEmployees(
     [FromRoute] int deptId, 
     [FromQuery] int page, 
     [FromQuery] int pageSize)
-
 {
     return Ok($"Dept: {deptId}, Loading Page: {page} with size {pageSize}");
 }
@@ -193,7 +192,6 @@ entity.Property(s => s.Name)
           .IsRequired()                          // NOT NULL constraint
           .HasMaxLength(100);  
   .HasIndex(s => s.Email)
-.HasOne(s => s.Department)
 
 Disable lazy loading
 
@@ -339,7 +337,7 @@ Main()
 Father obj = new Father();
 obj.Test();
 
-Father obj1 = new Child();
+Father obj1 = new Father();
 obj1.Test();
 Child obj2 = new Child();
 obj2.Test();
@@ -699,4 +697,345 @@ Problem: Write a query for a Transactions table containing TransactionDate and A
 Scenario C: Deduplication
 Problem: A staging table accidentally received duplicate customer records with identical details except for a unique auto-incremented ID column. Write a query or a script using a Common Table Expression (CTE) to safely delete the duplicate rows while retaining exactly one record per customer.
 
+
+
+
+
+-- Employees without a department
+SELECT e.id AS emp_id, e.name AS emp_name, d.id AS dept_id, d.deptName
+FROM Employee e
+LEFT JOIN Department d ON e.deptId = d.id
+WHERE d.id IS NULL
+
+
+SELECT 
+    id,
+    name,
+    salary,
+    deptId,
+    ROUND(avgDeptSalary, 2) AS avgDeptSalary
+FROM DeptAverages
+WHERE salary > avgDeptSalary;
+
+
+
+using System;
+
+namespace InterfaceExample
+{
+    // Define Interface A
+    public interface IA
+    {
+        int AVal { get; }
+    }
+
+    // Define Interface B
+    public interface IB
+    {
+        int BVal { get; }
+    }
+
+    // Class C implements both IA and IB
+    public class C : IA, IB
+    {
+        public int AVal => 5;
+        public int BVal => 5;
+
+        public int GetSum()
+        {
+            return AVal + BVal;
+        }
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            // 1. Direct Instantiation of Class C
+            C objC = new C();
+            Console.WriteLine($"AVal: {objC.AVal}");         // Output: 5
+            Console.WriteLine($"BVal: {objC.BVal}");         // Output: 5
+            Console.WriteLine($"Total Sum: {objC.GetSum()}"); // Output: 10
+
+            Console.WriteLine("-----------------------------------");
+
+            // 2. Polymorphism using Interface References
+            IA interfaceA = objC;
+            Console.WriteLine($"Accessing via IA: {interfaceA.AVal}");
+
+            IB interfaceB = objC;
+            Console.WriteLine($"Accessing via IB: {interfaceB.BVal}");
+        }
+    }
+}
 https://rr-rohitsharma01.medium.com/infosys-interview-questions-and-answers-net-and-why-i-rejected-the-offer-fcf4236a55ba
+
+string operation
+Func and Sp
+
+
+
+
+
+Deleting Absolute Duplicates (No Primary Key / Id Column)
+
+
+
+
+use of table varible and table varible
+
+
+
+public IActionResult GetData()
+    {
+        var data = new { Id = 1, Name = "John Doe" };
+
+        if (data == null)
+        {
+            return NotFound("Data not found");
+        }
+
+        return Ok(data); // Returns HTTP 200 OK with JSON payload
+    }
+
+
+public async Task<IActionResult> GetData(int id)
+    {
+        var student = await _context.Students.FindAsync(id);
+
+        if (student == null)
+        {
+            return NotFound(new { Message = $"Student with ID {id} not found." });
+        }
+
+        return Ok(student);
+    }
+
+public async Task<ActionResult<int/User>> GetStockCountAsync(int id)
+
+
+generic and nongeneric method
+
+
+Viewstate
+constraints in sql
+dll and exe
+why cookie and session used
+
+
+ControllerBase vs. Controller
+
+
+ IMessage msg = new SimpleMessage();
+        Console.WriteLine(msg.GetMessage());  // Hello
+
+
+
+
+public Student()
+    {
+        StudentId = 100;
+        Console.WriteLine("1. Default Constructor ran. StudentId is now: " + StudentId);
+    }
+
+    // 2. Parameterized Constructor (Chained to default constructor via : this())
+    public Student(int id) : this() 
+    {
+        // This runs AFTER the default constructor finishes
+        StudentId = id; 
+        Console.WriteLine("2. Parameterized Constructor ran. StudentId is now overwritten to: " + StudentId);
+    }
+
+
+1,2,2,3
+Rank=1,2,2,4
+denseRank=1,2,2,3
+
+
+Finding the Difference Between Dates (DATEDIFF)
+SELECT DATEDIFF(day, '2026-01-01', '2026-05-18') AS DaysElapsed;
+The data is stored directly in the RAM of the web server hosting your application.
+In-Memory Cache and Distributed Cache
+
+
+
+[HttpGet("user/{id}")]
+public IActionResult GetUserData(int id)
+{
+    // Hitting .Result blocks the executing thread completely!
+    var data = _userService.GetProfileAsync(id).Result; 
+    return Ok(data);
+}
+
+
+ApiController and Regular Controller
+Uniqkey index and non uniq key index
+
+
+class and struct
+reference type and value type
+
+
+
+
+using System;
+
+public class My
+{
+    // 1. Correct delegate declaration syntax
+    public delegate void RemoteAction();
+
+    // 2. Method that accepts a delegate (method) as an argument
+    public void GetAction(RemoteAction action)
+    {
+        Console.WriteLine("Executing passed method...");
+        action(); // Invokes the method passed in
+    }
+
+    // 3. Target method matching the delegate signature
+    public void IncreaseVolume()
+    {
+        Console.WriteLine("Volume Increased!");
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        My obj = new My();
+
+        // Pass the method 'IncreaseVolume' as an argument to 'GetAction'
+        obj.GetAction(obj.IncreaseVolume);
+    }
+}
+
+
+Orderby
+var sortedEmployees = context.Employees
+                             .OrderBy(e => e.LastName)
+                             .ThenBy(e => e.FirstName) // secondary sorting by FirstName
+                             .ToList();
+
+
+
+
+
+        * 
+      * * 
+    * * * 
+  * * * * 
+* * * * * 
+
+
+
+[TypeFilter(typeof(MySimpleActionFilter))]
+
+global exception handle
+
+for and for each loop
+
+string (System.String):Type: Reference type (class).Memory Location: Stored on the Heap.Mutability: Immutable (cannot be modified after creation). Any modification or concatenation creates a new object on the heap.  StringBuilder (System.Text.StringBuilder):Type: Reference type (class).Memory Location: Stored on the Heap.Mutability: Mutable (can be modified in-place). It manages an internal character array (char[]) on the heap that resizes as needed without creating new objects.  
+
+In jQuery
+#=Id
+.=class
+
+
+
+IQueryable builds the SQL string step-by-step. It defers execution so that any future filtering, sorting, or paging (.Skip()/.Take()) you append happens directly on the Database Server.
+IEnumerable assumes the data is already in RAM. The moment you cast your database data to IEnumerable, any future filtering or processing happens entirely on your Application Server, consuming local memory and CPU cycles.
+// Line 1: Executes immediately and pulls all Jaipur users into RAM
+IEnumerable<User> users = context.Users.Where(u => u.City == "Jaipur").ToList();
+
+// Line 2: You add a second filter later in your code
+var activeJaipurUsers = users.Where(u => u.IsActive == true).ToList();
+now it is in memory...
+
+-------------------------------
+// Line 1: No SQL is executed yet! It just builds the query plan.
+IQueryable<User> usersQuery = context.Users.Where(u => u.City == "Jaipur");
+
+// Line 2: You append the second filter to the query plan. Still no SQL executed!
+IQueryable<User> finalQuery = usersQuery.Where(u => u.IsActive == true);
+
+// Line 3: The TRIGGER command. SQL executes NOW.
+var activeJaipurUsers = finalQuery.ToList();
+at db level
+
+
+
+viewsate
+.dll and .exe
+constraints in sql
+cookie and session
+
+
+
+
+
+
+
+
+views
+joins
+functions
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employees
+WHERE salary < (SELECT MAX(salary) FROM Employees)
+
+delete,drop,truncate
+group by customer_id hmesha last me ata h
+
+
+
+
+
+
+
+using System.Collections.Generic;
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int Age { get; set; }
+
+    // Navigation Property: One student has many subject marks
+    public ICollection<SubjectMark> Marks { get; set; } = new List<SubjectMark>();
+}
+
+public class SubjectMark
+{
+    public int Id { get; set; }
+    public string SubjectName { get; set; } = string.Empty; // e.g., "Hindi", "English", "Maths"
+    public int Score { get; set; }
+
+    // Foreign Key
+    public int StudentId { get; set; }
+    public Student Student { get; set; } = null!;
+}
+
+// 1. Instantiate (no manual IDs needed)
+var student = new Student
+{
+    Name = "Jain",
+    Age = 25,
+    Marks = new List<SubjectMark>
+    {
+        new SubjectMark { SubjectName = "Hindi", Score = 60 },
+        new SubjectMark { SubjectName = "English", Score = 90 },
+        new SubjectMark { SubjectName = "Maths", Score = 100 }
+    }
+};
+
+// 2. Add to DbContext and Save
+_context.Students.Add(student);
+await _context.SaveChangesAsync();
+
+// At this point, student.Id and all mark.StudentId values are automatically populated by EF Core!
+Console.WriteLine($"Generated Student ID: {student.Id}");
+
+
+
