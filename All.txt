@@ -917,19 +917,6 @@ var activeJaipurUsers = finalQuery.ToList();
 at db level
 
 
-
-viewsate
-.dll and .exe
-constraints in sql
-cookie and session
-
-
-
-
-
-
-
-
 views
 joins
 functions
@@ -940,10 +927,6 @@ WHERE salary < (SELECT MAX(salary) FROM Employees)
 
 delete,drop,truncate
 group by customer_id hmesha last me ata h
-
-
-
-
 
 
 
