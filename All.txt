@@ -779,53 +779,6 @@ Func and Sp
 
 Deleting Absolute Duplicates (No Primary Key / Id Column)
 
-
-
-
-use of table varible and table varible
-
-
-
-public IActionResult GetData()
-    {
-        var data = new { Id = 1, Name = "John Doe" };
-
-        if (data == null)
-        {
-            return NotFound("Data not found");
-        }
-
-        return Ok(data); // Returns HTTP 200 OK with JSON payload
-    }
-
-
-public async Task<IActionResult> GetData(int id)
-    {
-        var student = await _context.Students.FindAsync(id);
-
-        if (student == null)
-        {
-            return NotFound(new { Message = $"Student with ID {id} not found." });
-        }
-
-        return Ok(student);
-    }
-
-public async Task<ActionResult<int/User>> GetStockCountAsync(int id)
-
-
-generic and nongeneric method
-
-
-Viewstate
-constraints in sql
-dll and exe
-why cookie and session used
-
-
-ControllerBase vs. Controller
-
-
  IMessage msg = new SimpleMessage();
         Console.WriteLine(msg.GetMessage());  // Hello
 
