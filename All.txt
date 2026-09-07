@@ -825,7 +825,7 @@ ApiController and Regular Controller
 Uniqkey index and non uniq key index
 
 
-class and struct
+class and struct:Inheritance,Memory-allocation
 reference type and value type
 
 
