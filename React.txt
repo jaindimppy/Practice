@@ -1,0 +1,850 @@
+Flexbox (must)
+let / const
+arrow functions => ()
+map(), filter(), reduce()
+spread operator ...
+destructuring {}
+import / export
+async / await
+Template literals (Hello ${name})
+
+let:
+Value can be changed
+Use only when reassignment is needed
+
+const:
+Value cannot be reassigned
+Preferred in React
+------------------------------------
+const → default choice in React
+let → use only when needed
+Never use var
+React state replaces most let usage
+
+Arrow function
+1️⃣ Normal function (old way)
+function add(a, b) {
+  return a + b;
+}
+
+2️⃣ Arrow function (modern / React way)
+const add = (a, b) => {
+  return a + b;
+};
+
+3️⃣ Short arrow function (most common)
+const add = (a, b) => a + b;
+👉 If there is one line, you don’t need {} and return.
+
+
+🔹 Event Handler
+const handleClick = () => {
+  console.log("Button clicked");
+};
+
+🔹 Passing function to onClick
+<button onClick={handleClick}>Click</button>
+
+
+
+
+First react HelloWorld print
+Need to create App.js file while the other .html file will be created automatically
+App.js file contain
+
+import "./styles.css";
+
+const MyApp = () => {
+  return <div>Hello react world</div>;
+};
+export default MyApp;
+
+
+1️⃣ map() – Transform / Render Lists
+Purpose: Convert each element in an array into something else (often JSX).
+Syntax:
+array.map((item, index) => {
+  return /* new value */;
+});
+---------------------------------------
+const MyApp = () => {
+  const names = ['A', 'B', 'C'];
+  return (
+    <div>
+      <h4>Names : </h4>
+      {
+        names.map((val,index) => (
+          <li key={index}>{val}</li>
+        ))}
+    </div>
+  );
+};
+export default MyApp;
+
+
+2️⃣ filter() – Select / Filter Items
+
+Purpose: Return a new array containing only items that match a condition.
+----------------------------------------------------------
+<div>Filters:</div>
+const MyFilters = () =>{
+  const ListbFilter = ["abc","new", "String", "array"];
+  const  FilteredList = ListbFilter.filter(x => x.includes("ew"));
+  return (
+    <div><ul>
+      {
+        FilteredList.map((value,index) =>
+        (
+          <li key={index}>{value}</li>
+        ))}
+      </ul>
+      </div>
+  );
+};
+export default MyFilters;
+
+3️⃣ reduce() – Accumulate / Combine Values
+Purpose: Reduce an array into one single value (sum, count, string, object).
+---------------------------------------------
+<div>Reduce:</div>
+const ReduceApp = () =>{
+const numberedList = [1,5,7,9,0];
+const reduceList = numberedList.reduce((val,index) => val + index ,0);
+return (
+  <div>
+      <h2>Total :{reduceList}</h2>
+      <h3>Numbers :{numberedList.join(", ")}</h3>
+    </div>
+);
+
+};
+export default ReduceApp;
+
+
+
+🔹	
+const SimpleArray = () => {
+  const fruits = ["mango", "banana", "Apple"];
+  const Veges = ["patato", "chilli", "spinach"];
+
+  const mixFruitnVeges = [...fruits, ...Veges];
+
+  return (
+    <div>
+      <h4>fruits:</h4>
+      {fruits.join(" ,")}
+
+      <br />
+
+      <h4>veges :</h4>
+      {Veges.join(" ,")}
+
+      <br />
+
+      <h4>both:</h4>
+      {mixFruitnVeges.join(" ,")}
+    </div>
+  );
+};
+
+
+🔹 Spread with Objects (Updating Object State)
+import React from "react";
+
+const SpreadOperatorV1 = () => {
+  const [item1, item2] = React.useState({
+    Name: "Jaindimple",
+    Age: "68"
+  });
+
+  const UpdateAge = () => {
+    item2({
+      ...item1,
+      Age: "40"
+    });
+  };
+
+  return (
+    <div>
+      <div>Name is: {item1.Name}</div>
+      <div>Age is: {item1.Age}</div>
+      <button onClick={UpdateAge}>Update Age</button>
+    </div>
+  );
+};
+
+export default SpreadOperatorV1;
+
+
+🔹 Updating Array State in React
+import React from "react";
+
+const SpreadOperator = () => {
+  const [item1, item2] = React.useState(["A", "B"]);
+
+  const AddItem = () => {
+    item2([...item1, "C"]);
+  };
+
+  return (
+    <div>
+      item1: {item1.join(", ")}
+      <br />
+      <button onClick={AddItem}>Add Item</button>
+    </div>
+  );
+};
+
+export default SpreadOperator;
+
+
+Destructuring:
+Destructuring is a JavaScript feature that allows you to extract values from objects or arrays into distinct variables.
+
+1. **Destructing Arrays**
+
+const DestructuringArray = () =>{
+
+const fruits = ["Apple", "Banana", "Mango"];
+const [first, second, third] = fruits;
+
+console.log(first);  // Apple
+console.log(second); // Banana
+console.log(third);  // Mango
+};
+export default DestructuringArray
+
+
+
+2. **Destructuring Objects**
+
+const person = {
+firstName: "John",
+lastName: "Doe",
+age: 50
+};
+
+// Destructuring
+const DestructuringObjects = () =>{ 
+const details = {name : "jaindimple", Age :"70"}; 
+const{name,Age} = details; 
+console.log(name);
+ console.log(Age); }; 
+export default DestructuringObjects
+
+now in this we can use only one varible if required ,order does't matter,add your required varible but with default value
+
+=>Unpack the values in a random order:
+let {lastName, age, firstName} = person;
+
+=>For potentially missing properties we can set default values:
+let {firstName, lastName, age, country = "Norway"} = person;
+
+=>Extract only firstName from the object:
+let {firstName} = person;
+
+We can also destructure deeply nested objects by referencing the nested object then using a colon and curly braces to again destructure the items needed from the nested object:
+
+const destructObjects =() =>{
+const values ={Name :"Jain dimple",Age :"77",city:"Ahmedabad",state:{postcode:"102030",stateName:"Gujarat"}};
+const {city,Name,Age,temp="none",state:{postcode,stateName}} = values;
+return (
+<div>
+values are:{Name},{city},{temp},{postcode}
+</div>
+)
+}
+export default destructObjects;
+
+3. **destructuring props**
+
+const PropssDestruct = ({ name, age }) => {
+return (
+<div>
+name is {name} and age is : {age}
+</div>
+);
+};
+
+createRoot(document.getElementById('root')).render(
+<PropssDestruct name="jain dimple" age="55" />);
+// export default PropssDestruct;
+
+4. **useState Hook Destructuring**
+
+1️⃣ Basic useState with a Single Value
+
+const UsestateBasicExample = () =>{
+  const  [item1,item2] = React.useState(0);
+  const UpdateValue = () =>
+  {
+      item2(item1 + 8)
+  }
+  return (
+    <div>
+       <p>Value: {item1}</p>
+      <button onClick = {UpdateValue}>UpdateVal</button>
+    </div>
+  );
+};
+export default UsestateBasicExample;
+
+2️⃣ useState with Objects (Spread Operator)
+
+const UsestateObject = () =>{
+  const [user ,setUser] = React.useState({Name:"Jaindimple",Age:40});
+  const updateUser = () =>{
+    setUser({...user,Name:50,Age:66});
+  };
+  return (
+    
+    <div>Value is : {user.Name} and Age is : {user.Age}
+    <div>
+      <button onClick={updateUser}>Update value</button>
+    </div>
+    </div>
+  );
+};
+export default UsestateObject;
+
+3️⃣ useState with Arrays (Spread Operator)
+
+const UseStateWithArray = () =>
+{
+  const [items,setItems] = React.useState(["Abc","Xyz"]);
+  const UpdateItems = () =>{
+        setItems([...items,"C","D"]);
+  };
+  return (
+      <div>
+        <div>Values are : {items}</div>
+        <div><button onClick = {UpdateItems}>Update Value </button></div>
+      </div>
+  );
+};
+export default UseStateWithArray
+
+
+Array destructuring [value, setValue] is required because useState returns an array.
+setValue is used to update state and trigger a re-render.
+
+
+1️⃣ export in React
+There are two types of export:
+A. Default Export
+
+In new file you create the component in file(exportpara.js) and import it in another file like(App.js)
+
+Exportpractice.js
+------------------------------------------------
+import React from 'react';
+
+const ExportMessage = () => {
+  return <div>Hello from Export practice message</div>;
+};
+export default ExportMessage;
+
+
+App.js
+--------------------------------------------------
+import React from "react";
+import "./style.css";
+import ExportMessage from "./Exportpractice";
+
+function MyImportOfMessage()
+{
+  return (
+    <div>
+    <div> this is the App.js</div>
+    <ExportMessage />
+    </div>
+  );
+};
+export default MyImportOfMessage;
+-----------------------------------------------
+import ExportMessage from "./Exportpractice";
+in this "./Exportpractice" should be filename which is imported and 
+import ExportMessage is the name which is used in the code call
+
+ <div> this is the App.js</div>
+    <ExportMessage />
+    </div>
+
+B.Named Export
+
+1️⃣ NamedExport.js (your file)
+import React from 'react';
+
+export function MyExportV1(name) {
+  return <div>My Name is: {name}</div>;
+}
+Named export → use export const … → import with {}.
+
+2️⃣ How to import it in another file
+
+File: App.js 
+import React from "react";
+import { MyExportV1 } from "./NamedExport"; // ✅ curly braces for named exports
+
+function App() {
+  return (
+    <div>
+      <h1>Hello from App</h1>
+      {MyExportV1("Jain Dimple")} {/* call the function */}
+    </div>
+  );
+}
+
+export default App;
+
+
+Default export → use export default Component → import without {}.
+Named export → use export const … → import with {}.
+A file can have only one default export.It is imported without curly braces.
+A file can have multiple named exports.They must be imported using curly braces {} and with the exact same names.
+
+Literals :
+Multi-line Literals:
+A literal in JavaScript (and ES6) is a fixed value you write directly in code, like numbers, strings, booleans, arrays, or objects.
+
+const message = `This is line 1
+This is line 2`;
+console.log(message);
+------------------------------------------------------------
+Now using literals you can do the condition with variable
+Another example:
+const MyLiterals = () =>{
+
+  const name = "Jain dimple";
+  let a = 10;
+  let b = 20;
+  return(
+    <div>
+    <div>
+      {
+      `Hello
+      My name is ${name}`}
+      </div>
+      <div>Value of a=
+        {
+          `${(a + b) >= 20 ? a = 50 : a = 20}`
+        }
+          <br/>sum of both {a+b}
+        </div>
+        </div>
+  );
+};
+export default  MyLiterals
+
+
+React:
+React is a JavaScript library for building user interfaces (UI), especially for web applications
+Component-Based:
+UI is broken into small, reusable pieces called components.
+Example: Header, Footer, Card, Button
+Virtual DOM:
+React keeps a lightweight copy of the DOM in memory
+Only updates the parts of the page that change → faster performance
+Easy to Manage State:
+Use useState hook to store and update data dynamically
+
+
+2️⃣ JSX Basics:
+a) Embedding expressions
+You can put JavaScript variables or expressions inside {}:
+const name = "Dimple";
+const element = <h1>Hello, {name}!</h1>;
+
+b) JSX is a single parent element
+return (
+  <div>
+    <h1>Hello</h1>
+    <p>Welcome</p>
+  </div>
+)
+
+c)Conditional Rendering
+const isLoggedIn = true;
+
+return (
+  <div>
+    {isLoggedIn ? <h1>Welcome back!</h1> : <h1>Please login</h1>}
+  </div>
+)
+
+
+1️⃣ What is a Component?
+A Component is a reusable piece of UI in React.
+Think of it as a JavaScript function that returns JSX.
+Components make it easy to break a page into small parts.
+Example: Header, Footer, Button, Card — each can be a component.
+2️⃣ Function Components
+Function Components are JavaScript functions that return JSX.
+
+function Greeting() {
+  return <h1>Hello, Dimple!</h1>;
+}
+Greeting is a component
+<Greeting /> can be used in your app anywhere
+
+function App() {
+  return (
+    <div>
+      <Greeting />
+      <Greeting />
+    </div>
+  );
+}
+
+3️⃣ Components with Props
+Can use props for dynamic data
+Props (short for properties) let you pass data to components:
+-------------------------------------
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+function App() {
+  return (
+    <div>
+      <Greeting name="Dimple" />
+      <Greeting name="Jain" />
+    </div>
+  );
+}
+
+4️⃣ Components with State
+Is the same as usestate(0),usestate([]),usestate({}) we use earlier
+
+Events:
+Events in React are actions triggered by the user, like:
+Clicking a button
+Typing in a text box
+Hovering over an element
+React uses camelCase syntax for event names(onClick,onChange), unlike HTML.
+
+Example:
+const MyEvent = () =>
+{
+function MyEvent()
+{
+  alert("Hello")
+}
+  return (
+   <div>
+     <button onClick={MyEvent}>Click</button>
+     </div>
+  );
+};
+export default MyEvent
+
+don't put () after the function name otherwise it will calls the function dont relays on the click event
+like
+<button onClick={MyEvent()}>Click</button> is the wrong
+
+////////////////////////////////////////////////////////
+
+const MyOnchangeEvent = () =>
+{
+  const [Name,setName] = useState("");
+    function handleEvent(e)
+    {
+      setName(e.target.value);
+    };
+    return(
+      <div>
+        <input type="text" onChange={handleEvent} value={Name} placeholder="Enter your name" />
+        <div>
+          <h4> Name is :{Name}</h4>
+          </div>
+      </div>
+    )
+}
+export default MyOnchangeEvent
+
+///////////////////////////////////////////////////////
+const MyCounterApp = () =>
+{
+  let [count,setCount] = useState(0);
+  function myFunction()
+  {
+        setCount(count+1);
+  }
+  return(
+    <div>
+      <div>
+      <h2>Counter example</h2>
+      <hr />
+      <button onClick={myFunction}>Click</button>
+      <h4> Click {count} times..</h4>
+      <br />
+      </div>
+    </div>
+  )
+}
+export default MyCounterApp
+
+Todo:
+------------------------------------------------------
+function TodoApp()
+{
+    let [task,setTask] = useState("");
+    // let [item,setItem ] = useState("")
+    let [list,setList] = useState([]);
+    let [isEdit,setIsedit] = useState(-1);
+    function GetTask(e)
+    {
+        setTask(e.target.value);
+    }
+    function addTask(e)
+    {
+      if(isEdit === -1)
+      {
+        if(task.trim() === "")return;
+        setTask(task);
+        console.log("1");
+        setList([...list,task]);
+        alert(task + "  Added to list"); 
+        setTask("");
+      }
+      else
+      {
+        console.log("3");
+        const tempList = [...list];
+        tempList[isEdit] = task;
+        setList(tempList);
+        setIsedit(-1);
+        setTask("")
+      }
+    }
+    function removeItem(e)
+    {
+      let newlist = [...list];
+      newlist.splice(e,1);
+      setList(newlist);
+    }
+    function editItem(e)
+    {
+      setTask(list[e]);
+      setIsedit(e);
+    }
+
+    return (
+      <div>
+        Task <br/>
+        <input type="text" placeholder="Enter Task name" onChange={GetTask} value={task} />
+        <br/>
+        <div><button type="submit" style= {{marginTop:"10px" }}onClick={()=>addTask()}>{isEdit !== -1 ? "update" : "Submit"}</button></div>
+        {/* <div> Task name: {item} added</div> */}
+        <div>
+          <br/>
+          ItemList:
+          
+          <hr/>
+          {
+            list.map((val,index) =>(
+              <div>
+                {/* <ul> */}
+              <li key={index}>{val}    &nbsp;&nbsp; <button onClick={()=>editItem(index)}>Edit</button>  &nbsp;<button type="text" onClick={() =>removeItem(index)}>Remove
+              </button>
+           
+              </li>
+              {/* </ul> */}
+             <br />
+              </div>
+            ))
+          }
+          </div>
+      </div>
+    );
+};
+export default TodoApp;
+----------------------------------------------------------
+simple login form
+function simpleLogin()
+{
+  const[email,setEmail] = useState("");
+  const[error,seterror] = useState("");
+  const[pwdError,setpwdError] = useState("");
+  const[pwd,setPwd] = useState("");
+
+  function validateEmail(e)
+  {
+    const value = e.target.value;
+    setEmail(value);
+    const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    if(value === "")
+    {
+        seterror("Email is required");
+    }
+    else if(!isValidEmail.test(value))
+    {
+        seterror("Invalid email address!");
+    }
+    else {
+      seterror("");
+  }
+}
+
+    function validatePwd(e)
+    {
+      console.log("1");
+      const value =  e.target.value;
+      setPwd(value);
+      if(value === "")
+      {
+        setpwdError("Password is required");
+      }
+      else if(value.length<6)
+      {
+        setpwdError("Password length should be greathan 5");
+      }
+      else
+      {
+        setpwdError("");
+      }
+
+    }
+
+    function save()
+    {
+        alert("details of Username/Email : "+email +"  and  password are saved");
+    }
+  
+  
+  return (
+    <div>
+       <div className="login-container">
+      <h2>Simple Login</h2>
+
+      <div className="input-group">
+        <label>Email</label>
+        <input type="email" placeholder="Enter email" onChange={validateEmail} value={email} className= {error ? "input-error" :""} />
+        <p className="error-text">{error}</p>
+      </div>
+
+      <div className="input-group">
+        <label>Password</label>
+        <input type="password" placeholder="Enter password" onChange={validatePwd} className={pwdError ? "input-error" : ""}  value ={pwd} />
+        <p className="error-text">{pwdError}</p>
+      </div>
+
+      <button className="login-btn" onClick={save}>Login</button>
+    </div>
+   <hr />
+   <TodoApp />
+
+    </div>
+  )
+}
+export default simpleLogin;
+
+
+
+
+
+
+
+later on :
+Single object state instead of many useState (professional approach)
+Submit & validate the form
+Reset form after submit
+
+
+You did not write a single line of code saying "locate the text element and insert the number 1550". You simply changed the data number inside the setTask data bucket, and React handled the DOM plumbing to matching the layout automatically.
+useState creates a state variable and an execution function.
+
+Never modify state directly (e.g., isOpen = true is illegal in React).
+
+Always pass the new value to the setter function (setIsOpen(true)) to trigger the screen refresh.
+
+
+USeeffect
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+const HangfireJobMonitor = () => {
+  // Step 1: Initialize states to hold your data grid rows and loading status flags
+  const [jobs, setJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Step 2: Use useEffect to securely fire the HTTP client request once on load
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/todos?_limit=3")
+      .then((response) => {
+        setJobs(response.data); // Save the payload directly into state memory
+        setIsLoading(false);    // Turn off the loading view layout
+      })
+      .catch((err) => {
+        setError("Database connection failed. Check Web API routing.");
+        setIsLoading(false);
+      });
+  }, []); // 👈 Empty bracket ensures this hits your backend exactly once!
+
+  // Step 3: Branching conditional rendering flags
+  if (isLoading) return <h3>⏳ Querying backend server metrics...</h3>;
+  if (error) return <h3 style={{ color: "red" }}>{error}</h3>;
+
+  // Step 4: Render the final data payload using your map element transformation note
+  return (
+    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+      <h2>Automated Workflow Dashboard</h2>
+      <ul>
+        {
+jobs.map((job) => (
+          <li key={job.id} style={{ margin: "10px 0" }}>
+            <strong>[ID: {job.id}]</strong> {job.title} — {job.completed ? "🟢 Active" : "🛑 Offline"}
+          </li>
+        ))
+}
+      </ul>
+    </div>
+  );
+};
+
+export default HangfireJobMonitor;
+
+
+
+"What causes a React component to re-render?"
+The Answer: A component re-renders under three primary conditions:
+Its local State changes via a setter function (e.g., setCount).
+Its Props (inputs passed from a parent component) update.
+Its Parent component re-renders.
+
+
+
+What is the Virtual DOM and how does reconciliation work?"
+. When a state changes, React builds a new Virtual DOM tree and runs a fast "diffing" algorithm against the previous one. It calculates the exact difference and surgically updates only that specific changed element in the real browser DOM.
+
+
+
+When you declare an object in JavaScript, the variable doesn’t actually hold the data. It holds a memory address pointer (a reference) that points to a location on the heap where the data lives.
+Imagine you have a user state tracking an object:
+
+JavaScript
+const [user, setUser] = useState({ name: "Jain", age: 40 });
+In the browser's RAM, it looks like this:
+Memory Address: 0xABCD123
+Value at that address: { name: "Jain", age: 40 }
+The variable user simply holds the pointer: 0xABCD123.
+
+2. The Direct Mutation Bug (What happens when you do user.name = "Dimple")
+If you write:
+JavaScript
+user.name = "Dimple";
+You are going directly to heap address 0xABCD123 and changing the property value from "Jain" to "Dimple".
+The crucial problem: The variable user is still holding the exact same memory address pointer: 0xABCD123. The pointer itself did not change.
+
+
+
+useState is a built-in React function (called a "Hook") that allows a component to hold and manage its own private, dynamic memory.
+When you modify data using the useState updater gateway, React instantly says: "The memory bank has changed! Let me immediately re-execute this component function to redraw the user interface with the fresh data entries." This automatic redraw is called a Re-render.
+
+
+
+
+
+
+

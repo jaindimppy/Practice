@@ -1,0 +1,173 @@
+Running total of salaries inside each department (ordered by hire date)
+Find all employees whose salary is higher than the average salary of their specific department.
+Abstraction ExampleFixing typos (abstarct $\rightarrow$ 
+
+
+
+var app = builder.Build();
+
+// Register the class-based middleware on 'app' so both are write after app.build();
+app.UseMiddleware<CustomMiddleware>();
+
+ApiController-ActionResult or with <T> and Regular Controller-IActionResult
+
+
+
+modelBuilder.Entity<Student>()
+        .HasIndex(x => x.Id);
+
+
+
+// Program.cs
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+           // Explicitly disable proxy-based lazy loading
+           .UseLazyLoadingProxies(false);
+});
+
+table varible in userdefined fn
+generic methods
+
+ViewComponent
+
+Write a query to find duplicate records in a table based on a specific column (e.g., Email). (Solved using GROUP BY column HAVING COUNT(*) > 1).
+ControllerBase vs. Controller
+Default Access in Classes: Abstract class members are private by default, not public. Interface members are public by default.
+max occurance
+anagram
+
+sp and fn -return val
+uniq key index and non uniq key index
+.
+class (Reference Type) and struct(Value Type)
+
+in list
+objlist.remove and objlist.removeat
+
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employees
+WHERE salary < (SELECT MAX(salary) FROM Employees)
+
+
+views
+Adding columns to emp is allowed, but the view remains unaffected.
+Removing columns to emp is allow but is affecte dto view it will throws error.
+A view acts strictly like a saved virtual table, not a method or function. You cannot define variables or pass arguments into it at execution time.
+
+
+Method overloading
+Return Types Do Not Count: You cannot overload a method by changing only the return type.
+
+C#
+// COMPILER ERROR: Type already defines a member called 'Add' with the same parameter types
+public int Add(int a, int b) { return a + b; }
+public double Add(int a, int b) { return (double)(a + b); }
+
+
+CREATE FUNCTION fn_SimpleExample()
+RETURNS @MyTable TABLE (
+    ID INT,
+    StatusName VARCHAR(50)
+)
+AS
+BEGIN
+    -- Insert rows directly into the table variable
+    INSERT INTO @MyTable (ID, StatusName) VALUES (1, 'Active');
+    INSERT INTO @MyTable (ID, StatusName) VALUES (2, 'Inactive');
+
+    RETURN;
+END;
+
+sp syntax
+
+
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int Age { get; set; }
+
+    // Navigation Property: One student has many subject marks
+    public ICollection<SubjectMark> Marks { get; set; } = new List<SubjectMark>();
+}
+
+public class SubjectMark
+{
+    public int Id { get; set; }
+    public string SubjectName { get; set; } = string.Empty; // e.g., "Hindi", "English", "Maths"
+    public int Score { get; set; }
+
+    // Foreign Key
+    public int StudentId { get; set; }
+    public Student Student { get; set; } = null!;
+}
+
+// 1. Instantiate (no manual IDs needed)
+var student = new Student
+{
+    Name = "Jain",
+    Age = 25,
+    Marks = new List<SubjectMark>
+    {
+        new SubjectMark { SubjectName = "Hindi", Score = 60 },
+        new SubjectMark { SubjectName = "English", Score = 90 },
+        new SubjectMark { SubjectName = "Maths", Score = 100 }
+    }
+};
+
+
+Find departments where average salary is greater than 60,000.
+SELECT deptId, AVG(salary) AS avgSalary  FROM employee GROUP BY deptId 
+HAVING AVG(salary) > 60000;
+
+Get employees along with their manager names (same table).
+SELECT e.name AS employeeName, m.name AS managerName  FROM employee e  LEFT JOIN employee m  ON e.managerId = m.id;
+
+
+Find total salary paid per department.
+SELECT deptId, SUM(salary) AS totalSalary  FROM employee GROUP BY deptId;
+
+
+Get running total of salaries ordered by employee ID.
+sum over order by Id
+
+Find employees whose name starts and ends with a vowel.
+SELECT *
+FROM Emp
+WHERE name LIKE '[aeiou]%[aeiou]';.
+
+Find employees with the same salary.
+SELECT 
+    e.Id AS Employee1_Id,
+    e.Name AS Employee1_Name,
+    e1.Id AS Employee2_Id,
+    e1.Name AS Employee2_Name,
+    e.Salary
+FROM Employee e
+INNER JOIN Employee e1 
+    ON e.Salary = e1.Salary 
+   AND e.Id < e1.Id;
+
+
+A reference type stores the address (reference) of the actual data.The actual object is stored in heap memory.
+like:
+class
+string
+object
+array
+delegate
+interface
+
+
+anagram = sort
+substring logic
+
+sort 
+1st=-1
+2nd=-1 and -1
+
+1sst ,2nd ,3rd largest element
+
