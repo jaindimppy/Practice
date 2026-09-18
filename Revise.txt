@@ -169,5 +169,7 @@ sort
 1st=-1
 2nd=-1 and -1
 
-1sst ,2nd ,3rd largest element
+1st ,2nd ,3rd largest element
+int[] arr = [55, 55, 22, 3];
+First 55: num > max1 ($55 > \text{MinValue}$) is true.max1 becomes 55.Second 55:num > max1 ($55 > 55$) is false.Next check: else if (num > max2 && num < max1).Because of num < max1, the check asks: is $55 < 55$? False!The second 55 is completely ignored.Next number 22:Fits into max2.Next number 3:Fits into max3.Result: 1st: 55, 2nd: 22, 3rd: 3 (3 distinct values).What Would Happen Without ItIf the check was simply else if (num > max2) without num < max1:First 55: Sets max1 = 55.Second 55:55 > max1 is false.Falls to else if (num > max2) $\rightarrow$ $55 > \text{MinValue}$ is true!max2 gets set to 55.Result without protection: 1st: 55, 2nd: 55, 3rd: 22.
 
